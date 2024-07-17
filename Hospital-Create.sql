@@ -16,7 +16,8 @@ CREATE OR REPLACE TABLE Patients(
     lastName varchar(50),
     roomID int NOT NULL,                -- Are patients required to have a room?
     primaryDoctorID int NOT NULL,
-    treatmentDoctors int NOT NULL,      -- References the treatment table because treatments can have multiple doctors
+    doctorID int NOT NULL,
+    treatmentID int NOT NULL,     
     appointmentID int NOT NULL,
     dateOfBirth DATE NOT NULL,
     contactPhone varchar(15) NOT NULL,      -- Emergency might not have phone number
@@ -27,15 +28,15 @@ CREATE OR REPLACE TABLE Patients(
     emergencyContactEmail varchar(100) NULL,
     checkInTime DATETIME NOT NULL,
     bloodType varchar(3) NOT NULL,
-    birthedSex ENUM("Male", "Female") NOT NULL,     -- Added
-    associatedGender ENUM("Male", "Female", "Other") NOT NULL,  -- Changed from Gender
+    Sex ENUM("Male", "Female") NOT NULL,     -- Added
+    Gender ENUM("Male", "Female", "Other") NOT NULL,  -- Changed from Gender
     language varchar(50) NOT NULL,
     patientType ENUM("Primary", "Emergency", "Specialist") NOT NULL,
     releaseDate DATETIME NULL,
 
     FOREIGN KEY (roomID) REFERENCES Rooms(roomID),
     FOREIGN KEY (primaryDoctorID) REFERENCES Doctors(doctorID),
-    FOREIGN KEY (treatmentDoctors) REFERENCES Treatments(doctorID),
+    FOREIGN KEY (treatmentID) REFERENCES Treatments(treatmentID),
     FOREIGN KEY (appointmentID) REFERENCES Appointments(appointmentID)
 );
 
