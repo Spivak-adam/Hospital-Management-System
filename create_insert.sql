@@ -70,19 +70,18 @@ CREATE OR REPLACE TABLE Appointments(
     appointmentID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     doctorID int NOT NULL,
     patientID int NOT NULL,
-    roomID int NOT NULL,        -- Can either get roomID from patient, or set it for future use
-    firstName varchar(50),      -- Must get first name from Patients
-    lastName varchar(50),       -- Must get last name from Patients
-    status ENUM("Confirmed", "In-Room", "Released") NOT NULL,
-    reason ENUM("Scheduled", "ER") NOT NULL,
+    roomID int NOT NULL,
+    status ENUM('Confirmed', 'In-Room', 'Released') NOT NULL,
+    reason ENUM('Scheduled', 'ER') NOT NULL,
     checkInTime TIME NOT NULL,
-    checkOutTime TIME NULL,     -- Check out time can be null
+    checkOutTime TIME NULL,
     date DATE NOT NULL,
 
     FOREIGN KEY (patientID) REFERENCES Patients(patientID),
-    FOREIGN KEY (doctorID) REFERENCES Patients(primaryDoctorID),
+    FOREIGN KEY (doctorID) REFERENCES Doctors(doctorID),
     FOREIGN KEY (roomID) REFERENCES Rooms(roomID)
 );
+
 
 INSERT INTO Appointments (status, reason, patientID, doctorID, date, checkInTime, checkOutTime)
 VALUES
