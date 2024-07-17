@@ -1,11 +1,11 @@
 -- Hospital Management System
 -- Authors: Adam Spivak, and Madelyn Lazar
 -- Description: A Hospital management system (HMS) written in mySQL Database.
--- This file creates all the neccesary tables for the database. These
--- tables are Patients, Appointments, Treatments, Room, and Doctors. 
+-- This file creates all the necessary tables for the database. These
+-- tables are Patients, Appointments, Treatments, Rooms, Doctors, and DoctorTreatment. 
 -- Appointments is the master table, but also a transaction table. It keeps
 -- record of all the patients that come in and out of the hospital, their rooms,
--- their doctors, and the status their appointments.
+-- their doctors, and the status of their appointments.
 
 SET FOREIGN_KEY_CHECKS=0;
 SET AUTOCOMMIT = 0;
@@ -20,16 +20,16 @@ CREATE OR REPLACE TABLE Patients(
     primaryDoctorID int NOT NULL,
     appointmentID int NOT NULL,
     dateOfBirth DATE NOT NULL,
-    contactPhone varchar(15) NOT NULL,      -- Emergency might not have phone number
+    contactPhone varchar(15) NOT NULL,      
     contactEmail varchar(100) NULL UNIQUE,
-    address varchar(255) NOT NULL,          -- Emergency might not have address
+    address varchar(255) NOT NULL,          
     emergencyContactName varchar(100) NULL,
     emergencyContactPhone varchar(100) NULL,
     emergencyContactEmail varchar(100) NULL,
     checkInTime DATETIME NOT NULL,
     bloodType varchar(3) NOT NULL,
-    sex ENUM("Male", "Female") NOT NULL,     -- Added
-    gender ENUM("Male", "Female", "Other") NOT NULL,  -- Changed from Gender
+    sex ENUM("Male", "Female") NOT NULL,     
+    gender ENUM("Male", "Female", "Other") NOT NULL,  
     age int NOT NULL,
     language varchar(50) NOT NULL,
     patientType ENUM("Primary", "Emergency", "Specialist") NOT NULL,
@@ -63,7 +63,6 @@ INSERT INTO Patients (
  '202 Maple St', '2024-07-18 13:00:00', 5, 3, 'B+', '2024-07-25 14:00:00', 'Female', 'Female', 33, 'Spanish', 'Emergency');
 
 
-
 -- create and insert data into Appointments table
 CREATE OR REPLACE TABLE Appointments(
     appointmentID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -81,7 +80,6 @@ CREATE OR REPLACE TABLE Appointments(
     FOREIGN KEY (roomID) REFERENCES Rooms(roomID)
 );
 
-
 INSERT INTO Appointments (status, reason, patientID, doctorID, date, checkInTime, checkOutTime, roomID)
 VALUES
 ('Confirmed', 'Scheduled', 1, 1, '2024-07-14 09:00:00', '09:00:00', '10:00:00', 1),
@@ -89,7 +87,6 @@ VALUES
 ('Released', 'Scheduled', 3, 3, '2024-07-16 11:00:00', '11:00:00', '12:00:00', 3),
 ('Confirmed', 'Scheduled', 4, 4, '2024-07-17 12:00:00', '12:00:00', '13:00:00', 4),
 ('In-Room', 'ER', 5, 5, '2024-07-18 13:00:00', '13:00:00', '14:00:00', 5);
-
 
 
 -- create and insert data into Doctors table
@@ -114,31 +111,49 @@ VALUES
 ('Dermatology', 'Anna', 'Taylor', 'anna.taylor@example.com', '555-666-7777', NULL, 'French', 'Female');
 
 
-
-
 -- create and insert data into Treatments table
 CREATE OR REPLACE TABLE Treatments(
     treatmentID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     patientID int NOT NULL,
-    doctorID VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     date DATETIME NOT NULL,
-    diagnosis TEXT NOT NULL,    -- Changed from varchar
-    symptoms TEXT NOT NULL,     -- Changed from varchar
+    diagnosis TEXT NOT NULL,
+    symptoms TEXT NOT NULL,
 
-    FOREIGN KEY (patientID) REFERENCES Patients(patientID),
-    FOREIGN KEY (doctorID) REFERENCES Doctors(doctorID)
+    FOREIGN KEY (patientID) REFERENCES Patients(patientID)
 );
 
-INSERT INTO Treatments (description, date, doctorID, patientID, diagnosis, symptoms)
+INSERT INTO Treatments (description, date, patientID, diagnosis, symptoms)
 VALUES
-('Heart surgery', '2024-07-14 09:00:00', '1, 2', 1, 'Coronary artery disease', 'Chest pain, shortness of breath'),
-('Brain MRI', '2024-07-15 10:00:00', '2, 3', 2, 'Brain tumor', 'Headache, nausea'),
-('Flu vaccination', '2024-07-16 11:00:00', '3, 4, 5', 3, 'Influenza', 'Fever, cough, sore throat'),
-('Knee replacement', '2024-07-17 12:00:00', 4, 4, 'Osteoarthritis', 'Knee pain, swelling'),
-('Skin biopsy', '2024-07-18 13:00:00', '4, 5', 5, 'Skin lesion', 'Skin growth, discoloration');
+('Heart surgery', '2024-07-14 09:00:00', 1, 'Coronary artery disease', 'Chest pain, shortness of breath'),
+('Brain MRI', '2024-07-15 10:00:00', 2, 'Brain tumor', 'Headache, nausea'),
+('Flu vaccination', '2024-07-16 11:00:00', 3, 'Influenza', 'Fever, cough, sore throat'),
+('Knee replacement', '2024-07-17 12:00:00', 4, 'Osteoarthritis', 'Knee pain, swelling'),
+('Skin biopsy', '2024-07-18 13:00:00', 5, 'Skin lesion', 'Skin growth, discoloration');
 
 
+-- create and insert data into DoctorTreatment table
+CREATE OR REPLACE TABLE DoctorTreatment(
+    doctorID int NOT NULL,
+    treatmentID int NOT NULL,
+
+    PRIMARY KEY (doctorID, treatmentID),
+    FOREIGN KEY (doctorID) REFERENCES Doctors(doctorID),
+    FOREIGN KEY (treatmentID) REFERENCES Treatments(treatmentID)
+);
+
+INSERT INTO DoctorTreatment (doctorID, treatmentID)
+VALUES
+(1, 1),
+(2, 1),
+(2, 2),
+(3, 2),
+(3, 3),
+(4, 3),
+(5, 3),
+(4, 4),
+(4, 5),
+(5, 5);
 
 
 -- create and insert data into Rooms table
@@ -165,7 +180,5 @@ VALUES
 ('Recovery', '205', 5, 5, 'Yes', 'Shared room with 2 beds', 4);
 
 
-
-
 SET FOREIGN_KEY_CHECKS=1;
-COMMIT; 
+COMMIT;
