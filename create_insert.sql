@@ -134,15 +134,15 @@ VALUES
 
 -- create and insert data into DoctorTreatment table
 CREATE OR REPLACE TABLE DoctorTreatment(
-    doctorID int NOT NULL,
     treatmentID int NOT NULL,
+    doctorID int NOT NULL,
 
     PRIMARY KEY (doctorID, treatmentID),
     FOREIGN KEY (doctorID) REFERENCES Doctors(doctorID),
     FOREIGN KEY (treatmentID) REFERENCES Treatments(treatmentID)
 );
 
-INSERT INTO DoctorTreatment (doctorID, treatmentID)
+INSERT INTO DoctorTreatment (treatmentID, doctorID)
 VALUES
 (1, 1),
 (2, 1),
