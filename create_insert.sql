@@ -1,5 +1,6 @@
 -- Hospital Management System
 -- Authors: Adam Spivak, and Madelyn Lazar
+-- Group: 33
 -- Description: A Hospital management system (HMS) written in mySQL Database.
 -- This file creates all the necessary tables for the database. These
 -- tables are Patients, Appointments, Treatments, Rooms, Doctors, and DoctorTreatment. 
