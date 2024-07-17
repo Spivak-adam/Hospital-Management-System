@@ -1,3 +1,10 @@
+-- Hospital Management System
+-- Authors: Adam Spivak, and Madelyn Lazar
+-- Description: A Hospital management system (HMS) written in mySQL Database.
+-- This file inserts all the neccesary information for the database, adding
+-- all the information to each entity needed to run the Hospital.
+
+
 SET FOREIGN_KEY_CHECKS=0;
 SET AUTOCOMMIT = 0;
 
