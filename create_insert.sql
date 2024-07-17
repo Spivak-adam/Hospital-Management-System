@@ -18,7 +18,7 @@ CREATE OR REPLACE TABLE Patients(
     lastName varchar(50),
     roomID int NOT NULL,                -- Are patients required to have a room?
     primaryDoctorID int NOT NULL,
-    treatmentDoctors int NOT NULL,      -- References the treatment table because treatments can have multiple doctors
+    doctorID int NOT NULL,      -- References the treatment table because treatments can have multiple doctors
     appointmentID int NOT NULL,
     dateOfBirth DATE NOT NULL,
     contactPhone varchar(15) NOT NULL,      -- Emergency might not have phone number
