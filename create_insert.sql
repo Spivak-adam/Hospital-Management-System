@@ -16,9 +16,9 @@ CREATE OR REPLACE TABLE Patients(
     patientID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     firstName varchar(50),
     lastName varchar(50),
-    roomID int NOT NULL,                -- Are patients required to have a room?
+    roomID int NOT NULL,               
     primaryDoctorID int NOT NULL,
-    doctorID int NOT NULL,      -- References the treatment table because treatments can have multiple doctors
+    doctorID varchar(255) NOT NULL,      -- References the treatment table because treatments can have multiple doctors
     appointmentID int NOT NULL,
     dateOfBirth DATE NOT NULL,
     contactPhone varchar(15) NOT NULL,      -- Emergency might not have phone number
@@ -35,7 +35,7 @@ CREATE OR REPLACE TABLE Patients(
     language varchar(50) NOT NULL,
     patientType ENUM("Primary", "Emergency", "Specialist") NOT NULL,
     releaseDate DATETIME NULL,
-
+    
     FOREIGN KEY (roomID) REFERENCES Rooms(roomID),
     FOREIGN KEY (primaryDoctorID) REFERENCES Doctors(doctorID),
     FOREIGN KEY (appointmentID) REFERENCES Appointments(appointmentID)
