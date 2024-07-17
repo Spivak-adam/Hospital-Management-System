@@ -29,15 +29,15 @@ CREATE OR REPLACE TABLE Patients(
     emergencyContactEmail varchar(100) NULL,
     checkInTime DATETIME NOT NULL,
     bloodType varchar(3) NOT NULL,
-    birthedSex ENUM("Male", "Female") NOT NULL,     -- Added
-    associatedGender ENUM("Male", "Female", "Other") NOT NULL,  -- Changed from Gender
+    sex ENUM("Male", "Female") NOT NULL,     -- Added
+    gender ENUM("Male", "Female", "Other") NOT NULL,  -- Changed from Gender
+    age int NOT NULL,
     language varchar(50) NOT NULL,
     patientType ENUM("Primary", "Emergency", "Specialist") NOT NULL,
     releaseDate DATETIME NULL,
 
     FOREIGN KEY (roomID) REFERENCES Rooms(roomID),
     FOREIGN KEY (primaryDoctorID) REFERENCES Doctors(doctorID),
-    FOREIGN KEY (treatmentDoctors) REFERENCES Treatments(doctorID),
     FOREIGN KEY (appointmentID) REFERENCES Appointments(appointmentID)
 );
 
@@ -45,23 +45,23 @@ INSERT INTO Patients (
     firstName, lastName, dateOfBirth, roomID, contactPhone, contactEmail, 
     emergencyContactName, emergencyContactPhone, emergencyContactEmail, 
     address, checkInTime, appointmentID, doctorID, primaryDoctorID, bloodType, 
-    releaseDate, gender, language, patientType
+    releaseDate, sex, gender, age, language, patientType
 ) VALUES
 ('John', 'Doe', '1980-01-01', 1, '123-456-7890', 'john@example.com', 
  'Jane Doe', '123-456-7899', 'jane.doe@example.com', 
- '123 Main St', '2024-07-14 09:00:00', 1, '1,2', 2, 'A+', '2024-07-20 10:00:00', 'Male', 'English', 'Primary'),
+ '123 Main St', '2024-07-14 09:00:00', 1, '1,2', 2, 'A+', '2024-07-20 10:00:00', 'Female', 'Male', 21, 'English', 'Primary'),
 ('Jane', 'Smith', '1990-02-02', 2, '234-567-8901', 'jane@example.com', 
  'John Smith', '234-567-8910', 'john.smith@example.com', 
- '456 Elm St', '2024-07-15 10:00:00', 2, '2,3', 3, 'B-', NULL, 'Female', 'Spanish', 'Emergency'),
+ '456 Elm St', '2024-07-15 10:00:00', 2, '2,3', 3, 'B-', NULL, 'Female', 'Female', 55, 'Spanish', 'Emergency'),
 ('Alice', 'Brown', '2000-03-03', 3, '345-678-9012', 'alice@example.com', 
  'Bob Brown', '345-678-9021', 'bob.brown@example.com', 
- '789 Pine St', '2024-07-16 11:00:00', 3, '1,4', 1, 'O+', NULL, 'Female', 'French', 'Specialist'),
+ '789 Pine St', '2024-07-16 11:00:00', 3, '1,4', 1, 'O+', NULL, 'Female', 'Female', 62, 'French', 'Specialist'),
 ('Bob', 'White', '1985-04-04', 4, '456-789-0123', 'bob@example.com', 
  'Alice White', '456-789-0132', 'alice.white@example.com', 
- '101 Oak St', '2024-07-17 12:00:00', 4, '2,4', 2, 'AB-', NULL, 'Male', 'English', 'Primary'),
+ '101 Oak St', '2024-07-17 12:00:00', 4, '2,4', 2, 'AB-', NULL, 'Male, 'Male', 70, 'English', 'Primary'),
 ('Mary', 'Johnson', '1995-05-05', 5, '567-890-1234', 'mary@example.com', 
  'Peter Johnson', '567-890-1243', 'peter.johnson@example.com', 
- '202 Maple St', '2024-07-18 13:00:00', 5, '3,5', 3, 'B+', '2024-07-25 14:00:00', 'Female', 'Spanish', 'Emergency');
+ '202 Maple St', '2024-07-18 13:00:00', 5, '3,5', 3, 'B+', '2024-07-25 14:00:00', 'Female', 'Female', 33, 'Spanish', 'Emergency');
 
 
 
