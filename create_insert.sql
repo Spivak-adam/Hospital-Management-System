@@ -10,6 +10,8 @@
 SET FOREIGN_KEY_CHECKS=0;
 SET AUTOCOMMIT = 0;
 
+
+-- create and insert data into Patients table
 CREATE OR REPLACE TABLE Patients(
     patientID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     firstName varchar(50),
@@ -39,73 +41,6 @@ CREATE OR REPLACE TABLE Patients(
     FOREIGN KEY (appointmentID) REFERENCES Appointments(appointmentID)
 );
 
-CREATE OR REPLACE TABLE Appointments(
-    appointmentID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    doctorID int NOT NULL,
-    patientID int NOT NULL,
-    roomID int NOT NULL,        -- Can either get roomID from patient, or set it for future use
-    firstName varchar(50),      -- Must get first name from Patients
-    lastName varchar(50),       -- Must get last name from Patients
-    status ENUM("Confirmed", "In-Room", "Released") NOT NULL,
-    reason ENUM("Scheduled", "ER") NOT NULL,
-    checkInTime TIME NOT NULL,
-    checkOutTime TIME NULL,     -- Check out time can be null
-    date DATE NOT NULL,
-
-    FOREIGN KEY (patientID) REFERENCES Patients(patientID),
-    FOREIGN KEY (doctorID) REFERENCES Patients(primaryDoctorID),
-    FOREIGN KEY (roomID) REFERENCES Rooms(roomID)
-);
-
-CREATE OR REPLACE TABLE Doctors(
-    doctorID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    firstName varchar(50),
-    lastName varchar(50),
-    specialization varchar(100) NOT NULL,
-    email varchar(100) NOT NULL UNIQUE,
-    phoneNumber varchar(15) NOT NULL,
-    image BLOB NULL,
-    language varchar(50) NOT NULL,
-    gender ENUM("Male", "Female", "Other")
-);
-
-CREATE OR REPLACE TABLE Treatments(
-    treatmentID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    patientID int NOT NULL,
-    doctorID int NOT NULL,
-    description TEXT NOT NULL,
-    date DATETIME NOT NULL,
-    diagnosis TEXT NOT NULL,    -- Changed from varchar
-    symptoms TEXT NOT NULL,     -- Changed from varchar
-
-    FOREIGN KEY (patientID) REFERENCES Patients(patientID),
-    FOREIGN KEY (doctorID) REFERENCES Doctors(doctorID)
-);
-
-CREATE OR REPLACE TABLE Rooms(
-    roomID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    patientID int NOT NULL,
-    doctorID int NOT NULL,
-    location ENUM("ICU", "Recovery", "General") NOT NULL,
-    number varchar(10) NOT NULL,
-    occupied ENUM("Yes", "No") NOT NULL,
-    accommodations text NULL,
-    lengthOfStay int NOT NULL,
-
-    FOREIGN KEY (patientID) REFERENCES Patients(patientID),
-    FOREIGN KEY (doctorID) REFERENCES Doctors(doctorID)
-);
-
-
-INSERT INTO Doctors (specialization, firstName, lastName, email, phoneNumber, image, language, gender)
-VALUES
-('Cardiology', 'John', 'Watson', 'john.watson@example.com', '111-222-3333', NULL, 'English', 'Male'),
-('Neurology', 'Sarah', 'Connor', 'sarah.connor@example.com', '444-555-6666', NULL, 'English', 'Female'),
-('Pediatrics', 'Emily', 'Stone', 'emily.stone@example.com', '777-888-9999', NULL, 'Spanish', 'Female'),
-('Orthopedics', 'Michael', 'Brown', 'michael.brown@example.com', '222-333-4444', NULL, 'English', 'Male'),
-('Dermatology', 'Anna', 'Taylor', 'anna.taylor@example.com', '555-666-7777', NULL, 'French', 'Female');
-
-
 INSERT INTO Patients (
     firstName, lastName, dateOfBirth, roomID, contactPhone, contactEmail, 
     emergencyContactName, emergencyContactPhone, emergencyContactEmail, 
@@ -130,6 +65,24 @@ INSERT INTO Patients (
 
 
 
+-- create and insert data into Appointments table
+CREATE OR REPLACE TABLE Appointments(
+    appointmentID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    doctorID int NOT NULL,
+    patientID int NOT NULL,
+    roomID int NOT NULL,        -- Can either get roomID from patient, or set it for future use
+    firstName varchar(50),      -- Must get first name from Patients
+    lastName varchar(50),       -- Must get last name from Patients
+    status ENUM("Confirmed", "In-Room", "Released") NOT NULL,
+    reason ENUM("Scheduled", "ER") NOT NULL,
+    checkInTime TIME NOT NULL,
+    checkOutTime TIME NULL,     -- Check out time can be null
+    date DATE NOT NULL,
+
+    FOREIGN KEY (patientID) REFERENCES Patients(patientID),
+    FOREIGN KEY (doctorID) REFERENCES Patients(primaryDoctorID),
+    FOREIGN KEY (roomID) REFERENCES Rooms(roomID)
+);
 
 INSERT INTO Appointments (status, reason, patientID, doctorID, date, checkInTime, checkOutTime)
 VALUES
@@ -141,6 +94,43 @@ VALUES
 
 
 
+-- create and insert data into Doctors table
+CREATE OR REPLACE TABLE Doctors(
+    doctorID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    firstName varchar(50),
+    lastName varchar(50),
+    specialization varchar(100) NOT NULL,
+    email varchar(100) NOT NULL UNIQUE,
+    phoneNumber varchar(15) NOT NULL,
+    image BLOB NULL,
+    language varchar(50) NOT NULL,
+    gender ENUM("Male", "Female", "Other")
+);
+
+INSERT INTO Doctors (specialization, firstName, lastName, email, phoneNumber, image, language, gender)
+VALUES
+('Cardiology', 'John', 'Watson', 'john.watson@example.com', '111-222-3333', NULL, 'English', 'Male'),
+('Neurology', 'Sarah', 'Connor', 'sarah.connor@example.com', '444-555-6666', NULL, 'English', 'Female'),
+('Pediatrics', 'Emily', 'Stone', 'emily.stone@example.com', '777-888-9999', NULL, 'Spanish', 'Female'),
+('Orthopedics', 'Michael', 'Brown', 'michael.brown@example.com', '222-333-4444', NULL, 'English', 'Male'),
+('Dermatology', 'Anna', 'Taylor', 'anna.taylor@example.com', '555-666-7777', NULL, 'French', 'Female');
+
+
+
+
+-- create and insert data into Treatments table
+CREATE OR REPLACE TABLE Treatments(
+    treatmentID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    patientID int NOT NULL,
+    doctorID int NOT NULL,
+    description TEXT NOT NULL,
+    date DATETIME NOT NULL,
+    diagnosis TEXT NOT NULL,    -- Changed from varchar
+    symptoms TEXT NOT NULL,     -- Changed from varchar
+
+    FOREIGN KEY (patientID) REFERENCES Patients(patientID),
+    FOREIGN KEY (doctorID) REFERENCES Doctors(doctorID)
+);
 
 INSERT INTO Treatments (description, date, doctorID, patientID, diagnosis, symptoms)
 VALUES
@@ -153,6 +143,21 @@ VALUES
 
 
 
+-- create and insert data into Rooms table
+CREATE OR REPLACE TABLE Rooms(
+    roomID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    patientID int NOT NULL,
+    doctorID int NOT NULL,
+    location ENUM("ICU", "Recovery", "General") NOT NULL,
+    number varchar(10) NOT NULL,
+    occupied ENUM("Yes", "No") NOT NULL,
+    accommodations text NULL,
+    lengthOfStay int NOT NULL,
+
+    FOREIGN KEY (patientID) REFERENCES Patients(patientID),
+    FOREIGN KEY (doctorID) REFERENCES Doctors(doctorID)
+);
+
 INSERT INTO Rooms (location, number, patientID, doctorID, occupied, accommodations, lengthOfStay)
 VALUES
 ('ICU', '101', 1, 1, 'Yes', 'Private room with ventilator', 6),
@@ -160,6 +165,7 @@ VALUES
 ('General', '303', 3, 3, 'Yes', 'Private room', 1),
 ('ICU', '104', 4, 4, 'Yes', 'Private room with ventilator', 7),
 ('Recovery', '205', 5, 5, 'Yes', 'Shared room with 2 beds', 4);
+
 
 
 
