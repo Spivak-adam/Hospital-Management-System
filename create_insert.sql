@@ -18,7 +18,6 @@ CREATE OR REPLACE TABLE Patients(
     lastName varchar(50),
     roomID int NOT NULL,               
     primaryDoctorID int NOT NULL,
-    doctorID varchar(255) NOT NULL,      -- References the treatment table because treatments can have multiple doctors
     appointmentID int NOT NULL,
     dateOfBirth DATE NOT NULL,
     contactPhone varchar(15) NOT NULL,      -- Emergency might not have phone number
@@ -44,7 +43,7 @@ CREATE OR REPLACE TABLE Patients(
 INSERT INTO Patients (
     firstName, lastName, dateOfBirth, roomID, contactPhone, contactEmail, 
     emergencyContactName, emergencyContactPhone, emergencyContactEmail, 
-    address, checkInTime, appointmentID, doctorID, primaryDoctorID, bloodType, 
+    address, checkInTime, appointmentID, primaryDoctorID, bloodType, 
     releaseDate, sex, gender, age, language, patientType
 ) VALUES
 ('John', 'Doe', '1980-01-01', 1, '123-456-7890', 'john@example.com', 
