@@ -120,7 +120,7 @@ VALUES
 CREATE OR REPLACE TABLE Treatments(
     treatmentID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     patientID int NOT NULL,
-    doctorID int NOT NULL,
+    doctorID VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     date DATETIME NOT NULL,
     diagnosis TEXT NOT NULL,    -- Changed from varchar
@@ -132,11 +132,11 @@ CREATE OR REPLACE TABLE Treatments(
 
 INSERT INTO Treatments (description, date, doctorID, patientID, diagnosis, symptoms)
 VALUES
-('Heart surgery', '2024-07-14 09:00:00', 1, 1, 'Coronary artery disease', 'Chest pain, shortness of breath'),
-('Brain MRI', '2024-07-15 10:00:00', 2, 2, 'Brain tumor', 'Headache, nausea'),
-('Flu vaccination', '2024-07-16 11:00:00', 3, 3, 'Influenza', 'Fever, cough, sore throat'),
+('Heart surgery', '2024-07-14 09:00:00', '1, 2', 1, 'Coronary artery disease', 'Chest pain, shortness of breath'),
+('Brain MRI', '2024-07-15 10:00:00', '2, 3', 2, 'Brain tumor', 'Headache, nausea'),
+('Flu vaccination', '2024-07-16 11:00:00', '3, 4, 5', 3, 'Influenza', 'Fever, cough, sore throat'),
 ('Knee replacement', '2024-07-17 12:00:00', 4, 4, 'Osteoarthritis', 'Knee pain, swelling'),
-('Skin biopsy', '2024-07-18 13:00:00', 5, 5, 'Skin lesion', 'Skin growth, discoloration');
+('Skin biopsy', '2024-07-18 13:00:00', '4, 5', 5, 'Skin lesion', 'Skin growth, discoloration');
 
 
 
