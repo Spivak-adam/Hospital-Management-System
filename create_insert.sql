@@ -58,7 +58,7 @@ INSERT INTO Patients (
  '789 Pine St', '2024-07-16 11:00:00', 3, '1,4', 1, 'O+', NULL, 'Female', 'Female', 62, 'French', 'Specialist'),
 ('Bob', 'White', '1985-04-04', 4, '456-789-0123', 'bob@example.com', 
  'Alice White', '456-789-0132', 'alice.white@example.com', 
- '101 Oak St', '2024-07-17 12:00:00', 4, '2,4', 2, 'AB-', NULL, 'Male, 'Male', 70, 'English', 'Primary'),
+ '101 Oak St', '2024-07-17 12:00:00', 4, '2,4', 2, 'AB-', NULL, 'Male', 'Male', 70, 'English', 'Primary'),
 ('Mary', 'Johnson', '1995-05-05', 5, '567-890-1234', 'mary@example.com', 
  'Peter Johnson', '567-890-1243', 'peter.johnson@example.com', 
  '202 Maple St', '2024-07-18 13:00:00', 5, '3,5', 3, 'B+', '2024-07-25 14:00:00', 'Female', 'Female', 33, 'Spanish', 'Emergency');
