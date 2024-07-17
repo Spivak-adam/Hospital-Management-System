@@ -83,13 +83,13 @@ CREATE OR REPLACE TABLE Appointments(
 );
 
 
-INSERT INTO Appointments (status, reason, patientID, doctorID, date, checkInTime, checkOutTime)
+INSERT INTO Appointments (status, reason, patientID, doctorID, date, checkInTime, checkOutTime, roomID)
 VALUES
-('Confirmed', 'Scheduled', 1, 1, '2024-07-14 09:00:00', '09:00:00', '10:00:00'),
-('In-Room', 'ER', 2, 2, '2024-07-15 10:00:00', '10:00:00', '11:00:00'),
-('Released', 'Scheduled', 3, 3, '2024-07-16 11:00:00', '11:00:00', '12:00:00'),
-('Confirmed', 'Scheduled', 4, 4, '2024-07-17 12:00:00', '12:00:00', '13:00:00'),
-('In-Room', 'ER', 5, 5, '2024-07-18 13:00:00', '13:00:00', '14:00:00');
+('Confirmed', 'Scheduled', 1, 1, '2024-07-14 09:00:00', '09:00:00', '10:00:00', 1),
+('In-Room', 'ER', 2, 2, '2024-07-15 10:00:00', '10:00:00', '11:00:00', 2),
+('Released', 'Scheduled', 3, 3, '2024-07-16 11:00:00', '11:00:00', '12:00:00', 3),
+('Confirmed', 'Scheduled', 4, 4, '2024-07-17 12:00:00', '12:00:00', '13:00:00', 4),
+('In-Room', 'ER', 5, 5, '2024-07-18 13:00:00', '13:00:00', '14:00:00', 5);
 
 
 
