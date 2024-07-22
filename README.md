@@ -27,19 +27,17 @@ MedixManager is a Hospital Management System designed to help manage patients, d
 3. **Set up the database:**
 
     - Ensure you have MySQL installed and running.
-    - Create a new database:
-        ```sql
-        CREATE DATABASE medixmanager;
-        ```
+    - Connect to cs340 database:
+        ```mysql -u [cs340_username] -h classmysql.engr.oregonstate.edu -p                     [cs340_username]
+        
     - Import the SQL schema and sample data:
-        ```bash
-        mysql -u yourusername -p medixmanager < sql/ddl.sql
-        mysql -u yourusername -p medixmanager < sql/dml.sql
-        ```
+        ```source ddl.sql
+        ```source dml.sql
 
 4. **Configure the database connection:**
+   right now its commented out because I was only working on the front end.
 
-    - Update the `config/database.js` file with your database credentials:
+    - Update the `app.js` file with your database credentials:
         ```javascript
         const mysql = require('mysql');
 
@@ -53,7 +51,7 @@ MedixManager is a Hospital Management System designed to help manage patients, d
         module.exports = connection;
         ```
 
-5. **Start the application:**
+6. **Start the application:**
     ```bash
     npm start
     ```
@@ -64,12 +62,17 @@ MedixManager is a Hospital Management System designed to help manage patients, d
     nodemon app.js
     ```
 
-6. **Access the application:**
+7. **Access the application:**
 
     Open your web browser and navigate to:
     ```
     http://yourserveraddress:3000
     ```
+
+    or use the school server which is:
+   ```
+   http://flip.engr.oregonstate.edu:3000
+   ```
 
 ## Usage
 
@@ -109,8 +112,6 @@ medixmanager/
 │
 ├── app.js # Main server file
 ├── package.json # Node.js dependencies and scripts
-├── config/
-│ └── database.js # Database configuration
 └── README.md # This file
 
 
