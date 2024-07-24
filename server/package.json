@@ -2,7 +2,7 @@
   "name": "server",
   "version": "1.0.0",
   "description": "backend for react app that uses node and mySQL",
-  "main": "app.js",
+  "main": "app.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

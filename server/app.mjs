@@ -1,21 +1,23 @@
-var express = require('express');
-const bodyParser = require('body-parser');
-const path = require('path');
+import express from 'express';
+import bodyParser from 'body-parser';
+import path from 'path';
 var app = express();
-var PORT = 2136;
-
-const db = require('./db-connector');
-
-app.get('/', function(req, res){
-    let base = "<h1>Got backend online!</h1>"
-    res.send(base);
-});
-    
+var PORT = 2138;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use(express.static(path.join(__dirname, 'public')));
+// Source - ChatGPT
+import db from './db-connector.mjs';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use(express.static(path.join(__dirname, '../client/build')));
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build/index.html'));
+  });
 
 /* Routes
 const patientsRoute = require('./routes/patients');

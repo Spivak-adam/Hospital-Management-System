@@ -1,6 +1,6 @@
-var mysql = require('mysql')
+import mysql from 'mysql'
 
-var pool = mysql.createPool({
+var db = mysql.createPool({
     connectionLimit : 10,
     host: 'classmysql.engr.oregonstate.edu',
     user: 'cs340_spivaka',
@@ -8,4 +8,4 @@ var pool = mysql.createPool({
     database: 'cs340_spivaka'
 })
 
-module.exports.pool = pool;
+export default db;
