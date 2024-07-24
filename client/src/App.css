@@ -1,0 +1,232 @@
+/*  ===== MOBILE styles (reside at the top and are inherited by all devices) ===== */
+/*  ===== See tablet, desktop, and print @media queries at the bottom. */
+
+
+/*   ----- Imports  -----  */
+/* @import 'node_modules/modern-normalize/modern-normalize.css';  npm install modern-normalize  Resets elements for browser consistency.  https://www.npmjs.com/package/modern-normalize */
+/* @import "component1.css";   Component-specific stylesheets, if any.   */
+/* @import url(//fonts.googleapis.com/css?family=Font+Name); Add fonts from a hosted services like Google Fonts.   */
+@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Lugrasimo&family=Sanchez:ital@0;1&display=swap');
+
+/* Reset some basic styles */
+body, h1, h2, h3, p, ul, li, a {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.container {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.top-bar {
+  background: #105d74;
+  color: #ffffff;
+  padding: 20px 0;
+}
+
+.top-bar .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.social-icons img {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+}
+
+.contact-info {
+  text-align: right;
+}
+
+.header-content {
+  background: url('../public/homeBackground.png') no-repeat center center;
+  background-size: cover;
+  color: #010709;
+  padding: 100px 0;
+  text-align: center;
+  position: relative;
+  width: 100%; /* Ensure it spans the full width */
+  display: flex;
+}
+
+.header-content .container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.logo {
+  max-width: 100px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.logo-name {
+  display: flex;
+  align-items: center;
+}
+
+.logo-name .logo {
+  max-width: 50px;
+  height: auto;
+  margin-right: 15px;
+}
+
+.logo-name h1 {
+  font-size: 1.5em;
+  margin: 0;
+}
+
+.header-content h1 {
+  font-size: 3em;
+  margin-bottom: 10px;
+}
+
+
+.header-content p {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+main {
+  flex: 1;
+  background: #ecf8fa;
+  padding: 40px 0;
+}
+
+.services {
+  text-align: center;
+}
+
+.services h2 {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.services h3 {
+  font-size: 1.5em;
+  margin-bottom: 5px;
+}
+
+.services p {
+  font-size: 1em;
+  margin-bottom: 10px;
+}
+
+.services-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 25px;
+}
+
+.service-box {
+  background: #1f9ac0;
+  color: #ecf8fa;
+  padding: 20px;
+  border-radius: 10px;
+  width: 200px;
+  text-align: center;
+}
+
+.service-box:hover {
+  background: #105d74;
+}
+
+footer {
+  background: #105d74;
+  color: #ecf8fa;
+  text-align: center;
+  padding: 20px 0;
+}
+
+footer a {
+  color: #1f9ac0;
+  text-decoration: none;
+}
+
+
+
+
+/*patients styles page*/
+/* Additional styles for patients page */
+
+.contact-info span {
+  margin-left: 20px;
+}
+
+.patients-section {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.patients-section h2 {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+}
+
+.patients-section p {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+
+.patient-actions {
+  margin-bottom: 20px;
+}
+
+.btn-action {
+  background: #1f9ac0;
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin: 0 10px;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn-action:hover {
+  background: #105d74;
+}
+
+.patients-list {
+  overflow-x: auto;
+}
+
+.patients-list table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.patients-list th, .patients-list td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.patients-list th {
+  background-color: #1f9ac0;
+  color: #ffffff;
+}
+
+.patients-list td {
+  background-color: #f4f4f4;
+}
+
+.patients-list a.btn-action {
+  padding: 5px 10px;
+}

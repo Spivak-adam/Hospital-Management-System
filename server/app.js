@@ -1,22 +1,16 @@
-const express = require('express');
+var express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
-const app = express();
-const port = 3000;
+var app = express();
+var PORT = 2136;
 
-/* Database connection
-const mysql = require('mysql');
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'cs340'
+const db = require('./db-connector');
+
+app.get('/', function(req, res){
+    let base = "<h1>Got backend online!</h1>"
+    res.send(base);
 });
-
-db.connect((err) => {
-    if (err) throw err;
-    console.log('Connected to database');
-});*/
+    
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -36,6 +30,6 @@ app.use('/appointments', appointmentsRoute);
 app.use('/treatments', treatmentsRoute);
 app.use('/rooms', roomsRoute);*/
 
-app.listen(port, '0.0.0.0', () => {
-    console.log(`Server running on port ${port}`);
+app.listen(PORT, function(){            
+    console.log('Express started on http://classwork.engr.oregonstate.edu:' + PORT + '; press Ctrl-C to terminate.')
 });
