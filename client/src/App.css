@@ -42,6 +42,24 @@ body {
   align-items: center;
 }
 
+.top-bar .nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.top-bar .nav-links a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 5px 10px;
+    background-color: #1f9ac0;
+    border-radius: 5px;
+}
+
+.top-bar .nav-links a:hover {
+    background-color: #105d74;
+}
+
+
 .social-icons img {
   width: 20px;
   height: 20px;
