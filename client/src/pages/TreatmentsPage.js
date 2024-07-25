@@ -1,20 +1,19 @@
+import React from 'react';
 import NavigationBar from '../components/NavigationBar';
 
-function TreatmentsPage(){
-    return(
+function TreatmentsPage() {
+    return (
         <>
             <NavigationBar />
-            <div class="container">
-                <section class="patients-section">
+            <div className="container">
+                <section className="patients-section">
                     <h2>Treatments</h2>
                     <p>Manage treatments and procedures</p>
-    
-                    <div class="patient-actions">
-                        <a href="#" class="btn-action">Add New Treatment</a>
-                        <a href="#" class="btn-action">View All Treatments</a>
+                    <div className="patient-actions">
+                        <a href="#" className="btn-action">Add New Treatment</a>
+                        <a href="#" className="btn-action">View All Treatments</a>
                     </div>
-    
-                    <div class="patients-list">
+                    <div className="patients-list">
                         <table>
                             <thead>
                                 <tr>
@@ -30,8 +29,8 @@ function TreatmentsPage(){
                                     <td>Chemotherapy</td>
                                     <td>Cancer treatment using chemical substances</td>
                                     <td>
-                                        <a href="#" class="btn-action">Edit</a>
-                                        <a href="#" class="btn-action">Delete</a>
+                                        <a href="#" className="btn-action">Edit</a>
+                                        <a href="#" className="btn-action">Delete</a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -41,6 +40,8 @@ function TreatmentsPage(){
             </div>
         </>
     );
-};
+}
+
+export default TreatmentsPage;
 
 export default TreatmentsPage;
