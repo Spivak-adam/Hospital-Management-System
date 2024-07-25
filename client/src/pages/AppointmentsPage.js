@@ -1,20 +1,19 @@
+import React from 'react';
 import NavigationBar from '../components/NavigationBar';
 
-function AppointmentsPage(){
-    return(
+function AppointmentsPage() {
+    return (
         <>
             <NavigationBar />
-            <div class="container">
-                <section class="patients-section">
+            <div className="container">
+                <section className="patients-section">
                     <h2>Appointments</h2>
                     <p>Schedule and view appointments</p>
-    
-                    <div class="patient-actions">
-                        <a href="#" class="btn-action">Add New Appointment</a>
-                        <a href="#" class="btn-action">View All Appointments</a>
+                    <div className="patient-actions">
+                        <a href="#" className="btn-action">Add New Appointment</a>
+                        <a href="#" className="btn-action">View All Appointments</a>
                     </div>
-    
-                    <div class="patients-list">
+                    <div className="patients-list">
                         <table>
                             <thead>
                                 <tr>
@@ -34,8 +33,8 @@ function AppointmentsPage(){
                                     <td>2024-07-01</td>
                                     <td>10:00 AM</td>
                                     <td>
-                                        <a href="#" class="btn-action">Edit</a>
-                                        <a href="#" class="btn-action">Delete</a>
+                                        <a href="#" className="btn-action">Edit</a>
+                                        <a href="#" className="btn-action">Delete</a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -44,7 +43,8 @@ function AppointmentsPage(){
                 </section>
             </div>
         </>
-    )
-};
+    );
+}
 
 export default AppointmentsPage;
+
