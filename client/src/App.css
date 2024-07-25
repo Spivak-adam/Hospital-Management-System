@@ -59,10 +59,7 @@ body {
     background-color: #105d74;
 }
 
-
-.social-icons img {
-  width: 20px;
-  height: 20px;
+.social-icons a{
   margin-left: 10px;
 }
 
@@ -129,10 +126,16 @@ body {
   margin-bottom: 10px;
 }
 
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
 main {
   flex: 1;
   background: #ecf8fa;
-  padding: 40px 0;
 }
 
 .services {
