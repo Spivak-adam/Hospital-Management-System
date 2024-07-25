@@ -43,5 +43,3 @@ function TreatmentsPage() {
 }
 
 export default TreatmentsPage;
-
-export default TreatmentsPage;
