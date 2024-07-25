@@ -22,7 +22,8 @@ function Header() {
                         <a href="#"><img src={instagramLogo} alt="Instagram Logo"/></a>
                         <a href="#"><img src={pinterestLogo} alt="Pinterest Logo"/></a>
                     </div>
-                    <span>+1-123-456-7890 contactus@medixmanager.com</span>
+                    <span>+1-123-456-7890</span>
+                    <span>contactus@medixmanager.com</span>
                 </div>
             </div>
         </div>
