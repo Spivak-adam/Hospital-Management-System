@@ -52,6 +52,11 @@ body {
   text-align: right;
 }
 
+.contact-info span {
+  display: block;
+  margin-left: 0;
+}
+
 .header-content {
   background: url('../public/homeBackground.png') no-repeat center center;
   background-size: cover;
@@ -165,9 +170,6 @@ footer a {
 /*patients styles page*/
 /* Additional styles for patients page */
 
-.contact-info span {
-  margin-left: 20px;
-}
 
 .patients-section {
   text-align: center;
