@@ -1,10 +1,6 @@
 import './App.css';
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-
-// Components
-import Header from './components/Header';
-import './App.css';
 
 // Pages
 import HomePage from './pages/HomePage.js';
@@ -17,11 +13,6 @@ import RoomsPage from './pages/RoomsPage.js';
 function App() {
   return (
     <BrowserRouter>
-
-      <header>
-        <Header />
-      </header>
-
       <main>
         <section>
           <Routes>
@@ -36,7 +27,7 @@ function App() {
       </main>
 
       <footer>
-        <div class="container">
+        <div className="container">
           <p>Need help? Contact us at <a href="mailto:support@medixmanager.com">support@medixmanager.com</a></p>
           <p>&copy; 2024 Hospital Management System</p>
         </div>
@@ -46,3 +37,4 @@ function App() {
 }
 
 export default App;
+
