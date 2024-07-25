@@ -19,20 +19,30 @@ MedixManager is a Hospital Management System designed to help manage patients, d
     cd medixmanager
     ```
 
-2. **Install the required dependencies:**
+2. **Install the required dependencies for Server and Client:**
     ```bash
     npm install
+    ```
+
+    For Client
+    ```
+    npm run build
     ```
 
 3. **Set up the database:**
 
     - Ensure you have MySQL installed and running.
     - Connect to cs340 database:
-        ```mysql -u [cs340_username] -h classmysql.engr.oregonstate.edu -p                     [cs340_username]
+        ```
+        mysql -u [cs340_username] -h classmysql.engr.oregonstate.edu -p
+        [cs340_username]
+        ```
         
     - Import the SQL schema and sample data:
-        ```source ddl.sql
-        ```source dml.sql
+        ```
+        source ddl.sql
+        source dml.sql
+        ```
 
 4. **Configure the database connection:**
    right now its commented out because I was only working on the front end.
@@ -51,8 +61,9 @@ MedixManager is a Hospital Management System designed to help manage patients, d
         module.exports = connection;
         ```
 
-6. **Start the application:**
-    ```bash
+5. **Start the application:**
+    ```
+    bash
     npm start
     ```
 
@@ -62,7 +73,7 @@ MedixManager is a Hospital Management System designed to help manage patients, d
     nodemon app.js
     ```
 
-7. **Access the application:**
+6. **Access the application:**
 
     Open your web browser and navigate to:
     ```
@@ -84,7 +95,7 @@ MedixManager is a Hospital Management System designed to help manage patients, d
 - **Rooms:** Assign and manage room allocations.
 
 ## File Structure
-
+```
 medixmanager/
 │
 ├── styles.css # Main stylesheet for the application
@@ -113,7 +124,7 @@ medixmanager/
 ├── app.js # Main server file
 ├── package.json # Node.js dependencies and scripts
 └── README.md # This file
-
+```
 
 ## Technologies Used
 
@@ -124,6 +135,8 @@ medixmanager/
 - **Frontend:**
   - HTML
   - CSS
+  - JavaScript
+  - React
 
 - **Database:**
   - MySQL
