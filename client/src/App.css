@@ -79,7 +79,6 @@ body {
   background: url('../public/homeBackground.png') no-repeat center center;
   background-size: cover;
   color: #010709;
-  padding: 100px 0;
   text-align: center;
   position: relative;
   width: 100%; /* Ensure it spans the full width */
@@ -143,6 +142,7 @@ main {
 
 .services h2 {
   font-size: 2em;
+  margin-top: 50px;
 }
 
 .services h3 {
@@ -152,7 +152,7 @@ main {
 
 .services p {
   font-size: 1em;
-  margin-bottom: 50px;
+  margin-bottom: 40px;
 }
 
 .services-grid {
@@ -160,13 +160,12 @@ main {
   flex-wrap: wrap;
   justify-content: center;
   gap: 25px;
-  margin-top: 30px;
 }
 
 .service-box {
   background: #1f9ac0;
   color: #ecf8fa;
-  padding: 20px;
+  padding: 5px;
   border-radius: 10px;
   width: 200px;
   text-align: center;
@@ -256,3 +255,4 @@ footer a {
 .patients-list a.btn-action {
   padding: 5px 10px;
 }
+
