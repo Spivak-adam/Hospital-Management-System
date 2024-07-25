@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import NavigationBar from '../components/NavigationBar';
 
 function HomePage() {
     return (
         <>
+            <NavigationBar />
             <div class="header-content">
                 <div class="container">
                     <h1>MedixManager</h1>
