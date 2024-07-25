@@ -49,7 +49,7 @@ CREATE OR REPLACE TABLE Appointments(
     checkOutTime TIME NULL,
     date DATE NOT NULL,
 
-    FOREIGN KEY (patientID) REFERENCES Patients(patientID),
+    FOREIGN KEY (patientID) REFERENCES Patients(patientID) ON DELETE CASCADE,
     FOREIGN KEY (doctorID) REFERENCES Doctors(doctorID),
     FOREIGN KEY (roomID) REFERENCES Rooms(roomID)
 );
@@ -80,7 +80,7 @@ CREATE OR REPLACE TABLE Treatments(
     diagnosis TEXT NOT NULL,
     symptoms TEXT NOT NULL,
 
-    FOREIGN KEY (patientID) REFERENCES Patients(patientID)
+    FOREIGN KEY (patientID) REFERENCES Patients(patientID) ON DELETE CASCADE
 );
 
 
@@ -91,8 +91,8 @@ CREATE OR REPLACE TABLE DoctorTreatment(
     treatmentID int NOT NULL,
 
     PRIMARY KEY (doctorID, treatmentID),
-    FOREIGN KEY (doctorID) REFERENCES Doctors(doctorID),
-    FOREIGN KEY (treatmentID) REFERENCES Treatments(treatmentID)
+    FOREIGN KEY (doctorID) REFERENCES Doctors(doctorID) ON DELETE CASCADE,
+    FOREIGN KEY (treatmentID) REFERENCES Treatments(treatmentID) ON DELETE CASCADE
 );
 
 
