@@ -81,7 +81,6 @@ UPDATE Treatments SET description = :descriptionInput, diagnosis = :diagnosis, s
 DELETE FROM Patients WHERE patientID = patientIDInput;
 DELETE FROM Doctors WHERE doctorID = doctorIDInput;
 
-
 -- Running some Querries---------------------------------
 -- Get basic patient information like First name, Last name, Appointment Date and Status
 Select Patients.firstName, Patients.lastName, Appointments.date, Appointments.status
