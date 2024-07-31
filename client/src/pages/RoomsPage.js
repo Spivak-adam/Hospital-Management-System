@@ -1,7 +1,27 @@
-import React from 'react';
 import NavigationBar from '../components/NavigationBar';
+import Rooms from '../components/Rooms';
+import { React, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-function RoomsPage() {
+function RoomsPage({ }) {
+    // useNavigate to Redirect
+
+    // Use state to bring in data
+    const [roomData, setRoomData] = useState([]);
+
+    // Retrieve Data
+    const loadRoomData = async () => {
+        const response = await fetch('/rooms');
+        const roomData = await response.json();
+        setRoomData(roomData);
+    }
+
+    // LOAD all the room data when page is started
+    useEffect(() => {
+        loadRoomData();
+    }, []);
+
     return (
         <>
             <NavigationBar />
@@ -14,29 +34,8 @@ function RoomsPage() {
                         <a href="#" className="btn-action">View All Rooms</a>
                     </div>
                     <div className="patients-list">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Room ID</th>
-                                    <th>Room Number</th>
-                                    <th>Type</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>101</td>
-                                    <td>ICU</td>
-                                    <td>Occupied</td>
-                                    <td>
-                                        <a href="#" className="btn-action">Edit</a>
-                                        <a href="#" className="btn-action">Delete</a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <Rooms
+                            rooms={roomData}/>
                     </div>
                 </section>
             </div>

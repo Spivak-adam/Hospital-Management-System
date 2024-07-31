@@ -8,25 +8,33 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 var db = require('./db-connector');
+
+app.get('/rooms', async (req, res) => {
+  try {
+    // Define our query     
+    query1 = "SELECT * FROM Rooms;"
+
+    // Querry Data
+    db.pool.query(query1, function (err, results, fields) {
+      // Send data in a JSON file to browser
+      console.log("Sending JSON information to /rooms");
+      res.send(JSON.stringify(results));
+    })
+
+  } catch (error) {
+    // Handle Errors
+    console.error('Database operation failed:', error);
+    res.status(500).send('Server error');
+  }
+
+});
+
 app.use(express.static(path.join(__dirname, '../client/build')));
 
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/build/index.html'));
-  });
+  res.sendFile(path.join(__dirname, '../client/build/index.html'));
+});
 
-/* Routes
-const patientsRoute = require('./routes/patients');
-const doctorsRoute = require('./routes/doctors');
-const appointmentsRoute = require('./routes/appointments');
-const treatmentsRoute = require('./routes/treatments');
-const roomsRoute = require('./routes/rooms');
-
-app.use('/patients', patientsRoute);
-app.use('/doctors', doctorsRoute);
-app.use('/appointments', appointmentsRoute);
-app.use('/treatments', treatmentsRoute);
-app.use('/rooms', roomsRoute);*/
-
-app.listen(PORT, function(){            
-    console.log('Express started on http://classwork.engr.oregonstate.edu:' + PORT + '; press Ctrl-C to terminate.')
+app.listen(PORT, function () {
+  console.log('Express started on http://classwork.engr.oregonstate.edu:' + PORT + '; press Ctrl-C to terminate.')
 });
