@@ -31,7 +31,8 @@ function RoomsPage({ }) {
                     <p>Assign and manage room allocations</p>
                     <div className="patient-actions">
                         <a href="#" className="btn-action">Add New Room</a>
-                        <a href="#" className="btn-action">View All Rooms</a>
+                        <a href="#" className="btn-action">Edit Rooms</a>
+                        <a href="#" className="btn-action">Delete Rooms</a>
                     </div>
                     <div className="patients-list">
                         <Rooms

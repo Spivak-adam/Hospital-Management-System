@@ -7,8 +7,10 @@ var PORT = 2138;
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// Conect to Database
 var db = require('./db-connector');
 
+// Pull from Rooms Entity
 app.get('/rooms', async (req, res) => {
   try {
     // Define our query     
@@ -29,6 +31,8 @@ app.get('/rooms', async (req, res) => {
 
 });
 
+
+// Build Application using build folder in client
 app.use(express.static(path.join(__dirname, '../client/build')));
 
 app.get('*', (req, res) => {
