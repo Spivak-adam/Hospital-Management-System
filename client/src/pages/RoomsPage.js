@@ -5,8 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 function RoomsPage({ }) {
-    // useNavigate to Redirect
-
     // Use state to bring in data
     const [roomData, setRoomData] = useState([]);
 
@@ -30,6 +28,7 @@ function RoomsPage({ }) {
                     <h2>Rooms</h2>
                     <p>Assign and manage room allocations</p>
                     <div className="patient-actions">
+                        <a href="#" className="btn-action">View All Rooms</a>
                         <a href="#" className="btn-action">Add New Room</a>
                         <a href="#" className="btn-action">Edit Rooms</a>
                         <a href="#" className="btn-action">Delete Rooms</a>

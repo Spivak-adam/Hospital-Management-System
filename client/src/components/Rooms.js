@@ -16,6 +16,7 @@ function RoomsTable({ rooms }) {
                     <th>Occupied</th>
                     <th>Accommodations</th>
                     <th>length of Stay</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>

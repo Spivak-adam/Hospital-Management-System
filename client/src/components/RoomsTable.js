@@ -1,13 +1,7 @@
 import React from 'react';
-
-// Change the icons, function names, and parameters 
-// to fit your portfolio topic and schema.
-
 import { MdDeleteForever, MdEdit } from 'react-icons/md';
 
-
 function Rooms({ rooms }) {
-    console.log(rooms);
     return (
         <tr>
             <td>{rooms.roomID}</td>
@@ -19,7 +13,10 @@ function Rooms({ rooms }) {
             <td>{rooms.accommodations}</td>
             <td>{rooms.lengthOfStay}</td>
 
-            {/* Update these icons to something that matches your style. */}
+            <td>
+                <a href="#" className="btn-action"><MdEdit />Edit</a>
+                <a href="#" className="btn-action"><MdDeleteForever />Delete</a>
+            </td>
         </tr>
     );
 }
