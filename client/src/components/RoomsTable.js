@@ -1,27 +1,23 @@
 import React from 'react';
-
-// Change the icons, function names, and parameters 
-// to fit your portfolio topic and schema.
-
 import { MdDeleteForever, MdEdit } from 'react-icons/md';
 
-
-function Rooms({ rooms }) {
-    console.log(rooms);
+function RoomTableList({ room, onDelete, onEdit }) {
     return (
         <tr>
-            <td>{rooms.roomID}</td>
-            <td>{rooms.patientID}</td>
-            <td>{rooms.doctorID}</td>
-            <td>{rooms.location}</td>
-            <td>{rooms.number}</td>
-            <td>{rooms.occupied}</td>
-            <td>{rooms.accommodations}</td>
-            <td>{rooms.lengthOfStay}</td>
-
-            {/* Update these icons to something that matches your style. */}
+            <td>{room.roomID}</td>
+            <td>{room.patientID}</td>
+            <td>{room.doctorID}</td>
+            <td>{room.location}</td>
+            <td>{room.number}</td>
+            <td>{room.occupied}</td>
+            <td>{room.accommodations}</td>
+            <td>{room.lengthOfStay}</td>
+            <td>
+                <MdEdit onClick={() => onEdit(room)} style={{ cursor: 'pointer', marginRight: '10px' }} />
+                <MdDeleteForever onClick={() => onDelete(room.roomID)} style={{ cursor: 'pointer' }} />
+            </td>
         </tr>
     );
 }
 
-export default Rooms;
+export default RoomTableList;

@@ -1,26 +1,37 @@
+import React, { useState, useEffect } from 'react';
 import NavigationBar from '../components/NavigationBar';
-import Rooms from '../components/Rooms';
-import { React, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import SearchBar from '../components/SearchBar';
+import RoomsTable from '../components/RoomsTable';
 
-function RoomsPage({ }) {
-    // useNavigate to Redirect
+function RoomsPage() {
+    const [rooms, setRooms] = useState([]);
+    const [filteredRooms, setFilteredRooms] = useState([]);
 
-    // Use state to bring in data
-    const [roomData, setRoomData] = useState([]);
-
-    // Retrieve Data
-    const loadRoomData = async () => {
-        const response = await fetch('/rooms');
-        const roomData = await response.json();
-        setRoomData(roomData);
-    }
-
-    // LOAD all the room data when page is started
     useEffect(() => {
-        loadRoomData();
+        // Fetch rooms data from the server
+        const fetchRooms = async () => {
+            try {
+                const response = await fetch('/rooms');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                setRooms(data);
+                setFilteredRooms(data);
+            } catch (error) {
+                console.error('Error fetching rooms:', error);
+            }
+        };
+
+        fetchRooms();
     }, []);
+
+    const handleSearch = (searchTerm) => {
+        const filtered = rooms.filter(room =>
+            room.location.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setFilteredRooms(filtered);
+    };
 
     return (
         <>
@@ -29,14 +40,17 @@ function RoomsPage({ }) {
                 <section className="patients-section">
                     <h2>Rooms</h2>
                     <p>Assign and manage room allocations</p>
+
+                    <SearchBar placeholder="Search Rooms..." onSearch={handleSearch} />
+
                     <div className="patient-actions">
-                        <a href="#" className="btn-action">Add New Room</a>
-                        <a href="#" className="btn-action">Edit Rooms</a>
-                        <a href="#" className="btn-action">Delete Rooms</a>
+                        <button className="btn-action">Add New Room</button>
+                        <button className="btn-action">Edit Rooms</button>
+                        <button className="btn-action">Delete Rooms</button>
                     </div>
+
                     <div className="patients-list">
-                        <Rooms
-                            rooms={roomData}/>
+                        <RoomsTable rooms={filteredRooms} />
                     </div>
                 </section>
             </div>

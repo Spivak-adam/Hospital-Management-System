@@ -1,9 +1,8 @@
 import React from 'react';
-import RoomTableList from './RoomsTable';
+import RoomTableList from './RoomTable';
 
-// Creates Rooms Table and populates it based on component
-
-function RoomsTable({ rooms }) {
+function RoomsTable({ rooms, onDelete, onEdit }) {
+    console.log('RoomsTable received rooms:', rooms); // Debugging log
     return (
         <table id="rooms">
             <thead>
@@ -15,14 +14,17 @@ function RoomsTable({ rooms }) {
                     <th>Number</th>
                     <th>Occupied</th>
                     <th>Accommodations</th>
-                    <th>length of Stay</th>
+                    <th>Length of Stay</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {rooms.map((room, i) => 
                     <RoomTableList 
-                        rooms={room} 
+                        room={room} 
                         key={i}
+                        onDelete={onDelete}
+                        onEdit={onEdit}
                     />)}
             </tbody>
         </table>

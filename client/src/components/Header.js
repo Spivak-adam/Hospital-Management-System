@@ -1,11 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { FaFacebook } from "react-icons/fa";
-import companyLogo from '../images/companyLogo.png';
+import { FaFacebook, FaInstagram, FaPinterest } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
-import { FaInstagram } from "react-icons/fa";
-import { FaPinterest } from "react-icons/fa";
+import companyLogo from '../images/companyLogo.png';
+
 
 function Header() {
     return (
@@ -16,11 +15,11 @@ function Header() {
                     <h1>MedixManager</h1>
                 </div>
                 <div class="contact-info">
-                    <div class="social-icons">
-                        <a href="#"><FaFacebook /></a>
-                        <a href="#"><FaXTwitter /></a>
-                        <a href="#"><FaInstagram /></a>
-                        <a href="#"><FaPinterest /></a>
+                <div className="social-icons">
+                        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"><FaFacebook /></a>
+                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"><FaXTwitter /></a>
+                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"><FaInstagram /></a>
+                        <a href="https://pinterest.com" target="_blank" rel="noopener noreferrer"><FaPinterest /></a>
                     </div>
                     <span>+1-123-456-7890</span>
                     <span>contactus@medixmanager.com</span>
