@@ -22,8 +22,10 @@ function RoomsPage() {
     };
 
     useEffect(() => {
-        fetchRooms();
-    }, []);
+        if (showTable) {
+            fetchRooms();
+        }
+    }, [showTable]);
 
     const handleSearch = (searchTerm) => {
         const filtered = rooms.filter(room =>
@@ -71,6 +73,30 @@ function RoomsPage() {
         }
     };
 
+    const renderTableSection = () => (
+        <>
+            <SearchBar placeholder="Search Rooms..." onSearch={handleSearch} />
+            <div className="patients-list">
+                <RoomsTable rooms={filteredRooms} />
+            </div>
+        </>
+    );
+
+    const renderFormSection = () => (
+        <form onSubmit={handleSubmitNewRoom}>
+            <h3>Add New Room</h3>
+            <input type="text" name="roomID" placeholder="Room ID" required />
+            <input type="text" name="patientID" placeholder="Patient ID" required />
+            <input type="text" name="doctorID" placeholder="Doctor ID" required />
+            <input type="text" name="location" placeholder="Location" required />
+            <input type="text" name="number" placeholder="Room Number" required />
+            <input type="text" name="occupied" placeholder="Occupied (true/false)" required />
+            <input type="text" name="accommodations" placeholder="Accommodations" required />
+            <input type="text" name="lengthOfStay" placeholder="Length of Stay" required />
+            <button type="submit" className="btn-action">Submit</button>
+        </form>
+    );
+
     return (
         <>
             <NavigationBar />
@@ -78,36 +104,12 @@ function RoomsPage() {
                 <section className="patients-section">
                     <h2>Rooms</h2>
                     <p>Assign and manage room allocations</p>
-
                     <div className="patient-actions">
-                        <button className="btn-action" onClick={() => setShowTable(true)}>View All Rooms</button>
+                        <button className="btn-action" onClick={() => { setShowTable(true); setShowForm(false); }}>View All Rooms</button>
                         <button className="btn-action" onClick={() => { setShowTable(false); setShowForm(true); }}>Add New Room</button>
                     </div>
-
-                    {showTable && (
-                        <>
-                            <SearchBar placeholder="Search Rooms..." onSearch={handleSearch} />
-
-                            <div className="patients-list">
-                                <RoomsTable rooms={filteredRooms} />
-                            </div>
-                        </>
-                    )}
-
-                    {showForm && (
-                        <form onSubmit={handleSubmitNewRoom}>
-                            <h3>Add New Room</h3>
-                            <input type="text" name="roomID" placeholder="Room ID" required />
-                            <input type="text" name="patientID" placeholder="Patient ID" required />
-                            <input type="text" name="doctorID" placeholder="Doctor ID" required />
-                            <input type="text" name="location" placeholder="Location" required />
-                            <input type="text" name="number" placeholder="Room Number" required />
-                            <input type="text" name="occupied" placeholder="Occupied (true/false)" required />
-                            <input type="text" name="accommodations" placeholder="Accommodations" required />
-                            <input type="text" name="lengthOfStay" placeholder="Length of Stay" required />
-                            <button type="submit" className="btn-action">Submit</button>
-                        </form>
-                    )}
+                    {showTable && renderTableSection()}
+                    {showForm && renderFormSection()}
                 </section>
             </div>
         </>

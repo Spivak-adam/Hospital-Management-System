@@ -1,5 +1,4 @@
 import React from 'react';
-import Rooms from './Rooms';
 
 function RoomsTable({ rooms }) {
     return (
@@ -18,9 +17,29 @@ function RoomsTable({ rooms }) {
                 </tr>
             </thead>
             <tbody>
-                {rooms.map((room, index) => (
-                    <Rooms key={index} room={room} />
-                ))}
+                {rooms.length > 0 ? (
+                    rooms.map((room, index) => (
+                        <tr key={index}>
+                            <td>{room.roomID}</td>
+                            <td>{room.patientID}</td>
+                            <td>{room.doctorID}</td>
+                            <td>{room.location}</td>
+                            <td>{room.number}</td>
+                            <td>{room.occupied ? 'Yes' : 'No'}</td>
+                            <td>{room.accommodations}</td>
+                            <td>{room.lengthOfStay}</td>
+                            <td>
+                                {/* Add appropriate action buttons or links here */}
+                                <button>Edit</button>
+                                <button>Delete</button>
+                            </td>
+                        </tr>
+                    ))
+                ) : (
+                    <tr>
+                        <td colSpan="9" style={{ textAlign: 'center' }}>No rooms available</td>
+                    </tr>
+                )}
             </tbody>
         </table>
     );
