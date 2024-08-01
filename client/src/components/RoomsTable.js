@@ -1,23 +1,29 @@
 import React from 'react';
-import { MdDeleteForever, MdEdit } from 'react-icons/md';
+import Rooms from './Rooms';
 
-function RoomTableList({ room, onDelete, onEdit }) {
+function RoomsTable({ rooms }) {
     return (
-        <tr>
-            <td>{room.roomID}</td>
-            <td>{room.patientID}</td>
-            <td>{room.doctorID}</td>
-            <td>{room.location}</td>
-            <td>{room.number}</td>
-            <td>{room.occupied}</td>
-            <td>{room.accommodations}</td>
-            <td>{room.lengthOfStay}</td>
-            <td>
-                <MdEdit onClick={() => onEdit(room)} style={{ cursor: 'pointer', marginRight: '10px' }} />
-                <MdDeleteForever onClick={() => onDelete(room.roomID)} style={{ cursor: 'pointer' }} />
-            </td>
-        </tr>
+        <table>
+            <thead>
+                <tr>
+                    <th>Room ID</th>
+                    <th>Patient ID</th>
+                    <th>Doctor ID</th>
+                    <th>Location</th>
+                    <th>Number</th>
+                    <th>Occupied</th>
+                    <th>Accommodations</th>
+                    <th>Length of Stay</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {rooms.map((room, index) => (
+                    <Rooms key={index} room={room} />
+                ))}
+            </tbody>
+        </table>
     );
 }
 
-export default RoomTableList;
+export default RoomsTable;
