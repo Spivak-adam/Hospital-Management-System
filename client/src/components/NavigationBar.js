@@ -1,38 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-
-import { FaFacebook, FaInstagram, FaPinterest } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
+import { FaBars } from "react-icons/fa";
 import companyLogo from '../images/companyLogo.png';
 
-
 function NavigationBar() {
+    const [menuActive, setMenuActive] = useState(false);
+
+    const toggleMenu = () => {
+        setMenuActive(!menuActive);
+    };
+
     return (
-        <div className="top-bar">
+        <div className={`top-bar ${menuActive ? 'active' : ''}`}>
             <div className="container">
                 <div className="logo-name">
-                    <Link to="/"><img src={companyLogo} alt="Company Logo" className="logo"/> </Link>
+                    <Link to="/"><img src={companyLogo} alt="Company Logo" className="logo" /> </Link>
                     <h1>MedixManager</h1>
                 </div>
-                <div className="nav-links">
+                <div className={`nav-links ${menuActive ? 'active' : ''}`}>
                     <Link to="/PatientsPage">Patients</Link>
                     <Link to="/DoctorsPage">Doctors</Link>
                     <Link to="/AppointmentsPage">Appointments</Link>
                     <Link to="/TreatmentsPage">Treatments</Link>
                     <Link to="/RoomsPage">Rooms</Link>
                 </div>
-                <div className="contact-info">
-                    <div className="social-icons">
-                        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer"><FaFacebook /></a>
-                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"><FaXTwitter /></a>
-                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer"><FaInstagram /></a>
-                        <a href="https://pinterest.com" target="_blank" rel="noopener noreferrer"><FaPinterest /></a>
-                    </div>                    <span>+1-123-456-7890</span>
-                    <span>contactus@medixmanager.com</span>
-                </div>
+                <button className="hamburger-menu" onClick={toggleMenu} aria-label="Open navigation menu">
+                    <FaBars />
+                </button>
             </div>
         </div>
     );
-};
+}
 
 export default NavigationBar;

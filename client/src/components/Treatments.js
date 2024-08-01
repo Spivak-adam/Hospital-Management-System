@@ -1,4 +1,6 @@
 import React from 'react';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+
 
 function Treatments({ treatment }) {
     return (
@@ -10,8 +12,8 @@ function Treatments({ treatment }) {
             <td>{treatment.diagnosis}</td>
             <td>{treatment.symptoms}</td>
             <td>
-                <button className="btn-action">Edit</button>
-                <button className="btn-action">Delete</button>
+                <button className="btn-action"><FaEdit /></button>
+                <button className="btn-action"><FaTrashAlt /></button>
             </td>
         </tr>
     );

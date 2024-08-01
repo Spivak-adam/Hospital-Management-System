@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 
 function Appointments({ appointment }) {
     return (
@@ -13,9 +14,9 @@ function Appointments({ appointment }) {
             <td>{appointment.checkOutTime}</td>
             <td>{appointment.date}</td>
             <td>
-                <button className="btn-action">Edit</button>
-                <button className="btn-action">Delete</button>
-            </td>
+                <button className="btn-action"><FaEdit /></button>
+                <button className="btn-action"><FaTrashAlt /></button>
+            </td>       
         </tr>
     );
 }

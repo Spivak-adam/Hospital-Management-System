@@ -1,5 +1,7 @@
 import React from 'react';
 import Treatments from './Treatments';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+
 
 function TreatmentsTable({ treatments }) {
     return (
@@ -22,7 +24,11 @@ function TreatmentsTable({ treatments }) {
                     ))
                 ) : (
                     <tr>
-                        <td colSpan="7" style={{ textAlign: 'center' }}>No treatments available</td>
+                        <td colSpan="6" style={{ textAlign: 'center' }}>No treatments available</td>
+                        <td style={{ textAlign: 'center' }}>
+                            <button className="btn-action"><FaEdit /></button>
+                            <button className="btn-action"><FaTrashAlt /></button>
+                        </td>
                      </tr>
                 )}
             </tbody>

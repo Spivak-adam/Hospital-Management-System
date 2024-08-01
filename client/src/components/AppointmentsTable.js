@@ -1,5 +1,7 @@
 import React from 'react';
 import Appointments from './Appointments';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+
 
 function AppointmentsTable({ appointments }) {
     return (
@@ -25,7 +27,11 @@ function AppointmentsTable({ appointments }) {
                     ))
                 ) : (
                     <tr>
-                        <td colSpan="10" style={{ textAlign: 'center' }}>No appointments available</td>
+                        <td colSpan="9" style={{ textAlign: 'center' }}>No appointments available</td>
+                        <td style={{ textAlign: 'center' }}>
+                            <button className="btn-action"><FaEdit /></button>
+                            <button className="btn-action"><FaTrashAlt /></button>
+                        </td>
                     </tr>
                 )}
             </tbody>

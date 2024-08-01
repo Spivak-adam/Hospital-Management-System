@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 
 function RoomsTable({ rooms }) {
     return (
@@ -28,16 +29,19 @@ function RoomsTable({ rooms }) {
                             <td>{room.occupied ? 'Yes' : 'No'}</td>
                             <td>{room.accommodations}</td>
                             <td>{room.lengthOfStay}</td>
-                            <td>
-                                {/* Add appropriate action buttons or links here */}
-                                <button>Edit</button>
-                                <button>Delete</button>
+                            <td style={{ textAlign: 'center' }}>
+                                <button className="btn-action"><FaEdit /></button>
+                                <button className="btn-action"><FaTrashAlt /></button>
                             </td>
                         </tr>
                     ))
                 ) : (
                     <tr>
-                        <td colSpan="9" style={{ textAlign: 'center' }}>No rooms available</td>
+                        <td colSpan="8" style={{ textAlign: 'center' }}>No rooms available</td>
+                        <td style={{ textAlign: 'center' }}>
+                            <button className="btn-action"><FaEdit /></button>
+                            <button className="btn-action"><FaTrashAlt /></button>
+                        </td>
                     </tr>
                 )}
             </tbody>

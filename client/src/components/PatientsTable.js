@@ -1,5 +1,6 @@
 import React from 'react';
 import Patients from './Patients';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 
 function PatientsTable({ patients }) {
     return (
@@ -33,7 +34,11 @@ function PatientsTable({ patients }) {
             <tbody>
                 {patients.length === 0 ? (
                     <tr>
-                        <td colSpan="22" style={{ textAlign: 'center' }}>No patients available</td>
+                        <td colSpan="21" style={{ textAlign: 'center' }}>No patients available</td>
+                        <td style={{ textAlign: 'center' }}>
+                            <button className="btn-action"><FaEdit /></button>
+                            <button className="btn-action"><FaTrashAlt /></button>
+                        </td>
                     </tr>
                 ) : (
                     patients.map((patient, index) => (

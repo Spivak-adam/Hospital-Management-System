@@ -1,5 +1,5 @@
 import React from 'react';
-import { MdDeleteForever, MdEdit } from 'react-icons/md';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 
 function Rooms({ room }) {
     return (
@@ -13,8 +13,8 @@ function Rooms({ room }) {
             <td>{room.accommodations}</td>
             <td>{room.lengthOfStay}</td>
             <td>
-                <button><MdEdit /></button>
-                <button><MdDeleteForever /></button>
+                <button className="btn-action"><FaEdit /></button>
+                <button className="btn-action"><FaTrashAlt /></button>
             </td>
         </tr>
     );
