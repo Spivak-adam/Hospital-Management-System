@@ -17,6 +17,28 @@ function Rooms({ room }) {
                 <button className="btn-action"><FaTrashAlt /></button>
             </td>
         </tr>
+        <table id="rooms">
+            <thead>
+                <tr>
+                    <th>Room ID</th>
+                    <th>Patient ID</th>
+                    <th>Doctor ID</th>
+                    <th>Location</th>
+                    <th>Number</th>
+                    <th>Occupied</th>
+                    <th>Accommodations</th>
+                    <th>length of Stay</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {rooms.map((room, i) => 
+                    <RoomTableList 
+                        rooms={room} 
+                        key={i}
+                    />)}
+            </tbody>
+        </table>
     );
 }
 

@@ -104,9 +104,17 @@ function RoomsPage() {
                 <section className="patients-section">
                     <h2>Rooms</h2>
                     <p>Assign and manage room allocations</p>
-                    <div className="patient-actions">
+                    <div className="patient-actions"
                         <button className="btn-action" onClick={() => { setShowTable(true); setShowForm(false); }}>View All Rooms</button>
                         <button className="btn-action" onClick={() => { setShowTable(false); setShowForm(true); }}>Add New Room</button>
+                        <a href="#" className="btn-action">View All Rooms</a>
+                        <a href="#" className="btn-action">Add New Room</a>
+                        <a href="#" className="btn-action">Edit Rooms</a>
+                        <a href="#" className="btn-action">Delete Rooms</a>
+                    </div>
+                    <div className="patients-list">
+                        <Rooms
+                            rooms={roomData}/>
                     </div>
                     {showTable && renderTableSection()}
                     {showForm && renderFormSection()}
