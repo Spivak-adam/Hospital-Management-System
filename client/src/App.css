@@ -19,10 +19,20 @@ body, h1, h2, h3, p, ul, li, a {
 
 body {
   font-family: Arial, sans-serif;
-  line-height: 1.6;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  margin: 0;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
 }
 
 .container {
@@ -30,6 +40,9 @@ body {
   margin: 0 auto;
 }
 
+
+
+/* nav bar*/ 
 .top-bar {
   background: #105d74;
   color: #ffffff;
@@ -40,11 +53,13 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 
 .top-bar .nav-links {
     display: flex;
-    gap: 20px;
+    gap: 1 rem;
+    margin: auto;
 }
 
 .top-bar .nav-links a {
@@ -59,18 +74,6 @@ body {
     background-color: #105d74;
 }
 
-.social-icons a{
-  margin-left: 10px;
-}
-
-.contact-info {
-  text-align: right;
-}
-
-.contact-info span {
-  display: block;
-  margin-left: 0;
-}
 
 .header-content {
   background: url('../public/homeBackground.png') no-repeat center center;
@@ -94,14 +97,15 @@ body {
 }
 
 .logo {
-  max-width: 150px;
+  max-width: 100px;
   height: auto;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .logo-name {
   display: flex;
   align-items: center;
+  left: 0;
 }
 
 .logo-name .logo {
@@ -133,10 +137,10 @@ body {
   gap: 10px;
 }
 
-main {
-  flex: 1;
-  background: #ecf8fa;
-}
+
+
+
+/*home page boxed buttons for links to pages*/
 
 .services {
   text-align: center;
@@ -178,11 +182,70 @@ main {
   background: #105d74;
 }
 
+
+/* info footer*/
+
 footer {
   background: #105d74;
   color: #ecf8fa;
   text-align: center;
   padding: 20px 0;
+  margin-top: auto;
+  width: 100%; /* Ensure it spans the full width */
+}
+
+footer .container {
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.footer-left,
+.footer-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.footer-right {
+  align-items: flex-end;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.contact-info span {
+  display: block;
+}
+
+.contact-info span:not(:last-child) {
+  margin-bottom: 5px;
+}
+
+.social-icons {
+  display: flex;
+  gap: 10px;
+}
+
+.social-icons a {
+  color: #ecf8fa;
+  text-decoration: none;
+}
+
+footer p {
+  margin: 5px 0;
 }
 
 footer a {
@@ -190,7 +253,22 @@ footer a {
   text-decoration: none;
 }
 
+footer a:hover {
+  text-decoration: underline;
+}
 
+/* Responsive styles */
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footer-left, .footer-right {
+    align-items: center;
+    margin-top: 10px;
+  }
+}
 
 
 /*patients styles page*/
@@ -258,4 +336,134 @@ footer a {
 .patients-list a.btn-action {
   padding: 5px 10px;
 }
+
+
+
+/* search bar styles*/
+
+.search-bar {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.search-bar input {
+  padding: 10px;
+  width: 60%;
+  max-width: 400px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.search-bar button {
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #1f9ac0;
+  color: white;
+  cursor: pointer;
+}
+
+.search-bar button:hover {
+  background-color: #105d74;
+}
+
+
+/*hamburger menu styles*/
+/* Add this to your existing CSS */
+
+/* Hamburger menu styles */
+.hamburger-menu {
+  display: none;
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-links.active {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 100%;
+  background-color: #105d74;
+  padding: 20px 0;
+  align-items: center;
+}
+
+.nav-links a {
+  color: #ffffff;
+  text-decoration: none;
+  padding: 5px 10px;
+  background-color: #1f9ac0;
+  border-radius: 5px;
+  margin: 5px 0;
+}
+
+.nav-links a:hover {
+  background-color: #105d74;
+}
+
+@media (max-width: 768px) {
+  .hamburger-menu {
+    display: block;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .contact-info {
+    display: none;
+  }
+
+  .top-bar.active .nav-links {
+    display: flex;
+  }
+}
+
+
+
+/* Add this to your existing CSS */
+
+/* Hide nav links by default on small screens */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+
+  .nav-links.active {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background-color: #105d74;
+    padding: 20px 0;
+    align-items: center;
+  }
+
+  .top-bar .nav-links {
+    display: none;
+  }
+
+  .top-bar.active .nav-links {
+    display: flex;
+  }
+
+  .top-bar.active .hamburger-menu {
+    display: block;
+  }
+}
+
 

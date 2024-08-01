@@ -1,10 +1,22 @@
 import React from 'react';
-import RoomTableList from './RoomsTable';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 
-// Creates Rooms Table and populates it based on component
-
-function RoomsTable({ rooms }) {
+function Rooms({ room }) {
     return (
+        <tr>
+            <td>{room.roomID}</td>
+            <td>{room.patientID}</td>
+            <td>{room.doctorID}</td>
+            <td>{room.location}</td>
+            <td>{room.number}</td>
+            <td>{room.occupied.toString()}</td>
+            <td>{room.accommodations}</td>
+            <td>{room.lengthOfStay}</td>
+            <td>
+                <button className="btn-action"><FaEdit /></button>
+                <button className="btn-action"><FaTrashAlt /></button>
+            </td>
+        </tr>
         <table id="rooms">
             <thead>
                 <tr>
@@ -30,4 +42,4 @@ function RoomsTable({ rooms }) {
     );
 }
 
-export default RoomsTable;
+export default Rooms;

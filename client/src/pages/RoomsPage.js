@@ -1,24 +1,101 @@
+import React, { useState, useEffect } from 'react';
 import NavigationBar from '../components/NavigationBar';
-import Rooms from '../components/Rooms';
-import { React, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import SearchBar from '../components/SearchBar';
+import RoomsTable from '../components/RoomsTable';
 
-function RoomsPage({ }) {
-    // Use state to bring in data
-    const [roomData, setRoomData] = useState([]);
+function RoomsPage() {
+    const [rooms, setRooms] = useState([]);
+    const [filteredRooms, setFilteredRooms] = useState([]);
+    const [showTable, setShowTable] = useState(false);
+    const [showForm, setShowForm] = useState(false);
 
-    // Retrieve Data
-    const loadRoomData = async () => {
-        const response = await fetch('/rooms');
-        const roomData = await response.json();
-        setRoomData(roomData);
-    }
+    const fetchRooms = async () => {
+        try {
+            const response = await fetch('/rooms');
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            setRooms(data);
+            setFilteredRooms(data);
+        } catch (error) {
+            console.error('Error fetching room data:', error);
+        }
+    };
 
-    // LOAD all the room data when page is started
     useEffect(() => {
-        loadRoomData();
-    }, []);
+        if (showTable) {
+            fetchRooms();
+        }
+    }, [showTable]);
+
+    const handleSearch = (searchTerm) => {
+        const filtered = rooms.filter(room =>
+            room.location.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setFilteredRooms(filtered);
+    };
+
+    const handleSubmitNewRoom = async (event) => {
+        event.preventDefault();
+        const form = event.target;
+        const newRoom = {
+            roomID: form.roomID.value,
+            patientID: form.patientID.value,
+            doctorID: form.doctorID.value,
+            location: form.location.value,
+            number: form.number.value,
+            occupied: form.occupied.value === 'true',
+            accommodations: form.accommodations.value,
+            lengthOfStay: form.lengthOfStay.value,
+        };
+
+        try {
+            const response = await fetch('/rooms', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newRoom),
+            });
+
+            if (response.ok) {
+                alert('New room added successfully!');
+                form.reset();
+                fetchRooms();
+                setShowForm(false);
+                setShowTable(true);
+            } else {
+                const errorMessage = await response.text();
+                alert(`Failed to add new room: ${errorMessage}`);
+            }
+        } catch (error) {
+            console.error('Error adding new room:', error);
+            alert('Error adding new room. Please try again.');
+        }
+    };
+
+    const renderTableSection = () => (
+        <>
+            <SearchBar placeholder="Search Rooms..." onSearch={handleSearch} />
+            <div className="patients-list">
+                <RoomsTable rooms={filteredRooms} />
+            </div>
+        </>
+    );
+
+    const renderFormSection = () => (
+        <form onSubmit={handleSubmitNewRoom}>
+            <h3>Add New Room</h3>
+            <input type="text" name="roomID" placeholder="Room ID" required />
+            <input type="text" name="patientID" placeholder="Patient ID" required />
+            <input type="text" name="doctorID" placeholder="Doctor ID" required />
+            <input type="text" name="location" placeholder="Location" required />
+            <input type="text" name="number" placeholder="Room Number" required />
+            <input type="text" name="occupied" placeholder="Occupied (true/false)" required />
+            <input type="text" name="accommodations" placeholder="Accommodations" required />
+            <input type="text" name="lengthOfStay" placeholder="Length of Stay" required />
+            <button type="submit" className="btn-action">Submit</button>
+        </form>
+    );
 
     return (
         <>
@@ -27,7 +104,9 @@ function RoomsPage({ }) {
                 <section className="patients-section">
                     <h2>Rooms</h2>
                     <p>Assign and manage room allocations</p>
-                    <div className="patient-actions">
+                    <div className="patient-actions"
+                        <button className="btn-action" onClick={() => { setShowTable(true); setShowForm(false); }}>View All Rooms</button>
+                        <button className="btn-action" onClick={() => { setShowTable(false); setShowForm(true); }}>Add New Room</button>
                         <a href="#" className="btn-action">View All Rooms</a>
                         <a href="#" className="btn-action">Add New Room</a>
                         <a href="#" className="btn-action">Edit Rooms</a>
@@ -37,6 +116,8 @@ function RoomsPage({ }) {
                         <Rooms
                             rooms={roomData}/>
                     </div>
+                    {showTable && renderTableSection()}
+                    {showForm && renderFormSection()}
                 </section>
             </div>
         </>
