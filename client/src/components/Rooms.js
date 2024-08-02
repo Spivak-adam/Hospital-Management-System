@@ -1,44 +1,22 @@
 import React from 'react';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 
-function Rooms({ room }) {
+function Rooms({ rooms }) {
     return (
         <tr>
-            <td>{room.roomID}</td>
-            <td>{room.patientID}</td>
-            <td>{room.doctorID}</td>
-            <td>{room.location}</td>
-            <td>{room.number}</td>
-            <td>{room.occupied.toString()}</td>
-            <td>{room.accommodations}</td>
-            <td>{room.lengthOfStay}</td>
-            <td>
+            <td>{rooms.roomID}</td>
+            <td>{rooms.patientID}</td>
+            <td>{rooms.doctorID}</td>
+            <td>{rooms.location}</td>
+            <td>{rooms.number}</td>
+            <td>{rooms.occupied}</td>
+            <td>{rooms.accommodations}</td>
+            <td>{rooms.lengthOfStay}</td>
+            <td style={{ textAlign: 'center' }}>
                 <button className="btn-action"><FaEdit /></button>
                 <button className="btn-action"><FaTrashAlt /></button>
             </td>
         </tr>
-        <table id="rooms">
-            <thead>
-                <tr>
-                    <th>Room ID</th>
-                    <th>Patient ID</th>
-                    <th>Doctor ID</th>
-                    <th>Location</th>
-                    <th>Number</th>
-                    <th>Occupied</th>
-                    <th>Accommodations</th>
-                    <th>length of Stay</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {rooms.map((room, i) => 
-                    <RoomTableList 
-                        rooms={room} 
-                        key={i}
-                    />)}
-            </tbody>
-        </table>
     );
 }
 

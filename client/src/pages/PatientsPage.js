@@ -13,9 +13,9 @@ function PatientsPage() {
         try {
             const response = await fetch('/patients');
             if (!response.ok) throw new Error('Network response was not ok');
-            const data = await response.json();
-            setPatients(data);
-            setFilteredPatients(data);
+            const patientData = await response.json();
+            setPatients(patientData);
+            setFilteredPatients(patientData);
         } catch (error) {
             console.error('Error fetching patient data:', error);
         }
@@ -90,7 +90,9 @@ function PatientsPage() {
         <>
             <SearchBar placeholder="Search Patients..." onSearch={handleSearch} />
             <div className="patients-list">
-                <PatientsTable patients={filteredPatients} />
+                <PatientsTable
+                    patients={patients}
+                />
             </div>
         </>
     );
@@ -144,24 +146,14 @@ function PatientsPage() {
                 <section className="patients-section">
                     <h2>Patients</h2>
                     <p>View and manage patient records</p>
-                    <div className="patient-actions"
+                    <div className="patient-actions">
                         <button className="btn-action" onClick={() => { setShowTable(true); setShowForm(false); }}>View All Patients</button>
                         <button className="btn-action" onClick={() => { setShowTable(false); setShowForm(true); }}>Add New Patient</button>
-                        <a href="#" className="btn-action">View All Patients</a>
-                        <a href="#" className="btn-action">Add New Patient</a>
-                        <a href="#" className="btn-action">Edit Patients</a>
-                        <a href="#" className="btn-action"> Delete Patients</a>
-                    </div>
-
-                    <div className="patients-list">
-                        <Patients
-                            patients={patientData}/>
-
                     </div>
                     {showTable && renderTableSection()}
                     {showForm && renderFormSection()}
-                </section>
-            </div>
+                </section >
+            </div >
         </>
     );
 }
