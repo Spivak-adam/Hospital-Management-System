@@ -28,13 +28,41 @@ function PatientsPage() {
         }
     }, [showTable]);
 
-    const handleSearch = (searchTerm) => {
-        const filtered = patients.filter(patient =>
-            patient.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            patient.lastName.toLowerCase().includes(searchTerm.toLowerCase())
+
+
+
+const handleSearch = (searchTerm) => {
+    const lowercasedSearchTerm = searchTerm.toLowerCase();
+    const filtered = patients.filter(patient => {
+        return (
+            patient.patientID.toString().includes(lowercasedSearchTerm) ||
+            patient.firstName.toLowerCase().includes(lowercasedSearchTerm) ||
+            patient.lastName.toLowerCase().includes(lowercasedSearchTerm) ||
+            patient.roomID.toString().includes(lowercasedSearchTerm) ||
+            patient.primaryDoctorID.toString().includes(lowercasedSearchTerm) ||
+            patient.appointmentID.toString().includes(lowercasedSearchTerm) ||
+            patient.dateOfBirth.toLowerCase().includes(lowercasedSearchTerm) ||
+            patient.contactPhone.toLowerCase().includes(lowercasedSearchTerm) ||
+            patient.contactEmail.toLowerCase().includes(lowercasedSearchTerm) ||
+            patient.address.toLowerCase().includes(lowercasedSearchTerm) ||
+            patient.emergencyContactName.toLowerCase().includes(lowercasedSearchTerm) ||
+            patient.emergencyContactPhone.toLowerCase().includes(lowercasedSearchTerm) ||
+            patient.emergencyContactEmail.toLowerCase().includes(lowercasedSearchTerm) ||
+            patient.checkInTime.toLowerCase().includes(lowercasedSearchTerm) ||
+            patient.bloodType.toLowerCase().includes(lowercasedSearchTerm) ||
+            patient.sex.toLowerCase().includes(lowercasedSearchTerm) ||
+            patient.gender.toLowerCase().includes(lowercasedSearchTerm) ||
+            patient.age.toString().includes(lowercasedSearchTerm) ||
+            patient.language.toLowerCase().includes(lowercasedSearchTerm) ||
+            patient.patientType.toLowerCase().includes(lowercasedSearchTerm) ||
+            (patient.releaseDate && patient.releaseDate.toLowerCase().includes(lowercasedSearchTerm))
         );
-        setFilteredPatients(filtered);
-    };
+    });
+    setFilteredPatients(filtered);
+};
+
+
+
 
     const handleSubmitNewPatient = async (event) => {
         event.preventDefault();

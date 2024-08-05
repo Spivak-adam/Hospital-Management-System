@@ -27,12 +27,26 @@ function RoomsPage() {
         }
     }, [showTable]);
 
+
+
+    
     const handleSearch = (searchTerm) => {
-        const filtered = rooms.filter(room =>
-            room.location.toLowerCase().includes(searchTerm.toLowerCase())
-        );
+        const lowercasedSearchTerm = searchTerm.toLowerCase();
+        const filtered = rooms.filter(room => {
+            return (
+                room.patientID.toString().includes(lowercasedSearchTerm) ||
+                room.doctorID.toString().includes(lowercasedSearchTerm) ||
+                room.location.toLowerCase().includes(lowercasedSearchTerm) ||
+                room.number.toLowerCase().includes(lowercasedSearchTerm) ||
+                room.occupied.toLowerCase().includes(lowercasedSearchTerm) ||
+                room.accommodations.toLowerCase().includes(lowercasedSearchTerm) ||
+                room.lengthOfStay.toString().includes(lowercasedSearchTerm)
+            );
+        });
         setFilteredRooms(filtered);
     };
+
+
 
     const handleSubmitNewRoom = async (event) => {
         event.preventDefault();

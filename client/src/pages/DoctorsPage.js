@@ -28,14 +28,30 @@ function DoctorsPage() {
         }
     }, [showTable]);
 
+
+    
+
     const handleSearch = (searchTerm) => {
-        const filtered = doctors.filter(doctor =>
-            doctor.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            doctor.lastName.toLowerCase().includes(searchTerm.toLowerCase())
-        );
+        const lowercasedSearchTerm = searchTerm.toLowerCase();
+        const filtered = doctors.filter(doctor => {
+            return (
+                doctor.doctorID.toString().includes(lowercasedSearchTerm) ||
+                doctor.firstName.toLowerCase().includes(lowercasedSearchTerm) ||
+                doctor.lastName.toLowerCase().includes(lowercasedSearchTerm) ||
+                doctor.specialization.toLowerCase().includes(lowercasedSearchTerm) ||
+                doctor.email.toLowerCase().includes(lowercasedSearchTerm) ||
+                doctor.phoneNumber.toLowerCase().includes(lowercasedSearchTerm) ||
+                (doctor.image && doctor.image.toString().includes(lowercasedSearchTerm)) ||
+                doctor.language.toLowerCase().includes(lowercasedSearchTerm) ||
+                doctor.gender.toLowerCase().includes(lowercasedSearchTerm)
+            );
+        });
         setFilteredDoctors(filtered);
     };
 
+    
+
+    
     const handleSubmitNewDoctor = async (event) => {
         event.preventDefault();
         const form = event.target;

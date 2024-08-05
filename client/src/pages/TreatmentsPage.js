@@ -29,13 +29,27 @@ function TreatmentsPage() {
         }
     }, [showTable]);
 
+
+    
+
     const handleSearch = (searchTerm) => {
-        const filtered = treatments.filter(treatment =>
-            treatment.description.toLowerCase().includes(searchTerm.toLowerCase())
-        );
+        const lowercasedSearchTerm = searchTerm.toLowerCase();
+        const filtered = treatments.filter(treatment => {
+            return (
+                treatment.treatmentID.toString().includes(lowercasedSearchTerm) ||
+                treatment.patientID.toString().includes(lowercasedSearchTerm) ||
+                treatment.description.toLowerCase().includes(lowercasedSearchTerm) ||
+                treatment.date.toLowerCase().includes(lowercasedSearchTerm) ||
+                treatment.diagnosis.toLowerCase().includes(lowercasedSearchTerm) ||
+                treatment.symptoms.toLowerCase().includes(lowercasedSearchTerm)
+            );
+        });
         setFilteredTreatments(filtered);
     };
 
+    
+
+    
     const handleSubmitNewTreatment = async (event) => {
         event.preventDefault();
         const form = event.target;

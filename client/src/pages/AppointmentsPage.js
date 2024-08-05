@@ -29,13 +29,30 @@ function AppointmentsPage() {
         }
     }, [showTable]);
 
+
+    
+
     const handleSearch = (searchTerm) => {
-        const filtered = appointments.filter(appointment =>
-            appointment.status.toLowerCase().includes(searchTerm.toLowerCase())
-        );
+        const lowercasedSearchTerm = searchTerm.toLowerCase();
+        const filtered = appointments.filter(appointment => {
+            return (
+                appointment.appointmentID.toString().includes(lowercasedSearchTerm) ||
+                appointment.doctorID.toString().includes(lowercasedSearchTerm) ||
+                appointment.patientID.toString().includes(lowercasedSearchTerm) ||
+                appointment.roomID.toString().includes(lowercasedSearchTerm) ||
+                appointment.status.toLowerCase().includes(lowercasedSearchTerm) ||
+                appointment.reason.toLowerCase().includes(lowercasedSearchTerm) ||
+                appointment.checkInTime.toLowerCase().includes(lowercasedSearchTerm) ||
+                (appointment.checkOutTime && appointment.checkOutTime.toLowerCase().includes(lowercasedSearchTerm)) ||
+                appointment.date.toLowerCase().includes(lowercasedSearchTerm)
+            );
+        });
         setFilteredAppointments(filtered);
     };
 
+    
+
+    
     const handleSubmitNewAppointment = async (event) => {
         event.preventDefault();
         const form = event.target;
