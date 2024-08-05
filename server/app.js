@@ -308,6 +308,95 @@ app.delete('/doctors/:id', async (req, res) => {
 
 
 
+
+// Pull from Appointments Entity
+app.get('/appointments', async (req, res) => {
+    try {
+        // Define our query     
+        const query = "SELECT * FROM Appointments;"
+
+        // Query Data
+        db.pool.query(query, (err, results) => {
+            if (err) throw err;
+            res.send(JSON.stringify(results));
+        });
+
+    } catch (error) {
+        console.error('Database operation failed:', error, '. Unable to pull Appointments.');
+        res.status(500).send('Server error');
+    }
+});
+
+// Add a new appointment
+app.post('/appointments', async (req, res) => {
+    try {
+        const { doctorID, patientID, roomID, status, reason, checkInTime, checkOutTime, date } = req.body;
+        const query = "INSERT INTO Appointments (doctorID, patientID, roomID, status, reason, checkInTime, checkOutTime, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        const values = [doctorID, patientID, roomID, status, reason, checkInTime, checkOutTime, date];
+
+        db.pool.query(query, values, (err, results) => {
+            if (err) {
+                console.error('Error adding appointment:', err);
+                res.status(500).send('Server error');
+            } else {
+                res.send('Appointment added successfully');
+            }
+        });
+
+    } catch (error) {
+        console.error('Database operation failed:', error, '. Unable to add Appointment.');
+        res.status(500).send('Server error');
+    }
+});
+
+// Update an existing appointment
+app.put('/appointments/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { doctorID, patientID, roomID, status, reason, checkInTime, checkOutTime, date } = req.body;
+        const query = "UPDATE Appointments SET doctorID = ?, patientID = ?, roomID = ?, status = ?, reason = ?, checkInTime = ?, checkOutTime = ?, date = ? WHERE appointmentID = ?";
+        const values = [doctorID, patientID, roomID, status, reason, checkInTime, checkOutTime, date, id];
+
+        db.pool.query(query, values, (err, results) => {
+            if (err) {
+                console.error('Error updating appointment:', err);
+                res.status(500).send('Server error');
+            } else {
+                res.send('Appointment updated successfully');
+            }
+        });
+
+    } catch (error) {
+        console.error('Database operation failed:', error, '. Unable to update Appointment.');
+        res.status(500).send('Server error');
+    }
+});
+
+// Delete an appointment
+app.delete('/appointments/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const query = "DELETE FROM Appointments WHERE appointmentID = ?";
+
+        db.pool.query(query, [id], (err, results) => {
+            if (err) {
+                console.error('Error deleting appointment:', err);
+                res.status(500).send('Server error');
+            } else {
+                res.send('Appointment deleted successfully');
+            }
+        });
+
+    } catch (error) {
+        console.error('Database operation failed:', error, '. Unable to delete Appointment.');
+        res.status(500).send('Server error');
+    }
+});
+
+
+
+
+
 // Build Application using build folder in client
 app.use(express.static(path.join(__dirname, '../client/build')));
 
