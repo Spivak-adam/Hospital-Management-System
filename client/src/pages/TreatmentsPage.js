@@ -2,22 +2,30 @@ import React, { useState, useEffect } from 'react';
 import NavigationBar from '../components/NavigationBar';
 import SearchBar from '../components/SearchBar';
 import TreatmentsTable from '../components/TreatmentsTable';
+import { useNavigate } from "react-router-dom";
 
 function TreatmentsPage() {
     const [treatments, setTreatments] = useState([]);
     const [filteredTreatments, setFilteredTreatments] = useState([]);
+    const [doctors, setDoctors] = useState([]);
     const [showTable, setShowTable] = useState(false);
     const [showForm, setShowForm] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [editTreatment, setEditTreatment] = useState(null);
+
+    const redirect = useNavigate();
 
     const fetchTreatments = async () => {
         try {
             const response = await fetch('/treatments');
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
-            setTreatments(data);
-            setFilteredTreatments(data);
+            console.log("Successfully Retrieved data", data)
+            let treatData = data.treatment;
+            let doctorData = data.doctors
+            setTreatments(treatData);
+            setFilteredTreatments(treatData);
+            setDoctors(doctorData);
         } catch (error) {
             console.error('Error fetching treatment data:', error);
         }
@@ -36,6 +44,7 @@ function TreatmentsPage() {
         setFilteredTreatments(filtered);
     };
 
+    // CREATE and Insert to table and database
     const handleSubmitNewTreatment = async (event) => {
         event.preventDefault();
         const form = event.target;
@@ -45,10 +54,11 @@ function TreatmentsPage() {
             date: form.date.value,
             diagnosis: form.diagnosis.value,
             symptoms: form.symptoms.value,
+            doctorID: form.doctorID.value
         };
 
         try {
-            const response = await fetch('/treatments', {
+            const response = await fetch('/create-treatments', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -62,6 +72,7 @@ function TreatmentsPage() {
                 fetchTreatments();
                 setShowForm(false);
                 setShowTable(true);
+                redirect("/TreatmentsPage")
             } else {
                 const errorMessage = await response.text();
                 alert(`Failed to add new treatment: ${errorMessage}`);
@@ -71,7 +82,7 @@ function TreatmentsPage() {
             alert('Error adding new treatment. Please try again.');
         }
     };
-
+  
     const handleUpdateTreatment = async (id, updatedTreatment) => {
         try {
             const response = await fetch(`/treatments/${id}`, {
@@ -122,7 +133,7 @@ function TreatmentsPage() {
         setShowForm(true);
         setShowTable(false);
     };
-
+  
     const renderTableSection = () => (
         <>
             <SearchBar placeholder="Search Treatments..." onSearch={handleSearch} />
@@ -137,6 +148,7 @@ function TreatmentsPage() {
         </>
     );
 
+    // Add treatment information form
     const renderFormSection = () => (
         <form onSubmit={editMode ? (e) => handleSubmitEdit(e) : handleSubmitNewTreatment}>
             <h3>{editMode ? 'Edit Treatment' : 'Add New Treatment'}</h3>
@@ -146,6 +158,35 @@ function TreatmentsPage() {
             <input type="text" name="diagnosis" placeholder="Diagnosis" defaultValue={editMode ? editTreatment.diagnosis : ''} required />
             <input type="text" name="symptoms" placeholder="Symptoms" defaultValue={editMode ? editTreatment.symptoms : ''} required />
             <button type="submit" className="btn-action">{editMode ? 'Update' : 'Submit'}</button>
+      <form>
+        <form class="createDataForm" onSubmit={handleSubmitNewTreatment}>
+            <h3>Add New Treatment</h3>
+            <label for="patientID">Patient ID:</label>
+            <input type="text" id="patientID" name="patientID" placeholder="Patient ID" required />
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" placeholder="Description" required></textarea>
+
+            <label for="date">Date:</label>
+            <input type="datetime-local" id="date" name="date" placeholder="Date" required />
+
+            <label for="diagnosis">Diagnosis:</label>
+            <textarea id="diagnosis" name="diagnosis" placeholder="Diagnosis" required></textarea>
+
+            <label for="symptoms">Symptoms:</label>
+            <textarea id="symptoms" name="symptoms" placeholder="Symptoms" required></textarea>
+
+            <label for="doctorID">Doctor ID:</label>
+            <select id="doctorID" name="doctorID" placeholder="Doctor ID" required>
+                <option value="">Select a doctor</option>
+                {doctors.map(doctor =>(
+                    <option key={doctor.doctorID} value={doctor.doctorID}>
+                        {doctor.lastName}
+                    </option>
+                ))}
+            </select>
+
+            <button type="submit" className="btn-action">Submit</button>
         </form>
     );
 

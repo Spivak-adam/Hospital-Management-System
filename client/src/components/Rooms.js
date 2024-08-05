@@ -50,6 +50,7 @@ function Rooms({ rooms, onUpdateRoom, onDeleteRoom }) {
                     </td>
                 </>
             )}
+
         </tr>
     );
 }

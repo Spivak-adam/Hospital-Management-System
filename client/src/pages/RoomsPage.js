@@ -119,6 +119,7 @@ function RoomsPage() {
             <SearchBar placeholder="Search Rooms..." onSearch={handleSearch} />
             <div className="patients-list">
                 <RoomsTable rooms={filteredRooms} onUpdateRoom={handleUpdateRoom} onDeleteRoom={handleDeleteRoom} />
+
             </div>
         </>
     );

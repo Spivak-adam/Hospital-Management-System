@@ -37,4 +37,4 @@ function RoomsTable({ rooms, onUpdateRoom, onDeleteRoom }) {
     );
 }
 
-export default RoomsTable;
+export default RoomsTable

@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "backend for react app that uses node and mySQL",
   "main": "app.js",
-"scripts": {
+  "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
-   "author": "",
+  "author": "",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.4.5",
