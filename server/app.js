@@ -1,16 +1,23 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-var app = express();
-var PORT = 2100;
+const app = express();
+const PORT = process.env.PORT;
 
+app.use(express.json())
+app.use(express.urlencoded({extended: true}))
+app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
 
 // Conect to Database
 var db = require('./db-connector');
 
-// Pull from Patients Entity
+/* Perform Patients CRUD operations
+--------------------------------------------*/
+// Read from Patients Entity
 app.get('/patients', async (req, res) => {
   try {
     // Define our query     
@@ -26,13 +33,15 @@ app.get('/patients', async (req, res) => {
 
   } catch (error) {
     // Handle Errors
-    console.error('Database operation failed:', error, '. Unable to pull Patients.');
+    console.error('Database operation failed:', error, '. Unable to read Patients.');
     res.status(500).send('Server error');
   }
 
 });
 
-// Pull from Appointments Entity
+/* Perform Appointments CRUD operations
+--------------------------------------------*/
+// Read from Appointments Entity
 app.get('/appointments', async (req, res) => {
   try {
     // Define our query     
@@ -48,13 +57,15 @@ app.get('/appointments', async (req, res) => {
 
   } catch (error) {
     // Handle Errors
-    console.error('Database operation failed:', error, '. Unable to pull Appointments.');
+    console.error('Database operation failed:', error, '. Unable to read Appointments.');
     res.status(500).send('Server error');
   }
 
 });
 
-// Pull from Doctors Entity
+/* Perform Doctors CRUD operations
+--------------------------------------------*/
+// Read from Doctors Entity
 app.get('/doctors', async (req, res) => {
   try {
     // Define our query     
@@ -70,17 +81,19 @@ app.get('/doctors', async (req, res) => {
 
   } catch (error) {
     // Handle Errors
-    console.error('Database operation failed:', error, '. Unable to pull Doctors.');
+    console.error('Database operation failed:', error, '. Unable to read Doctors.');
     res.status(500).send('Server error');
   }
 
 });
 
-// Pull from Treatments Entity
+/* Perform Treatments CRUD operations
+--------------------------------------------*/
+// Read from Treatments Entity
 app.get('/treatments', async (req, res) => {
   try {
     // Define our query     
-    query1 = "SELECT * FROM Treatments;"
+    query1 = `Select Treatments.*, Doctors.lastName from Treatments Inner join DoctorTreatment on DoctorTreatment.treatmentID = Treatments.treatmentID Inner join Doctors on DoctorTreatment.doctorID = Doctors.doctorID ORDER BY treatmentID;`
 
     // Querry Data
     db.pool.query(query1, function (err, results, fields) {
@@ -92,13 +105,44 @@ app.get('/treatments', async (req, res) => {
 
   } catch (error) {
     // Handle Errors
-    console.error('Database operation failed:', error, '. Unable to pull Treatments.');
+    console.error('Database operation failed:', error, '. Unable to read Treatments.');
     res.status(500).send('Server error');
   }
 
 });
 
-// Pull from Rooms Entity
+//Create Treatments from user
+app.post('/create-treatments', (req, res)=>{
+  let treatData = req.body;
+
+  console.log("INSERT treatment data submission form", treatData);
+
+  query1 = `SET FOREIGN_KEY_CHECKS=0;`;
+  query2 = `INSERT INTO Treatments (patientID, description, date, diagnosis, symptoms) VALUES ('${treatData['patientID']}','${treatData['description']}','${treatData['date']}','${treatData['diagnosis']}','${treatData['symptoms']}')`
+  query3 = `INSERT INTO DoctorTreatment (treatmentID, doctorID) VALUES (LAST_INSERT_ID(), ${treatData['doctorID']})`
+
+  db.pool.query(query1, function(error, rows, fields){
+    db.pool.query(query2, function(error, rows, fields){
+      db.pool.query(query3, function(error, rows, fields){
+        if (error){
+          console.log(error)
+          res.sendStatus(400)
+        }
+        else{
+          console.log("Successfully Inserted into Treatments Table, and DoctorTreatments")
+        }
+      })
+  })
+
+    
+  })
+
+})
+
+
+/* Perform Rooms CRUD operations
+--------------------------------------------*/
+// Read from Rooms Entity
 app.get('/rooms', async (req, res) => {
   try {
     // Define our query     
@@ -114,12 +158,11 @@ app.get('/rooms', async (req, res) => {
 
   } catch (error) {
     // Handle Errors
-    console.error('Database operation failed:', error, '. Unable to pull Rooms.');
+    console.error('Database operation failed:', error, '. Unable to read Rooms.');
     res.status(500).send('Server error');
   }
 
 });
-
 
 
 // Build Application using build folder in client

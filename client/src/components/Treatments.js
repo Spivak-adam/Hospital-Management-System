@@ -11,6 +11,7 @@ function Treatments({ treatment }) {
             <td>{treatment.date}</td>
             <td>{treatment.diagnosis}</td>
             <td>{treatment.symptoms}</td>
+            <td>{treatment.lastName}</td>
             <td>
                 <button className="btn-action"><FaEdit /></button>
                 <button className="btn-action"><FaTrashAlt /></button>

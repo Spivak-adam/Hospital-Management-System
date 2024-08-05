@@ -14,6 +14,7 @@ function TreatmentsTable({ treatments }) {
                     <th>Date</th>
                     <th>Diagnosis</th>
                     <th>Symptoms</th>
+                    <th>Assigned Doctors</th>
                     <th>Actions</th>
                 </tr>
             </thead>

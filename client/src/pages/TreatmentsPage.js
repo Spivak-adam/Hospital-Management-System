@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import NavigationBar from '../components/NavigationBar';
 import SearchBar from '../components/SearchBar';
 import TreatmentsTable from '../components/TreatmentsTable';
+import { useNavigate } from "react-router-dom";
 
 function TreatmentsPage() {
     const [treatments, setTreatments] = useState([]);
     const [filteredTreatments, setFilteredTreatments] = useState([]);
     const [showTable, setShowTable] = useState(false);
     const [showForm, setShowForm] = useState(false);
+
+    const redirect = useNavigate();
 
     const fetchTreatments = async () => {
         try {
@@ -38,16 +41,16 @@ function TreatmentsPage() {
         event.preventDefault();
         const form = event.target;
         const newTreatment = {
-            treatmentID: form.treatmentID.value,
             patientID: form.patientID.value,
             description: form.description.value,
             date: form.date.value,
             diagnosis: form.diagnosis.value,
             symptoms: form.symptoms.value,
+            doctorID: form.doctorID.value
         };
 
         try {
-            const response = await fetch('/treatments', {
+            const response = await fetch('/create-treatments', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -55,12 +58,13 @@ function TreatmentsPage() {
                 body: JSON.stringify(newTreatment),
             });
 
-            if (response.ok) {
+            if (response.status === 201) {
                 alert('New treatment added successfully!');
                 form.reset();
                 fetchTreatments();
                 setShowForm(false);
                 setShowTable(true);
+                redirect("/TreatmentsPage")
             } else {
                 const errorMessage = await response.text();
                 alert(`Failed to add new treatment: ${errorMessage}`);
@@ -83,12 +87,12 @@ function TreatmentsPage() {
     const renderFormSection = () => (
         <form onSubmit={handleSubmitNewTreatment}>
             <h3>Add New Treatment</h3>
-            <input type="text" name="treatmentID" placeholder="Treatment ID" required />
             <input type="text" name="patientID" placeholder="Patient ID" required />
             <textarea name="description" placeholder="Description" required></textarea>
             <input type="datetime-local" name="date" placeholder="Date" required />
             <textarea name="diagnosis" placeholder="Diagnosis" required></textarea>
             <textarea name="symptoms" placeholder="Symptoms" required></textarea>
+            <textarea name="doctorID" placeholder="Doctor ID" required></textarea>
             <button type="submit" className="btn-action">Submit</button>
         </form>
     );
