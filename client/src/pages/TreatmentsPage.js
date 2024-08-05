@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 function TreatmentsPage() {
     const [treatments, setTreatments] = useState([]);
     const [filteredTreatments, setFilteredTreatments] = useState([]);
+    const [doctors, setDoctors] = useState([]);
     const [showTable, setShowTable] = useState(false);
     const [showForm, setShowForm] = useState(false);
 
@@ -17,8 +18,12 @@ function TreatmentsPage() {
             const response = await fetch('/treatments');
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
-            setTreatments(data);
-            setFilteredTreatments(data);
+            console.log("Successfully Retrieved data", data)
+            let treatData = data.treatment;
+            let doctorData = data.doctors
+            setTreatments(treatData);
+            setFilteredTreatments(treatData);
+            setDoctors(doctorData);
         } catch (error) {
             console.error('Error fetching treatment data:', error);
         }
@@ -37,6 +42,7 @@ function TreatmentsPage() {
         setFilteredTreatments(filtered);
     };
 
+    // CREATE and Insert to table and database
     const handleSubmitNewTreatment = async (event) => {
         event.preventDefault();
         const form = event.target;
@@ -58,7 +64,7 @@ function TreatmentsPage() {
                 body: JSON.stringify(newTreatment),
             });
 
-            if (response.status === 201) {
+            if (response.ok) {
                 alert('New treatment added successfully!');
                 form.reset();
                 fetchTreatments();
@@ -75,6 +81,7 @@ function TreatmentsPage() {
         }
     };
 
+    // Search Patient information
     const renderTableSection = () => (
         <>
             <SearchBar placeholder="Search Treatments..." onSearch={handleSearch} />
@@ -84,15 +91,35 @@ function TreatmentsPage() {
         </>
     );
 
+    // Add treatment information form
     const renderFormSection = () => (
-        <form onSubmit={handleSubmitNewTreatment}>
+        <form class="createDataForm" onSubmit={handleSubmitNewTreatment}>
             <h3>Add New Treatment</h3>
-            <input type="text" name="patientID" placeholder="Patient ID" required />
-            <textarea name="description" placeholder="Description" required></textarea>
-            <input type="datetime-local" name="date" placeholder="Date" required />
-            <textarea name="diagnosis" placeholder="Diagnosis" required></textarea>
-            <textarea name="symptoms" placeholder="Symptoms" required></textarea>
-            <textarea name="doctorID" placeholder="Doctor ID" required></textarea>
+            <label for="patientID">Patient ID:</label>
+            <input type="text" id="patientID" name="patientID" placeholder="Patient ID" required />
+
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" placeholder="Description" required></textarea>
+
+            <label for="date">Date:</label>
+            <input type="datetime-local" id="date" name="date" placeholder="Date" required />
+
+            <label for="diagnosis">Diagnosis:</label>
+            <textarea id="diagnosis" name="diagnosis" placeholder="Diagnosis" required></textarea>
+
+            <label for="symptoms">Symptoms:</label>
+            <textarea id="symptoms" name="symptoms" placeholder="Symptoms" required></textarea>
+
+            <label for="doctorID">Doctor ID:</label>
+            <select id="doctorID" name="doctorID" placeholder="Doctor ID" required>
+                <option value="">Select a doctor</option>
+                {doctors.map(doctor =>(
+                    <option key={doctor.doctorID} value={doctor.doctorID}>
+                        {doctor.lastName}
+                    </option>
+                ))}
+            </select>
+
             <button type="submit" className="btn-action">Submit</button>
         </form>
     );

@@ -6,7 +6,7 @@ const app = express();
 const PORT = process.env.PORT;
 
 app.use(express.json())
-app.use(express.urlencoded({extended: true}))
+app.use(express.urlencoded({ extended: true }))
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -27,7 +27,7 @@ app.get('/patients', async (req, res) => {
     db.pool.query(query1, function (err, results, fields) {
       // Send data in a JSON file to browser
       console.log("Sending JSON information to /patients");
-      console.log("Patients:\n",JSON.stringify(results))
+      console.log("Patients:\n", JSON.stringify(results))
       res.send(JSON.stringify(results));
     })
 
@@ -51,7 +51,7 @@ app.get('/appointments', async (req, res) => {
     db.pool.query(query1, function (err, results, fields) {
       // Send data in a JSON file to browser
       console.log("Sending JSON information to /appointments");
-      console.log("Appointments:\n",JSON.stringify(results))
+      console.log("Appointments:\n", JSON.stringify(results))
       res.send(JSON.stringify(results));
     })
 
@@ -75,7 +75,7 @@ app.get('/doctors', async (req, res) => {
     db.pool.query(query1, function (err, results, fields) {
       // Send data in a JSON file to browser
       console.log("Sending JSON information to /doctors");
-      console.log("Doctors:\n",JSON.stringify(results))
+      console.log("Doctors:\n", JSON.stringify(results))
       res.send(JSON.stringify(results));
     })
 
@@ -92,15 +92,27 @@ app.get('/doctors', async (req, res) => {
 // Read from Treatments Entity
 app.get('/treatments', async (req, res) => {
   try {
-    // Define our query     
-    query1 = `Select Treatments.*, Doctors.lastName from Treatments Inner join DoctorTreatment on DoctorTreatment.treatmentID = Treatments.treatmentID Inner join Doctors on DoctorTreatment.doctorID = Doctors.doctorID ORDER BY treatmentID;`
+    // Select all the information from the treatments table    
+    let query1 = `Select Treatments.*, Doctors.lastName from Treatments Inner join DoctorTreatment on DoctorTreatment.treatmentID = Treatments.treatmentID Inner join Doctors on DoctorTreatment.doctorID = Doctors.doctorID ORDER BY treatmentID;`
 
-    // Querry Data
+    // Select all the information from the doctors table
+    let query2 = `Select * FROM Doctors;`
+
+    // Querry Data from Treatments
     db.pool.query(query1, function (err, results, fields) {
-      // Send data in a JSON file to browser
-      console.log("Sending JSON information to /treatments");
-      console.log("Treatments:\n",JSON.stringify(results))
-      res.send(JSON.stringify(results));
+      let treatData = results
+      //console.log("Treatments:\n", treatData)
+
+      // Querry Data from Doctors
+      db.pool.query(query2, function (err, results, fields) {
+        // Send data in a JSON file to browser
+        let doctorData = results
+        //console.log("Doctors for treatments:\n", doctorData)
+
+        console.log("Sending treatment and doctor JSON information to /treatments");
+        res.send(JSON.stringify({ treatment: treatData, doctors: doctorData }));
+      })
+
     })
 
   } catch (error) {
@@ -112,7 +124,7 @@ app.get('/treatments', async (req, res) => {
 });
 
 //Create Treatments from user
-app.post('/create-treatments', (req, res)=>{
+app.post('/create-treatments', (req, res) => {
   let treatData = req.body;
 
   console.log("INSERT treatment data submission form", treatData);
@@ -120,21 +132,25 @@ app.post('/create-treatments', (req, res)=>{
   query1 = `SET FOREIGN_KEY_CHECKS=0;`;
   query2 = `INSERT INTO Treatments (patientID, description, date, diagnosis, symptoms) VALUES ('${treatData['patientID']}','${treatData['description']}','${treatData['date']}','${treatData['diagnosis']}','${treatData['symptoms']}')`
   query3 = `INSERT INTO DoctorTreatment (treatmentID, doctorID) VALUES (LAST_INSERT_ID(), ${treatData['doctorID']})`
+  query4 = `SET FOREIGN_KEY_CHECKS=1;`;
 
-  db.pool.query(query1, function(error, rows, fields){
-    db.pool.query(query2, function(error, rows, fields){
-      db.pool.query(query3, function(error, rows, fields){
-        if (error){
-          console.log(error)
-          res.sendStatus(400)
-        }
-        else{
-          console.log("Successfully Inserted into Treatments Table, and DoctorTreatments")
-        }
+  db.pool.query(query1, function (error, rows, fields) {
+    db.pool.query(query2, function (error, rows, fields) {
+      db.pool.query(query3, function (error, rows, fields) {
+        db.pool.query(query4, function (error, rows, fields) {
+          if (error) {
+            console.log(error)
+            res.sendStatus(400)
+          }
+          else {
+            console.log("Successfully Inserted into Treatments Table, and DoctorTreatments")
+            res.redirect('/treatments');
+          }
+        })
       })
-  })
+    })
 
-    
+
   })
 
 })
@@ -152,7 +168,7 @@ app.get('/rooms', async (req, res) => {
     db.pool.query(query1, function (err, results, fields) {
       // Send data in a JSON file to browser
       console.log("Sending JSON information to /rooms");
-      console.log("Rooms:\n",JSON.stringify(results))
+      console.log("Rooms:\n", JSON.stringify(results))
       res.send(JSON.stringify(results));
     })
 
