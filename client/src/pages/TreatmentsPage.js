@@ -58,7 +58,7 @@ function TreatmentsPage() {
         };
 
         try {
-            const response = await fetch('/create-treatments', {
+            const response = await fetch('/treatments', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -72,7 +72,6 @@ function TreatmentsPage() {
                 fetchTreatments();
                 setShowForm(false);
                 setShowTable(true);
-                redirect("/TreatmentsPage")
             } else {
                 const errorMessage = await response.text();
                 alert(`Failed to add new treatment: ${errorMessage}`);
@@ -82,7 +81,7 @@ function TreatmentsPage() {
             alert('Error adding new treatment. Please try again.');
         }
     };
-  
+
     const handleUpdateTreatment = async (id, updatedTreatment) => {
         try {
             const response = await fetch(`/treatments/${id}`, {
@@ -133,15 +132,15 @@ function TreatmentsPage() {
         setShowForm(true);
         setShowTable(false);
     };
-  
+
     const renderTableSection = () => (
         <>
             <SearchBar placeholder="Search Treatments..." onSearch={handleSearch} />
             <div className="patients-list">
-                <TreatmentsTable 
-                    treatments={filteredTreatments} 
-                    onUpdateTreatment={handleUpdateTreatment} 
-                    onDeleteTreatment={handleDeleteTreatment} 
+                <TreatmentsTable
+                    treatments={filteredTreatments}
+                    onUpdateTreatment={handleUpdateTreatment}
+                    onDeleteTreatment={handleDeleteTreatment}
                     onEditClick={handleEditClick}
                 />
             </div>
@@ -150,43 +149,33 @@ function TreatmentsPage() {
 
     // Add treatment information form
     const renderFormSection = () => (
-        <form onSubmit={editMode ? (e) => handleSubmitEdit(e) : handleSubmitNewTreatment}>
+        <form class="createDataForm" onSubmit={editMode ? (e) => handleSubmitEdit(e) : handleSubmitNewTreatment}>
             <h3>{editMode ? 'Edit Treatment' : 'Add New Treatment'}</h3>
-            <input type="text" name="patientID" placeholder="Patient ID" defaultValue={editMode ? editTreatment.patientID : ''} required />
-            <input type="text" name="description" placeholder="Description" defaultValue={editMode ? editTreatment.description : ''} required />
-            <input type="datetime-local" name="date" placeholder="Date" defaultValue={editMode ? editTreatment.date : ''} required />
-            <input type="text" name="diagnosis" placeholder="Diagnosis" defaultValue={editMode ? editTreatment.diagnosis : ''} required />
-            <input type="text" name="symptoms" placeholder="Symptoms" defaultValue={editMode ? editTreatment.symptoms : ''} required />
-            <button type="submit" className="btn-action">{editMode ? 'Update' : 'Submit'}</button>
-      <form>
-        <form class="createDataForm" onSubmit={handleSubmitNewTreatment}>
-            <h3>Add New Treatment</h3>
             <label for="patientID">Patient ID:</label>
-            <input type="text" id="patientID" name="patientID" placeholder="Patient ID" required />
+            <input type="text" name="patientID" placeholder="Patient ID" defaultValue={editMode ? editTreatment.patientID : ''} required />
 
             <label for="description">Description:</label>
-            <textarea id="description" name="description" placeholder="Description" required></textarea>
+            <input type="text" name="description" placeholder="Description" defaultValue={editMode ? editTreatment.description : ''} required />
 
             <label for="date">Date:</label>
-            <input type="datetime-local" id="date" name="date" placeholder="Date" required />
+            <input type="datetime-local" name="date" placeholder="Date" defaultValue={editMode ? editTreatment.date : ''} required />
 
             <label for="diagnosis">Diagnosis:</label>
-            <textarea id="diagnosis" name="diagnosis" placeholder="Diagnosis" required></textarea>
+            <input type="text" name="diagnosis" placeholder="Diagnosis" defaultValue={editMode ? editTreatment.diagnosis : ''} required />
 
             <label for="symptoms">Symptoms:</label>
-            <textarea id="symptoms" name="symptoms" placeholder="Symptoms" required></textarea>
+            <input type="text" name="symptoms" placeholder="Symptoms" defaultValue={editMode ? editTreatment.symptoms : ''} required />
 
             <label for="doctorID">Doctor ID:</label>
             <select id="doctorID" name="doctorID" placeholder="Doctor ID" required>
                 <option value="">Select a doctor</option>
-                {doctors.map(doctor =>(
+                {doctors.map(doctor => (
                     <option key={doctor.doctorID} value={doctor.doctorID}>
                         {doctor.lastName}
                     </option>
                 ))}
             </select>
-
-            <button type="submit" className="btn-action">Submit</button>
+            <button type="submit" className="btn-action">{editMode ? 'Update' : 'Submit'}</button>
         </form>
     );
 

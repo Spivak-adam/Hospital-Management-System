@@ -16,6 +16,7 @@ function Treatment({ treatment, onUpdateTreatment, onDeleteTreatment, onEditClic
             <td>{treatment.date}</td>
             <td>{treatment.diagnosis}</td>
             <td>{treatment.symptoms}</td>
+            <td>{treatment.lastName}</td>
             <td style={{ textAlign: 'center' }}>
                 <button className="btn-action" onClick={() => onEditClick(treatment)}><FaEdit /></button>
                 <button className="btn-action" onClick={handleDelete}><FaTrashAlt /></button>
