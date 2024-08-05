@@ -397,6 +397,98 @@ app.delete('/appointments/:id', async (req, res) => {
 
 
 
+// Pull from Treatments Entity
+app.get('/treatments', async (req, res) => {
+    try {
+        // Define our query
+        query1 = "SELECT * FROM Treatments;"
+
+        // Query Data
+        db.pool.query(query1, function (err, results, fields) {
+            // Send data in a JSON file to browser
+            console.log("Sending JSON information to /treatments");
+            res.json(results);
+        });
+
+    } catch (error) {
+        // Handle Errors
+        console.error('Database operation failed:', error, '. Unable to pull Treatments.');
+        res.status(500).send('Server error');
+    }
+});
+
+// Create new treatment
+app.post('/treatments', async (req, res) => {
+    try {
+        const { patientID, description, date, diagnosis, symptoms } = req.body;
+        const query = "INSERT INTO Treatments (patientID, description, date, diagnosis, symptoms) VALUES (?, ?, ?, ?, ?)";
+        const values = [patientID, description, date, diagnosis, symptoms];
+
+        db.pool.query(query, values, (err, results) => {
+            if (err) {
+                console.error('Error adding treatment:', err);
+                res.status(500).send('Server error');
+            } else {
+                res.send('Treatment added successfully');
+            }
+        });
+
+    } catch (error) {
+        console.error('Database operation failed:', error, '. Unable to add Treatment.');
+        res.status(500).send('Server error');
+    }
+});
+
+// Update existing treatment
+app.put('/treatments/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { patientID, description, date, diagnosis, symptoms } = req.body;
+        const query = "UPDATE Treatments SET patientID = ?, description = ?, date = ?, diagnosis = ?, symptoms = ? WHERE treatmentID = ?";
+        const values = [patientID, description, date, diagnosis, symptoms, id];
+
+        db.pool.query(query, values, (err, results) => {
+            if (err) {
+                console.error('Error updating treatment:', err);
+                res.status(500).send('Server error');
+            } else {
+                res.send('Treatment updated successfully');
+            }
+        });
+
+    } catch (error) {
+        console.error('Database operation failed:', error, '. Unable to update Treatment.');
+        res.status(500).send('Server error');
+    }
+});
+
+// Delete treatment
+app.delete('/treatments/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const query = "DELETE FROM Treatments WHERE treatmentID = ?";
+        const values = [id];
+
+        db.pool.query(query, values, (err, results) => {
+            if (err) {
+                console.error('Error deleting treatment:', err);
+                res.status(500).send('Server error');
+            } else {
+                res.send('Treatment deleted successfully');
+            }
+        });
+
+    } catch (error) {
+        console.error('Database operation failed:', error, '. Unable to delete Treatment.');
+        res.status(500).send('Server error');
+    }
+});
+
+
+
+
+
+
 // Build Application using build folder in client
 app.use(express.static(path.join(__dirname, '../client/build')));
 

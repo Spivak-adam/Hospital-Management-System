@@ -1,9 +1,7 @@
 import React from 'react';
-import Treatments from './Treatments';
-import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import Treatment from './Treatments';
 
-
-function TreatmentsTable({ treatments }) {
+function TreatmentsTable({ treatments, onUpdateTreatment, onDeleteTreatment, onEditClick }) {
     return (
         <table>
             <thead>
@@ -19,17 +17,19 @@ function TreatmentsTable({ treatments }) {
             </thead>
             <tbody>
                 {treatments.length > 0 ? (
-                    treatments.map((treatment) => (
-                        <Treatments key={treatment.treatmentID} treatment={treatment} />
+                    treatments.map((treatment, index) => (
+                        <Treatment
+                            treatment={treatment}
+                            key={index}
+                            onUpdateTreatment={onUpdateTreatment}
+                            onDeleteTreatment={onDeleteTreatment}
+                            onEditClick={onEditClick}
+                        />
                     ))
                 ) : (
                     <tr>
-                        <td colSpan="6" style={{ textAlign: 'center' }}>No treatments available</td>
-                        <td style={{ textAlign: 'center' }}>
-                            <button className="btn-action"><FaEdit /></button>
-                            <button className="btn-action"><FaTrashAlt /></button>
-                        </td>
-                     </tr>
+                        <td colSpan="7" style={{ textAlign: 'center' }}>No treatments available</td>
+                    </tr>
                 )}
             </tbody>
         </table>
