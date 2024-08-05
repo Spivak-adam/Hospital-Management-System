@@ -34,11 +34,13 @@ function PatientsPage() {
         setFilteredPatients(filtered);
     };
 
+
+    
+
     const handleSubmitNewPatient = async (event) => {
         event.preventDefault();
         const form = event.target;
         const newPatient = {
-            patientID: form.patientID.value,
             firstName: form.firstName.value,
             lastName: form.lastName.value,
             roomID: form.roomID.value,
@@ -58,9 +60,12 @@ function PatientsPage() {
             age: form.age.value,
             language: form.language.value,
             patientType: form.patientType.value,
-            releaseDate: form.releaseDate.value
+            releaseDate: form.releaseDate.value,
         };
-
+    
+        // Log the new patient data
+        console.log("Submitting new patient:", newPatient);
+    
         try {
             const response = await fetch('/patients', {
                 method: 'POST',
@@ -69,13 +74,10 @@ function PatientsPage() {
                 },
                 body: JSON.stringify(newPatient),
             });
-
+    
             if (response.ok) {
                 alert('New patient added successfully!');
                 form.reset();
-                fetchPatients();
-                setShowForm(false);
-                setShowTable(true);
             } else {
                 const errorMessage = await response.text();
                 alert(`Failed to add new patient: ${errorMessage}`);
@@ -86,6 +88,11 @@ function PatientsPage() {
         }
     };
 
+    
+
+    
+
+
     const renderTableSection = () => (
         <>
             <SearchBar placeholder="Search Patients..." onSearch={handleSearch} />
@@ -95,47 +102,98 @@ function PatientsPage() {
         </>
     );
 
-    const renderFormSection = () => (
-        <form onSubmit={handleSubmitNewPatient}>
-            <h3>Add New Patient</h3>
-            <input type="text" name="patientID" placeholder="Patient ID" required />
-            <input type="text" name="firstName" placeholder="First Name" required />
-            <input type="text" name="lastName" placeholder="Last Name" required />
-            <input type="text" name="roomID" placeholder="Room ID" required />
-            <input type="text" name="primaryDoctorID" placeholder="Primary Doctor ID" required />
-            <input type="text" name="appointmentID" placeholder="Appointment ID" required />
-            <input type="date" name="dateOfBirth" placeholder="Date of Birth" required />
-            <input type="text" name="contactPhone" placeholder="Contact Phone" required />
-            <input type="email" name="contactEmail" placeholder="Contact Email" />
-            <input type="text" name="address" placeholder="Address" required />
-            <input type="text" name="emergencyContactName" placeholder="Emergency Contact Name" />
-            <input type="text" name="emergencyContactPhone" placeholder="Emergency Contact Phone" />
-            <input type="email" name="emergencyContactEmail" placeholder="Emergency Contact Email" />
-            <input type="datetime-local" name="checkInTime" placeholder="Check-In Time" required />
-            <input type="text" name="bloodType" placeholder="Blood Type" required />
-            <select name="sex" required>
-                <option value="">Select Sex</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-            </select>
-            <select name="gender" required>
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-            </select>
-            <input type="number" name="age" placeholder="Age" required />
-            <input type="text" name="language" placeholder="Language" required />
-            <select name="patientType" required>
-                <option value="">Select Patient Type</option>
-                <option value="Primary">Primary</option>
-                <option value="Emergency">Emergency</option>
-                <option value="Specialist">Specialist</option>
-            </select>
-            <input type="datetime-local" name="releaseDate" placeholder="Release Date" />
-            <button type="submit" className="btn-action">Submit</button>
-        </form>
-    );
+const renderFormSection = () => (
+    <form onSubmit={handleSubmitNewPatient}>
+        <h3>Add New Patient</h3>
+        <input type="text" name="patientID" placeholder="Patient ID" required />
+        <input type="text" name="firstName" placeholder="First Name" required />
+        <input type="text" name="lastName" placeholder="Last Name" required />
+        <input type="text" name="roomID" placeholder="Room ID" required />
+        <input type="text" name="primaryDoctorID" placeholder="Primary Doctor ID" required />
+        <input type="text" name="appointmentID" placeholder="Appointment ID" required />
+        <input type="date" name="dateOfBirth" placeholder="Date of Birth" required />
+        <input type="text" name="contactPhone" placeholder="Contact Phone" required />
+        <input type="email" name="contactEmail" placeholder="Contact Email" />
+        <input type="text" name="address" placeholder="Address" required />
+        <input type="text" name="emergencyContactName" placeholder="Emergency Contact Name" />
+        <input type="text" name="emergencyContactPhone" placeholder="Emergency Contact Phone" />
+        <input type="email" name="emergencyContactEmail" placeholder="Emergency Contact Email" />
+        <input type="datetime-local" name="checkInTime" placeholder="Check-In Time" required />
+        <input type="text" name="bloodType" placeholder="Blood Type" required />
+        <select name="sex" required>
+            <option value="">Select Sex</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+        <select name="gender" required>
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select>
+        <input type="number" name="age" placeholder="Age" required />
+        <input type="text" name="language" placeholder="Language" required />
+        <select name="patientType" required>
+            <option value="">Select Patient Type</option>
+            <option value="Primary">Primary</option>
+            <option value="Emergency">Emergency</option>
+            <option value="Specialist">Specialist</option>
+        </select>
+        <input type="datetime-local" name="releaseDate" placeholder="Release Date" />
+        <button type="submit" className="btn-action">Submit</button>
+    </form>
+);
+
+
+
+    const handleUpdatePatient = async (patient) => {
+        const updatedPatient = {
+            ...patient,
+            firstName: prompt("Enter new first name", patient.firstName) || patient.firstName,
+            lastName: prompt("Enter new last name", patient.lastName) || patient.lastName,
+            // add other fields as needed
+        };
+
+        try {
+            const response = await fetch(`/patients/${patient.patientID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedPatient),
+            });
+
+            if (response.ok) {
+                alert('Patient updated successfully!');
+                fetchPatients();
+            } else {
+                const errorMessage = await response.text();
+                alert(`Failed to update patient: ${errorMessage}`);
+            }
+        } catch (error) {
+            console.error('Error updating patient:', error);
+            alert('Error updating patient. Please try again.');
+        }
+    };
+
+    const handleDeletePatient = async (patientID) => {
+        try {
+            const response = await fetch(`/patients/${patientID}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                alert('Patient deleted successfully!');
+                fetchPatients();
+            } else {
+                const errorMessage = await response.text();
+                alert(`Failed to delete patient: ${errorMessage}`);
+            }
+        } catch (error) {
+            console.error('Error deleting patient:', error);
+            alert('Error deleting patient. Please try again.');
+        }
+    };
 
     return (
         <>

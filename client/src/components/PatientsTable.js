@@ -1,5 +1,4 @@
 import React from 'react';
-import Patients from './Patients';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 
 function PatientsTable({ patients }) {
@@ -32,18 +31,40 @@ function PatientsTable({ patients }) {
                 </tr>
             </thead>
             <tbody>
-                {patients.length === 0 ? (
-                    <tr>
-                        <td colSpan="21" style={{ textAlign: 'center' }}>No patients available</td>
-                        <td style={{ textAlign: 'center' }}>
-                            <button className="btn-action"><FaEdit /></button>
-                            <button className="btn-action"><FaTrashAlt /></button>
-                        </td>
-                    </tr>
-                ) : (
+                {patients.length > 0 ? (
                     patients.map((patient, index) => (
-                        <Patients key={index} patient={patient} />
+                        <tr key={index}>
+                            <td>{patient.patientID}</td>
+                            <td>{patient.firstName}</td>
+                            <td>{patient.lastName}</td>
+                            <td>{patient.roomID}</td>
+                            <td>{patient.primaryDoctorID}</td>
+                            <td>{patient.appointmentID}</td>
+                            <td>{patient.dateOfBirth}</td>
+                            <td>{patient.contactPhone}</td>
+                            <td>{patient.contactEmail}</td>
+                            <td>{patient.address}</td>
+                            <td>{patient.emergencyContactName}</td>
+                            <td>{patient.emergencyContactPhone}</td>
+                            <td>{patient.emergencyContactEmail}</td>
+                            <td>{patient.checkInTime}</td>
+                            <td>{patient.bloodType}</td>
+                            <td>{patient.sex}</td>
+                            <td>{patient.gender}</td>
+                            <td>{patient.age}</td>
+                            <td>{patient.language}</td>
+                            <td>{patient.patientType}</td>
+                            <td>{patient.releaseDate}</td>
+                            <td style={{ textAlign: 'center' }}>
+                                <button className="btn-action"><FaEdit /></button>
+                                <button className="btn-action"><FaTrashAlt /></button>
+                            </td>
+                        </tr>
                     ))
+                ) : (
+                    <tr>
+                        <td colSpan="22" style={{ textAlign: 'center' }}>No patients available</td>
+                    </tr>
                 )}
             </tbody>
         </table>
