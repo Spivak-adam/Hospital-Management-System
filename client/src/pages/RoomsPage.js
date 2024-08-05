@@ -38,12 +38,11 @@ function RoomsPage() {
         event.preventDefault();
         const form = event.target;
         const newRoom = {
-            roomID: form.roomID.value,
             patientID: form.patientID.value,
             doctorID: form.doctorID.value,
             location: form.location.value,
             number: form.number.value,
-            occupied: form.occupied.value === 'true',
+            occupied: form.occupied.value === 'true' ? 'Yes' : 'No',
             accommodations: form.accommodations.value,
             lengthOfStay: form.lengthOfStay.value,
         };
@@ -73,11 +72,54 @@ function RoomsPage() {
         }
     };
 
+    const handleUpdateRoom = async (roomID, updatedRoom) => {
+        try {
+            const response = await fetch(`/rooms/${roomID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedRoom),
+            });
+
+            if (response.ok) {
+                alert('Room updated successfully!');
+                fetchRooms();
+            } else {
+                const errorMessage = await response.text();
+                alert(`Failed to update room: ${errorMessage}`);
+            }
+        } catch (error) {
+            console.error('Error updating room:', error);
+            alert('Error updating room. Please try again.');
+        }
+    };
+
+    const handleDeleteRoom = async (roomID) => {
+        try {
+            const response = await fetch(`/rooms/${roomID}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                alert('Room deleted successfully!');
+                fetchRooms();
+            } else {
+                const errorMessage = await response.text();
+                alert(`Failed to delete room: ${errorMessage}`);
+            }
+        } catch (error) {
+            console.error('Error deleting room:', error);
+            alert('Error deleting room. Please try again.');
+        }
+    };
+
     const renderTableSection = () => (
         <>
             <SearchBar placeholder="Search Rooms..." onSearch={handleSearch} />
             <div className="patients-list">
-                <RoomsTable rooms={rooms} />
+                <RoomsTable rooms={filteredRooms} onUpdateRoom={handleUpdateRoom} onDeleteRoom={handleDeleteRoom} />
+
             </div>
         </>
     );
@@ -85,7 +127,6 @@ function RoomsPage() {
     const renderFormSection = () => (
         <form onSubmit={handleSubmitNewRoom}>
             <h3>Add New Room</h3>
-            <input type="text" name="roomID" placeholder="Room ID" required />
             <input type="text" name="patientID" placeholder="Patient ID" required />
             <input type="text" name="doctorID" placeholder="Doctor ID" required />
             <input type="text" name="location" placeholder="Location" required />

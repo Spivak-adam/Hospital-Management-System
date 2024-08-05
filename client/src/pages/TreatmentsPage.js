@@ -10,6 +10,8 @@ function TreatmentsPage() {
     const [doctors, setDoctors] = useState([]);
     const [showTable, setShowTable] = useState(false);
     const [showForm, setShowForm] = useState(false);
+    const [editMode, setEditMode] = useState(false);
+    const [editTreatment, setEditTreatment] = useState(null);
 
     const redirect = useNavigate();
 
@@ -80,19 +82,83 @@ function TreatmentsPage() {
             alert('Error adding new treatment. Please try again.');
         }
     };
+  
+    const handleUpdateTreatment = async (id, updatedTreatment) => {
+        try {
+            const response = await fetch(`/treatments/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedTreatment),
+            });
 
-    // Search Patient information
+            if (response.ok) {
+                alert('Treatment updated successfully!');
+                fetchTreatments();
+                setEditMode(false);
+                setEditTreatment(null);
+            } else {
+                const errorMessage = await response.text();
+                alert(`Failed to update treatment: ${errorMessage}`);
+            }
+        } catch (error) {
+            console.error('Error updating treatment:', error);
+            alert('Error updating treatment. Please try again.');
+        }
+    };
+
+    const handleDeleteTreatment = async (id) => {
+        try {
+            const response = await fetch(`/treatments/${id}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                alert('Treatment deleted successfully!');
+                fetchTreatments();
+            } else {
+                const errorMessage = await response.text();
+                alert(`Failed to delete treatment: ${errorMessage}`);
+            }
+        } catch (error) {
+            console.error('Error deleting treatment:', error);
+            alert('Error deleting treatment. Please try again.');
+        }
+    };
+
+    const handleEditClick = (treatment) => {
+        setEditMode(true);
+        setEditTreatment(treatment);
+        setShowForm(true);
+        setShowTable(false);
+    };
+  
     const renderTableSection = () => (
         <>
             <SearchBar placeholder="Search Treatments..." onSearch={handleSearch} />
             <div className="patients-list">
-                <TreatmentsTable treatments={filteredTreatments} />
+                <TreatmentsTable 
+                    treatments={filteredTreatments} 
+                    onUpdateTreatment={handleUpdateTreatment} 
+                    onDeleteTreatment={handleDeleteTreatment} 
+                    onEditClick={handleEditClick}
+                />
             </div>
         </>
     );
 
     // Add treatment information form
     const renderFormSection = () => (
+        <form onSubmit={editMode ? (e) => handleSubmitEdit(e) : handleSubmitNewTreatment}>
+            <h3>{editMode ? 'Edit Treatment' : 'Add New Treatment'}</h3>
+            <input type="text" name="patientID" placeholder="Patient ID" defaultValue={editMode ? editTreatment.patientID : ''} required />
+            <input type="text" name="description" placeholder="Description" defaultValue={editMode ? editTreatment.description : ''} required />
+            <input type="datetime-local" name="date" placeholder="Date" defaultValue={editMode ? editTreatment.date : ''} required />
+            <input type="text" name="diagnosis" placeholder="Diagnosis" defaultValue={editMode ? editTreatment.diagnosis : ''} required />
+            <input type="text" name="symptoms" placeholder="Symptoms" defaultValue={editMode ? editTreatment.symptoms : ''} required />
+            <button type="submit" className="btn-action">{editMode ? 'Update' : 'Submit'}</button>
+      <form>
         <form class="createDataForm" onSubmit={handleSubmitNewTreatment}>
             <h3>Add New Treatment</h3>
             <label for="patientID">Patient ID:</label>
@@ -124,16 +190,30 @@ function TreatmentsPage() {
         </form>
     );
 
+    const handleSubmitEdit = async (event) => {
+        event.preventDefault();
+        const form = event.target;
+        const updatedTreatment = {
+            patientID: form.patientID.value,
+            description: form.description.value,
+            date: form.date.value,
+            diagnosis: form.diagnosis.value,
+            symptoms: form.symptoms.value,
+        };
+
+        handleUpdateTreatment(editTreatment.treatmentID, updatedTreatment);
+    };
+
     return (
         <>
             <NavigationBar />
             <div className="container">
                 <section className="patients-section">
                     <h2>Treatments</h2>
-                    <p>View and manage treatments</p>
-                    <div className="patient-actions">
+                    <p>Manage treatments</p>
+                    <div className="patients-actions">
                         <button className="btn-action" onClick={() => { setShowTable(true); setShowForm(false); }}>View All Treatments</button>
-                        <button className="btn-action" onClick={() => { setShowTable(false); setShowForm(true); }}>Add New Treatment</button>
+                        <button className="btn-action" onClick={() => { setShowTable(false); setShowForm(true); setEditMode(false); setEditTreatment(null); }}>Add New Treatment</button>
                     </div>
                     {showTable && renderTableSection()}
                     {showForm && renderFormSection()}

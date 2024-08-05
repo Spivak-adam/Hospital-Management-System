@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 
-function Patients({ patient }) {
+function Patients({ patient, onUpdate, onDelete }) {
     return (
         <tr>
             <td>{patient.patientID}</td>
@@ -25,9 +25,9 @@ function Patients({ patient }) {
             <td>{patient.language}</td>
             <td>{patient.patientType}</td>
             <td>{patient.releaseDate}</td>
-            <td style={{ textAlign: 'center' }}>
-                <button className="btn-action"><FaEdit /></button>
-                <button className="btn-action"><FaTrashAlt /></button>
+            <td>
+                <button className="btn-action" onClick={() => onUpdate(patient)}><FaEdit /></button>
+                <button className="btn-action" onClick={() => onDelete(patient.patientID)}><FaTrashAlt /></button>
             </td>
         </tr>
     );

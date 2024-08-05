@@ -1,14 +1,11 @@
 import React from 'react';
-
-import Patients from './Patients';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 
-function PatientsTable({ patients }) {
+function PatientsTable({ patients, onUpdatePatient, onDeletePatient }) {
     return (
         <table>
             <thead>
                 <tr>
-                    <th>Patient ID</th>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Room ID</th>
@@ -21,7 +18,7 @@ function PatientsTable({ patients }) {
                     <th>Emergency Contact Name</th>
                     <th>Emergency Contact Phone</th>
                     <th>Emergency Contact Email</th>
-                    <th>Check-In Time</th>
+                    <th>Check-in Time</th>
                     <th>Blood Type</th>
                     <th>Sex</th>
                     <th>Gender</th>
@@ -33,21 +30,39 @@ function PatientsTable({ patients }) {
                 </tr>
             </thead>
             <tbody>
-                {patients.length === 0 ? (
+                {patients.length > 0 ? (
+                    patients.map((patient, index) => (
+                        <tr key={index}>
+                            <td>{patient.firstName}</td>
+                            <td>{patient.lastName}</td>
+                            <td>{patient.roomID}</td>
+                            <td>{patient.primaryDoctorID}</td>
+                            <td>{patient.appointmentID}</td>
+                            <td>{patient.dateOfBirth}</td>
+                            <td>{patient.contactPhone}</td>
+                            <td>{patient.contactEmail}</td>
+                            <td>{patient.address}</td>
+                            <td>{patient.emergencyContactName}</td>
+                            <td>{patient.emergencyContactPhone}</td>
+                            <td>{patient.emergencyContactEmail}</td>
+                            <td>{patient.checkInTime}</td>
+                            <td>{patient.bloodType}</td>
+                            <td>{patient.sex}</td>
+                            <td>{patient.gender}</td>
+                            <td>{patient.age}</td>
+                            <td>{patient.language}</td>
+                            <td>{patient.patientType}</td>
+                            <td>{patient.releaseDate}</td>
+                            <td style={{ textAlign: 'center' }}>
+                                <button className="btn-action" onClick={() => onUpdatePatient(patient)}><FaEdit /></button>
+                                <button className="btn-action" onClick={() => onDeletePatient(patient.patientID)}><FaTrashAlt /></button>
+                            </td>
+                        </tr>
+                    ))
+                ) : (
                     <tr>
                         <td colSpan="21" style={{ textAlign: 'center' }}>No patients available</td>
-                        <td style={{ textAlign: 'center' }}>
-                            <button className="btn-action"><FaEdit /></button>
-                            <button className="btn-action"><FaTrashAlt /></button>
-                        </td>
                     </tr>
-                ) : (
-                    patients.map((patient, index) => (
-                        <Patients 
-                            patient={patient}
-                            key={index}
-                        />
-                    ))
                 )}
             </tbody>
         </table>

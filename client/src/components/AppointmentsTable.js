@@ -1,9 +1,7 @@
 import React from 'react';
-import Appointments from './Appointments';
-import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import AppointmentRow from './Appointments';
 
-
-function AppointmentsTable({ appointments }) {
+function AppointmentsTable({ appointments, onUpdateAppointment, onDeleteAppointment, onEditClick }) {
     return (
         <table>
             <thead>
@@ -22,16 +20,18 @@ function AppointmentsTable({ appointments }) {
             </thead>
             <tbody>
                 {appointments.length > 0 ? (
-                    appointments.map((appointment) => (
-                        <Appointments key={appointment.appointmentID} appointment={appointment} />
+                    appointments.map((appointment, index) => (
+                        <AppointmentRow
+                            appointment={appointment}
+                            key={index}
+                            onUpdateAppointment={onUpdateAppointment}
+                            onDeleteAppointment={onDeleteAppointment}
+                            onEditClick={onEditClick}
+                        />
                     ))
                 ) : (
                     <tr>
-                        <td colSpan="9" style={{ textAlign: 'center' }}>No appointments available</td>
-                        <td style={{ textAlign: 'center' }}>
-                            <button className="btn-action"><FaEdit /></button>
-                            <button className="btn-action"><FaTrashAlt /></button>
-                        </td>
+                        <td colSpan="10" style={{ textAlign: 'center' }}>No appointments available</td>
                     </tr>
                 )}
             </tbody>

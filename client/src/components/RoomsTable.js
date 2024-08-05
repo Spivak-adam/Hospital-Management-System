@@ -1,8 +1,7 @@
 import React from 'react';
-import { FaEdit, FaTrashAlt } from 'react-icons/fa';
-import Rooms from './Rooms'
+import Rooms from './Rooms';
 
-function RoomsTable({ rooms }) {
+function RoomsTable({ rooms, onUpdateRoom, onDeleteRoom }) {
     return (
         <table>
             <thead>
@@ -24,15 +23,13 @@ function RoomsTable({ rooms }) {
                         <Rooms
                             rooms={room}
                             key={index}
+                            onUpdateRoom={onUpdateRoom}
+                            onDeleteRoom={onDeleteRoom}
                         />
                     ))
                 ) : (
                     <tr>
-                        <td colSpan="8" style={{ textAlign: 'center' }}>No rooms available</td>
-                        <td style={{ textAlign: 'center' }}>
-                            <button className="btn-action"><FaEdit /></button>
-                            <button className="btn-action"><FaTrashAlt /></button>
-                        </td>
+                        <td colSpan="9" style={{ textAlign: 'center' }}>No rooms available</td>
                     </tr>
                 )}
             </tbody>

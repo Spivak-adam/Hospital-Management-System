@@ -1,8 +1,13 @@
 import React from 'react';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 
+function Treatment({ treatment, onUpdateTreatment, onDeleteTreatment, onEditClick }) {
+    const handleDelete = () => {
+        if (window.confirm('Are you sure you want to delete this treatment?')) {
+            onDeleteTreatment(treatment.treatmentID);
+        }
+    };
 
-function Treatments({ treatment }) {
     return (
         <tr>
             <td>{treatment.treatmentID}</td>
@@ -11,13 +16,12 @@ function Treatments({ treatment }) {
             <td>{treatment.date}</td>
             <td>{treatment.diagnosis}</td>
             <td>{treatment.symptoms}</td>
-            <td>{treatment.lastName}</td>
-            <td>
-                <button className="btn-action"><FaEdit /></button>
-                <button className="btn-action"><FaTrashAlt /></button>
+            <td style={{ textAlign: 'center' }}>
+                <button className="btn-action" onClick={() => onEditClick(treatment)}><FaEdit /></button>
+                <button className="btn-action" onClick={handleDelete}><FaTrashAlt /></button>
             </td>
         </tr>
     );
 }
 
-export default Treatments;
+export default Treatment;
