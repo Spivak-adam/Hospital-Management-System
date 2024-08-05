@@ -73,37 +73,8 @@ app.post('/rooms', async (req, res) => {
   });
         
 
-
-
-  // Pull from Patients Entity
-app.get('/patients', async (req, res) => {
-    try {
-      // Define our query     
-      const query = "SELECT * FROM Patients;"
-  
-      // Query Data
-      db.pool.query(query, function (err, results, fields) {
-        if (err) {
-          console.error('Database operation failed:', err);
-          res.status(500).send('Server error');
-          return;
-        }
-        // Send data in a JSON file to browser
-        console.log("Sending JSON information to /patients");
-        console.log("Patients:\n", JSON.stringify(results));
-        res.send(JSON.stringify(results));
-      });
-  
-    } catch (error) {
-      // Handle Errors
-      console.error('Database operation failed:', error, '. Unable to pull Patients.');
-      res.status(500).send('Server error');
-    }
-  });
-  
-
   // Update a Room
-app.put('/rooms/:roomID', async (req, res) => {
+  app.put('/rooms/:roomID', async (req, res) => {
     try {
       const roomID = req.params.roomID;
       const { patientID, doctorID, location, number, occupied, accommodations, lengthOfStay } = req.body;
@@ -147,39 +118,109 @@ app.delete('/rooms/:roomID', async (req, res) => {
     }
   });
 
-  
-  
 
 
 
-  app.post('/patients', async (req, res) => {
-    try {
-      const { firstName, lastName, roomID, primaryDoctorID, appointmentID, dateOfBirth, contactPhone, contactEmail, address, emergencyContactName, emergencyContactPhone, emergencyContactEmail, checkInTime, bloodType, sex, gender, age, language, patientType, releaseDate } = req.body;
-  
-      // Log the received data
-      console.log("Received data for new patient:", req.body);
-  
-      // Define the insert query
-      const query = `
-        INSERT INTO Patients (firstName, lastName, roomID, primaryDoctorID, appointmentID, dateOfBirth, contactPhone, contactEmail, address, emergencyContactName, emergencyContactPhone, emergencyContactEmail, checkInTime, bloodType, sex, gender, age, language, patientType, releaseDate)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `;
-  
-      // Insert the new patient into the database
-      db.pool.query(query, [firstName, lastName, roomID, primaryDoctorID, appointmentID, dateOfBirth, contactPhone, contactEmail, address, emergencyContactName, emergencyContactPhone, emergencyContactEmail, checkInTime, bloodType, sex, gender, age, language, patientType, releaseDate], (err, results, fields) => {
-        if (err) {
-          console.error('Database operation failed:', err.message);
-          res.status(500).send('Server error');
-          return;
-        }
-        res.status(201).send('Patient added successfully');
-      });
-    } catch (error) {
-      console.error('Error adding patient:', error.message);
-      res.status(500).send('Server error');
-    }
-  });
 
+  // Pull from Patients Entity
+// Pull from Patients Entity
+app.get('/patients', async (req, res) => {
+  try {
+    // Define our query     
+    query1 = "SELECT * FROM Patients;"
+
+    // Query Data
+    db.pool.query(query1, function (err, results, fields) {
+      // Send data in a JSON file to browser
+      console.log("Sending JSON information to /patients");
+      console.log("Patients:\n", JSON.stringify(results))
+      res.send(JSON.stringify(results));
+    })
+
+  } catch (error) {
+    // Handle Errors
+    console.error('Database operation failed:', error, '. Unable to pull Patients.');
+    res.status(500).send('Server error');
+  }
+});
+
+// Add Patient
+app.post('/patients', async (req, res) => {
+  try {
+    const { firstName, lastName, roomID, primaryDoctorID, appointmentID, dateOfBirth, contactPhone, contactEmail, address, emergencyContactName, emergencyContactPhone, emergencyContactEmail, checkInTime, bloodType, sex, gender, age, language, patientType, releaseDate } = req.body;
+
+    const query = `
+      INSERT INTO Patients (
+        firstName, lastName, roomID, primaryDoctorID, appointmentID, dateOfBirth, contactPhone, contactEmail, address, emergencyContactName, emergencyContactPhone, emergencyContactEmail, checkInTime, bloodType, sex, gender, age, language, patientType, releaseDate
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    db.pool.query(query, [firstName, lastName, roomID, primaryDoctorID, appointmentID, dateOfBirth, contactPhone, contactEmail, address, emergencyContactName, emergencyContactPhone, emergencyContactEmail, checkInTime, bloodType, sex, gender, age, language, patientType, releaseDate], function (err, results, fields) {
+      if (err) {
+        console.error('Database operation failed:', err);
+        res.status(500).send('Server error');
+        return;
+      }
+      res.send('Patient added successfully');
+    });
+
+  } catch (error) {
+    // Handle Errors
+    console.error('Database operation failed:', error, '. Unable to add Patient.');
+    res.status(500).send('Server error');
+  }
+});
+
+// Update Patient
+app.put('/patients/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { firstName, lastName, roomID, primaryDoctorID, appointmentID, dateOfBirth, contactPhone, contactEmail, address, emergencyContactName, emergencyContactPhone, emergencyContactEmail, checkInTime, bloodType, sex, gender, age, language, patientType, releaseDate } = req.body;
+
+    const query = `
+      UPDATE Patients 
+      SET firstName = ?, lastName = ?, roomID = ?, primaryDoctorID = ?, appointmentID = ?, dateOfBirth = ?, contactPhone = ?, contactEmail = ?, address = ?, emergencyContactName = ?, emergencyContactPhone = ?, emergencyContactEmail = ?, checkInTime = ?, bloodType = ?, sex = ?, gender = ?, age = ?, language = ?, patientType = ?, releaseDate = ?
+      WHERE patientID = ?
+    `;
+
+    db.pool.query(query, [firstName, lastName, roomID, primaryDoctorID, appointmentID, dateOfBirth, contactPhone, contactEmail, address, emergencyContactName, emergencyContactPhone, emergencyContactEmail, checkInTime, bloodType, sex, gender, age, language, patientType, releaseDate, id], function (err, results, fields) {
+      if (err) {
+        console.error('Database operation failed:', err);
+        res.status(500).send('Server error');
+        return;
+      }
+      res.send('Patient updated successfully');
+    });
+
+  } catch (error) {
+    // Handle Errors
+    console.error('Database operation failed:', error, '. Unable to update Patient.');
+    res.status(500).send('Server error');
+  }
+});
+
+// Delete Patient
+app.delete('/patients/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const query = "DELETE FROM Patients WHERE patientID = ?";
+
+    db.pool.query(query, [id], function (err, results, fields) {
+      if (err) {
+        console.error('Database operation failed:', err);
+        res.status(500).send('Server error');
+        return;
+      }
+      res.send('Patient deleted successfully');
+    });
+
+  } catch (error) {
+    // Handle Errors
+    console.error('Database operation failed:', error, '. Unable to delete Patient.');
+    res.status(500).send('Server error');
+  }
+});
   
 
 
