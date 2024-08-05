@@ -179,7 +179,7 @@ function PatientsPage() {
     );
 
     const renderFormSection = () => (
-        <form onSubmit={editPatient ? handleSubmitUpdatePatient : handleSubmitNewPatient}>
+        <form class="createDataForm" onSubmit={editPatient ? handleSubmitUpdatePatient : handleSubmitNewPatient}>
             <h3>{editPatient ? 'Update Patient' : 'Add New Patient'}</h3>
             <input type="text" name="firstName" placeholder="First Name" defaultValue={editPatient ? editPatient.firstName : ''} required />
             <input type="text" name="lastName" placeholder="Last Name" defaultValue={editPatient ? editPatient.lastName : ''} required />

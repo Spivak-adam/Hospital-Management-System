@@ -141,7 +141,7 @@ function AppointmentsPage() {
     );
 
     const renderFormSection = () => (
-        <form onSubmit={editMode ? (e) => handleSubmitEdit(e) : handleSubmitNewAppointment}>
+        <form class="createDataForm" onSubmit={editMode ? (e) => handleSubmitEdit(e) : handleSubmitNewAppointment}>
             <h3>{editMode ? 'Edit Appointment' : 'Add New Appointment'}</h3>
             <input type="text" name="doctorID" placeholder="Doctor ID" defaultValue={editMode ? editAppointment.doctorID : ''} required />
             <input type="text" name="patientID" placeholder="Patient ID" defaultValue={editMode ? editAppointment.patientID : ''} required />

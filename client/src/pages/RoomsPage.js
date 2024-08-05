@@ -156,7 +156,7 @@ function RoomsPage() {
     );
 
     const renderFormSection = () => (
-        <form onSubmit={handleSubmitNewRoom}>
+        <form onSubmit={handleSubmitNewRoom} class="createDataForm">
             <h3>Add New Room</h3>
             <select name="patientID" required>
                 <option value="">Select Patient</option>
