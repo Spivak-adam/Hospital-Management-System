@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 import NavigationBar from '../components/NavigationBar';
 import SearchBar from '../components/SearchBar';
 import TreatmentsTable from '../components/TreatmentsTable';
-import { useNavigate } from "react-router-dom";
 
 function TreatmentsPage() {
     const [treatments, setTreatments] = useState([]);
     const [filteredTreatments, setFilteredTreatments] = useState([]);
-    const [doctors, setDoctors] = useState([]);
     const [showTable, setShowTable] = useState(false);
     const [showForm, setShowForm] = useState(false);
     const [patients, setPatients] = useState([]);
@@ -24,12 +22,8 @@ function TreatmentsPage() {
             const response = await fetch('/treatments');
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
-            console.log("Successfully Retrieved data", data)
-            let treatData = data.treatment;
-            let doctorData = data.doctors;
-            setTreatments(treatData);
-            setFilteredTreatments(treatData);
-            setDoctors(doctorData);
+            setTreatments(data);
+            setFilteredTreatments(data);
         } catch (error) {
             console.error('Error fetching treatment data:', error);
         }
@@ -56,6 +50,7 @@ function TreatmentsPage() {
             console.error('Error fetching doctor data:', error);
         }
     };
+
     const handleSearch = (searchTerm) => {
         const filtered = treatments.filter(treatment =>
             Object.values(treatment).some(value =>
@@ -65,7 +60,6 @@ function TreatmentsPage() {
         setFilteredTreatments(filtered);
     };
 
-    // CREATE and Insert to table and database
     const handleSubmitNewTreatment = async (event) => {
         event.preventDefault();
         const form = event.target;
@@ -75,7 +69,6 @@ function TreatmentsPage() {
             date: form.date.value,
             diagnosis: form.diagnosis.value,
             symptoms: form.symptoms.value,
-            doctorID: form.doctorID.value
         };
 
         try {
@@ -160,12 +153,9 @@ function TreatmentsPage() {
         </>
     );
 
-    // Add treatment information form
     const renderFormSection = () => (
         <form className="createDataForm" onSubmit={handleSubmitNewTreatment}>
             <h3>Add New Treatment</h3>
-
-            <label for="patientID">Patient ID:</label>
             <select name="patientID" required>
                 <option value="">Select Patient</option>
                 {patients.map(patient => (
@@ -174,28 +164,11 @@ function TreatmentsPage() {
                     </option>
                 ))}
             </select>
-
-            <label for="description">Description:</label>
             <input type="text" name="description" placeholder="Description of Treatment" required />
-              
-            <label for="date">Date:</label>
+            <p>Date of Treatment:</p>
             <input type="datetime-local" name="date" placeholder="Date" required />
-             
-            <label for="diagnosis">Diagnosis:</label>
             <input type="text" name="diagnosis" placeholder="Diagnosis" required />
-              
-            <label for="symptoms">Symptoms:</label>
             <input type="text" name="symptoms" placeholder="Symptoms" required />
-            
-              <label for="doctorID">Doctor ID:</label>
-            <select id="doctorID" name="doctorID" placeholder="Doctor ID" required>
-                <option value="">Select a doctor</option>
-                {doctors.map(doctor => (
-                    <option key={doctor.doctorID} value={doctor.doctorID}>
-                        {doctor.lastName}
-                    </option>
-                ))}
-            </select>
             <button type="submit" className="btn-action">Submit</button>
         </form>
     );
