@@ -10,8 +10,14 @@ function TreatmentsPage() {
     const [doctors, setDoctors] = useState([]);
     const [showTable, setShowTable] = useState(false);
     const [showForm, setShowForm] = useState(false);
-    const [editMode, setEditMode] = useState(false);
-    const [editTreatment, setEditTreatment] = useState(null);
+    const [patients, setPatients] = useState([]);
+    const [doctors, setDoctors] = useState([]);
+
+    useEffect(() => {
+        fetchTreatments();
+        fetchPatients();
+        fetchDoctors();
+    }, []);
 
     const fetchTreatments = async () => {
         try {
@@ -29,13 +35,32 @@ function TreatmentsPage() {
         }
     };
 
-    useEffect(() => {
-        fetchTreatments();
-    }, []);
+    const fetchPatients = async () => {
+        try {
+            const response = await fetch('/patients');
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            setPatients(data);
+        } catch (error) {
+            console.error('Error fetching patient data:', error);
+        }
+    };
 
+    const fetchDoctors = async () => {
+        try {
+            const response = await fetch('/doctors');
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            setDoctors(data);
+        } catch (error) {
+            console.error('Error fetching doctor data:', error);
+        }
+    };
     const handleSearch = (searchTerm) => {
         const filtered = treatments.filter(treatment =>
-            treatment.description.toLowerCase().includes(searchTerm.toLowerCase())
+            Object.values(treatment).some(value =>
+                value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+            )
         );
         setFilteredTreatments(filtered);
     };
@@ -78,9 +103,9 @@ function TreatmentsPage() {
         }
     };
 
-    const handleUpdateTreatment = async (id, updatedTreatment) => {
+    const handleUpdateTreatment = async (treatmentID, updatedTreatment) => {
         try {
-            const response = await fetch(`/treatments/${id}`, {
+            const response = await fetch(`/treatments/${treatmentID}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -91,8 +116,6 @@ function TreatmentsPage() {
             if (response.ok) {
                 alert('Treatment updated successfully!');
                 fetchTreatments();
-                setEditMode(false);
-                setEditTreatment(null);
             } else {
                 const errorMessage = await response.text();
                 alert(`Failed to update treatment: ${errorMessage}`);
@@ -103,9 +126,9 @@ function TreatmentsPage() {
         }
     };
 
-    const handleDeleteTreatment = async (id) => {
+    const handleDeleteTreatment = async (treatmentID) => {
         try {
-            const response = await fetch(`/treatments/${id}`, {
+            const response = await fetch(`/treatments/${treatmentID}`, {
                 method: 'DELETE',
             });
 
@@ -122,13 +145,6 @@ function TreatmentsPage() {
         }
     };
 
-    const handleEditClick = (treatment) => {
-        setEditMode(true);
-        setEditTreatment(treatment);
-        setShowForm(true);
-        setShowTable(false);
-    };
-
     const renderTableSection = () => (
         <>
             <SearchBar placeholder="Search Treatments..." onSearch={handleSearch} />
@@ -137,7 +153,8 @@ function TreatmentsPage() {
                     treatments={filteredTreatments}
                     onUpdateTreatment={handleUpdateTreatment}
                     onDeleteTreatment={handleDeleteTreatment}
-                    onEditClick={handleEditClick}
+                    patients={patients}
+                    doctors={doctors}
                 />
             </div>
         </>
@@ -145,24 +162,32 @@ function TreatmentsPage() {
 
     // Add treatment information form
     const renderFormSection = () => (
-        <form class="createDataForm" onSubmit={editMode ? (e) => handleSubmitEdit(e) : handleSubmitNewTreatment}>
-            <h3>{editMode ? 'Edit Treatment' : 'Add New Treatment'}</h3>
+        <form className="createDataForm" onSubmit={handleSubmitNewTreatment}>
+            <h3>Add New Treatment</h3>
+
             <label for="patientID">Patient ID:</label>
-            <input type="text" name="patientID" placeholder="Patient ID" defaultValue={editMode ? editTreatment.patientID : ''} required />
+            <select name="patientID" required>
+                <option value="">Select Patient</option>
+                {patients.map(patient => (
+                    <option key={patient.patientID} value={patient.patientID}>
+                        {patient.patientID} - {patient.firstName} {patient.lastName}
+                    </option>
+                ))}
+            </select>
 
             <label for="description">Description:</label>
-            <input type="text" name="description" placeholder="Description" defaultValue={editMode ? editTreatment.description : ''} required />
-
+            <input type="text" name="description" placeholder="Description of Treatment" required />
+              
             <label for="date">Date:</label>
-            <input type="datetime-local" name="date" placeholder="Date" defaultValue={editMode ? editTreatment.date : ''} required />
-
+            <input type="datetime-local" name="date" placeholder="Date" required />
+             
             <label for="diagnosis">Diagnosis:</label>
-            <input type="text" name="diagnosis" placeholder="Diagnosis" defaultValue={editMode ? editTreatment.diagnosis : ''} required />
-
+            <input type="text" name="diagnosis" placeholder="Diagnosis" required />
+              
             <label for="symptoms">Symptoms:</label>
-            <input type="text" name="symptoms" placeholder="Symptoms" defaultValue={editMode ? editTreatment.symptoms : ''} required />
-
-            <label for="doctorID">Doctor ID:</label>
+            <input type="text" name="symptoms" placeholder="Symptoms" required />
+            
+              <label for="doctorID">Doctor ID:</label>
             <select id="doctorID" name="doctorID" placeholder="Doctor ID" required>
                 <option value="">Select a doctor</option>
                 {doctors.map(doctor => (
@@ -171,23 +196,9 @@ function TreatmentsPage() {
                     </option>
                 ))}
             </select>
-            <button type="submit" className="btn-action">{editMode ? 'Update' : 'Submit'}</button>
+            <button type="submit" className="btn-action">Submit</button>
         </form>
     );
-
-    const handleSubmitEdit = async (event) => {
-        event.preventDefault();
-        const form = event.target;
-        const updatedTreatment = {
-            patientID: form.patientID.value,
-            description: form.description.value,
-            date: form.date.value,
-            diagnosis: form.diagnosis.value,
-            symptoms: form.symptoms.value,
-        };
-
-        handleUpdateTreatment(editTreatment.treatmentID, updatedTreatment);
-    };
 
     return (
         <>
@@ -195,10 +206,10 @@ function TreatmentsPage() {
             <div className="container">
                 <section className="patients-section">
                     <h2>Treatments</h2>
-                    <p>Manage treatments</p>
+                    <p>Manage treatments in the system</p>
                     <div className="patients-actions">
                         <button className="btn-action" onClick={() => { setShowTable(true); setShowForm(false); }}>View All Treatments</button>
-                        <button className="btn-action" onClick={() => { setShowTable(false); setShowForm(true); setEditMode(false); setEditTreatment(null); }}>Add New Treatment</button>
+                        <button className="btn-action" onClick={() => { setShowTable(false); setShowForm(true); }}>Add New Treatment</button>
                     </div>
                     {showTable && renderTableSection()}
                     {showForm && renderFormSection()}

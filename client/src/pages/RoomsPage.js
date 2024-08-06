@@ -156,9 +156,9 @@ function RoomsPage() {
     );
 
     const renderFormSection = () => (
-        <form onSubmit={handleSubmitNewRoom} class="createDataForm">
+        <form className="createDataForm" onSubmit={handleSubmitNewRoom}>
             <h3>Add New Room</h3>
-            <select name="patientID" required>
+            <select name="patientID">
                 <option value="">Select Patient</option>
                 {patients.map(patient => (
                     <option key={patient.patientID} value={patient.patientID}>
@@ -166,7 +166,7 @@ function RoomsPage() {
                     </option>
                 ))}
             </select>
-            <select name="doctorID" required>
+            <select name="doctorID">
                 <option value="">Select Doctor</option>
                 {doctors.map(doctor => (
                     <option key={doctor.doctorID} value={doctor.doctorID}>
@@ -187,7 +187,7 @@ function RoomsPage() {
                 <option value="No">No</option>
             </select>
             <input type="text" name="accommodations" placeholder="Accommodations" required />
-            <input type="number" name="lengthOfStay" placeholder="Length of Stay" required />
+            <input type="number" name="lengthOfStay" placeholder="Length of Stay" />
             <button type="submit" className="btn-action">Submit</button>
         </form>
     );

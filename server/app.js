@@ -21,33 +21,31 @@ var db = require('./db-connector');
 // Read from Rooms Entity
 app.get('/rooms', async (req, res) => {
   try {
-    // Define our query
-    const query1 = "SELECT * FROM Rooms;";
+      let query1 = "SELECT * FROM Rooms";
+      const { available } = req.query1;
 
-    // Query Data
-    db.pool.query(query1, function (err, results, fields) {
-      if (err) {
-        console.error('Database operation failed:', err);
-        res.status(500).send('Server error');
-        return;
+      if (available) {
+          query1 += " WHERE occupied = 'No'";
       }
-      // Debugging: print the results to ensure data is fetched
-      console.log("Query Results:", results);
-      if (results.length === 0) {
-        console.error('No data found for Rooms.');
-        res.status(404).send('No data found');
-        return;
-      }
-      // Send data in a JSON file to browser
-      console.log("Sending JSON information to /rooms");
-      res.json(results); // Ensure we send JSON response
-    });
+
+      // Query Data
+      db.pool.query(query1, function (err, results, fields) {
+          if (err) {
+              console.error('Database operation failed:', err, '. Unable to pull Rooms.');
+              res.status(500).send('Server error');
+          } else {
+              // Send data in a JSON file to browser
+              res.send(JSON.stringify(results));
+          }
+      });
+
   } catch (error) {
-    // Handle Errors
-    console.error('Database operation failed:', error, '. Unable to pull Rooms.');
-    res.status(500).send('Server error');
+      // Handle Errors
+      console.error('Database operation failed:', error, '. Unable to pull Rooms.');
+      res.status(500).send('Server error');
   }
 });
+
 
 // Add a new room
 app.post('/rooms', async (req, res) => {

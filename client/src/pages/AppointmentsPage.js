@@ -8,8 +8,16 @@ function AppointmentsPage() {
     const [filteredAppointments, setFilteredAppointments] = useState([]);
     const [showTable, setShowTable] = useState(false);
     const [showForm, setShowForm] = useState(false);
-    const [editMode, setEditMode] = useState(false);
-    const [editAppointment, setEditAppointment] = useState(null);
+    const [patients, setPatients] = useState([]);
+    const [doctors, setDoctors] = useState([]);
+    const [availableRooms, setAvailableRooms] = useState([]);
+
+    useEffect(() => {
+        fetchAppointments();
+        fetchPatients();
+        fetchDoctors();
+        fetchAvailableRooms();
+    }, []);
 
     const fetchAppointments = async () => {
         try {
@@ -23,15 +31,44 @@ function AppointmentsPage() {
         }
     };
 
-    useEffect(() => {
-        if (showTable) {
-            fetchAppointments();
+    const fetchPatients = async () => {
+        try {
+            const response = await fetch('/patients');
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            setPatients(data);
+        } catch (error) {
+            console.error('Error fetching patient data:', error);
         }
-    }, [showTable]);
+    };
+
+    const fetchDoctors = async () => {
+        try {
+            const response = await fetch('/doctors');
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            setDoctors(data);
+        } catch (error) {
+            console.error('Error fetching doctor data:', error);
+        }
+    };
+
+    const fetchAvailableRooms = async () => {
+        try {
+            const response = await fetch('/rooms?available=true');
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            setAvailableRooms(data);
+        } catch (error) {
+            console.error('Error fetching available room data:', error);
+        }
+    };
 
     const handleSearch = (searchTerm) => {
         const filtered = appointments.filter(appointment =>
-            appointment.status.toLowerCase().includes(searchTerm.toLowerCase())
+            Object.values(appointment).some(value =>
+                value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+            )
         );
         setFilteredAppointments(filtered);
     };
@@ -40,14 +77,14 @@ function AppointmentsPage() {
         event.preventDefault();
         const form = event.target;
         const newAppointment = {
-            doctorID: form.doctorID.value,
             patientID: form.patientID.value,
+            doctorID: form.doctorID.value,
             roomID: form.roomID.value,
-            status: form.status.value,
-            reason: form.reason.value,
+            date: form.date.value,
             checkInTime: form.checkInTime.value,
             checkOutTime: form.checkOutTime.value,
-            date: form.date.value,
+            status: form.status.value,
+            reason: form.reason.value,
         };
 
         try {
@@ -75,9 +112,9 @@ function AppointmentsPage() {
         }
     };
 
-    const handleUpdateAppointment = async (id, updatedAppointment) => {
+    const handleUpdateAppointment = async (appointmentID, updatedAppointment) => {
         try {
-            const response = await fetch(`/appointments/${id}`, {
+            const response = await fetch(`/appointments/${appointmentID}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -88,8 +125,6 @@ function AppointmentsPage() {
             if (response.ok) {
                 alert('Appointment updated successfully!');
                 fetchAppointments();
-                setEditMode(false);
-                setEditAppointment(null);
             } else {
                 const errorMessage = await response.text();
                 alert(`Failed to update appointment: ${errorMessage}`);
@@ -100,9 +135,9 @@ function AppointmentsPage() {
         }
     };
 
-    const handleDeleteAppointment = async (id) => {
+    const handleDeleteAppointment = async (appointmentID) => {
         try {
-            const response = await fetch(`/appointments/${id}`, {
+            const response = await fetch(`/appointments/${appointmentID}`, {
                 method: 'DELETE',
             });
 
@@ -119,58 +154,72 @@ function AppointmentsPage() {
         }
     };
 
-    const handleEditClick = (appointment) => {
-        setEditMode(true);
-        setEditAppointment(appointment);
-        setShowForm(true);
-        setShowTable(false);
-    };
-
     const renderTableSection = () => (
         <>
             <SearchBar placeholder="Search Appointments..." onSearch={handleSearch} />
             <div className="patients-list">
-                <AppointmentsTable 
-                    appointments={filteredAppointments} 
-                    onUpdateAppointment={handleUpdateAppointment} 
-                    onDeleteAppointment={handleDeleteAppointment} 
-                    onEditClick={handleEditClick}
+                <AppointmentsTable
+                    appointments={filteredAppointments}
+                    onUpdateAppointment={handleUpdateAppointment}
+                    onDeleteAppointment={handleDeleteAppointment}
+                    patients={patients}
+                    doctors={doctors}
+                    availableRooms={availableRooms}
                 />
             </div>
         </>
     );
 
     const renderFormSection = () => (
-        <form class="createDataForm" onSubmit={editMode ? (e) => handleSubmitEdit(e) : handleSubmitNewAppointment}>
-            <h3>{editMode ? 'Edit Appointment' : 'Add New Appointment'}</h3>
-            <input type="text" name="doctorID" placeholder="Doctor ID" defaultValue={editMode ? editAppointment.doctorID : ''} required />
-            <input type="text" name="patientID" placeholder="Patient ID" defaultValue={editMode ? editAppointment.patientID : ''} required />
-            <input type="text" name="roomID" placeholder="Room ID" defaultValue={editMode ? editAppointment.roomID : ''} required />
-            <input type="text" name="status" placeholder="Status" defaultValue={editMode ? editAppointment.status : ''} required />
-            <input type="text" name="reason" placeholder="Reason" defaultValue={editMode ? editAppointment.reason : ''} required />
-            <input type="text" name="checkInTime" placeholder="Check-In Time" defaultValue={editMode ? editAppointment.checkInTime : ''} required />
-            <input type="text" name="checkOutTime" placeholder="Check-Out Time" defaultValue={editMode ? editAppointment.checkOutTime : ''} required />
-            <input type="date" name="date" placeholder="Date" defaultValue={editMode ? editAppointment.date : ''} required />
-            <button type="submit" className="btn-action">{editMode ? 'Update' : 'Submit'}</button>
+        <form className="createDataForm" onSubmit={handleSubmitNewAppointment}>
+            <h3>Add New Appointment</h3>
+            <select name="patientID" required>
+                <option value="">Select Patient</option>
+                {patients.map(patient => (
+                    <option key={patient.patientID} value={patient.patientID}>
+                        {patient.patientID} - {patient.firstName} {patient.lastName}
+                    </option>
+                ))}
+            </select>
+            <select name="doctorID" required>
+                <option value="">Select Doctor</option>
+                {doctors.map(doctor => (
+                    <option key={doctor.doctorID} value={doctor.doctorID}>
+                        {doctor.doctorID} - {doctor.firstName} {doctor.lastName}
+                    </option>
+                ))}
+            </select>
+            <select name="roomID" required>
+                <option value="">Select Room</option>
+                {availableRooms.map(room => (
+                    <option key={room.roomID} value={room.roomID}>
+                        {room.roomID} - {room.location} ({room.number})
+                    </option>
+                ))}
+            </select>
+
+            <p>Date of Appointment:</p>
+            <input type="date" name="date" placeholder="Date of Appointment" required />
+            <p>Check-In Time:</p>
+            <input type="time" name="checkInTime" placeholder="Check-In Time" required />
+            <p>Check-Out Time:</p>
+            <input type="time" name="checkOutTime" placeholder="Check-Out Time" required />
+
+            <select name="status" required>
+                <option value="">Select Status</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="In-Room">In-Room</option>
+                <option value="Released">Released</option>
+            </select>
+            <select name="reason">
+                <option value="">Select Reason</option>
+                <option value="Scheduled">Scheduled</option>
+                <option value="ER">ER</option>
+            </select>
+            <button type="submit" className="btn-action">Submit</button>
+
         </form>
     );
-
-    const handleSubmitEdit = async (event) => {
-        event.preventDefault();
-        const form = event.target;
-        const updatedAppointment = {
-            doctorID: form.doctorID.value,
-            patientID: form.patientID.value,
-            roomID: form.roomID.value,
-            status: form.status.value,
-            reason: form.reason.value,
-            checkInTime: form.checkInTime.value,
-            checkOutTime: form.checkOutTime.value,
-            date: form.date.value,
-        };
-
-        handleUpdateAppointment(editAppointment.appointmentID, updatedAppointment);
-    };
 
     return (
         <>
