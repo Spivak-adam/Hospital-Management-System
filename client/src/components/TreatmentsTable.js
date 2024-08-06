@@ -1,7 +1,7 @@
 import React from 'react';
-import Treatment from './Treatments';
+import Treatments from './Treatments';
 
-function TreatmentsTable({ treatments, onUpdateTreatment, onDeleteTreatment, onEditClick }) {
+function TreatmentsTable({ treatments, onUpdateTreatment, onDeleteTreatment, patients, doctors }) {
     return (
         <table>
             <thead>
@@ -18,12 +18,13 @@ function TreatmentsTable({ treatments, onUpdateTreatment, onDeleteTreatment, onE
             <tbody>
                 {treatments.length > 0 ? (
                     treatments.map((treatment, index) => (
-                        <Treatment
+                        <Treatments
                             treatment={treatment}
                             key={index}
                             onUpdateTreatment={onUpdateTreatment}
                             onDeleteTreatment={onDeleteTreatment}
-                            onEditClick={onEditClick}
+                            patients={patients}
+                            doctors={doctors}
                         />
                     ))
                 ) : (

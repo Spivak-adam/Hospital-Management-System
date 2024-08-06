@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 
-function Rooms({ rooms, onUpdateRoom, onDeleteRoom }) {
+function Rooms({ room, onUpdateRoom, onDeleteRoom, patients, doctors }) {
     const [editing, setEditing] = useState(false);
-    const [updatedRoom, setUpdatedRoom] = useState(rooms);
+    const [updatedRoom, setUpdatedRoom] = useState(room);
 
     const handleEdit = () => {
         setEditing(true);
     };
 
     const handleSave = () => {
-        onUpdateRoom(rooms.roomID, updatedRoom);
+        onUpdateRoom(room.roomID, updatedRoom);
         setEditing(false);
     };
 
@@ -21,32 +21,70 @@ function Rooms({ rooms, onUpdateRoom, onDeleteRoom }) {
 
     return (
         <tr>
+            <td>{room.roomID}</td>
             {editing ? (
                 <>
-                    <td><input type="text" name="patientID" value={updatedRoom.patientID} onChange={handleChange} /></td>
-                    <td><input type="text" name="doctorID" value={updatedRoom.doctorID} onChange={handleChange} /></td>
-                    <td><input type="text" name="location" value={updatedRoom.location} onChange={handleChange} /></td>
-                    <td><input type="text" name="number" value={updatedRoom.number} onChange={handleChange} /></td>
-                    <td><input type="text" name="occupied" value={updatedRoom.occupied} onChange={handleChange} /></td>
-                    <td><input type="text" name="accommodations" value={updatedRoom.accommodations} onChange={handleChange} /></td>
-                    <td><input type="text" name="lengthOfStay" value={updatedRoom.lengthOfStay} onChange={handleChange} /></td>
+                    <td>
+                        <select name="patientID" value={updatedRoom.patientID} onChange={handleChange}>
+                            {patients.map(patient => (
+                                <option key={patient.patientID} value={patient.patientID}>
+                                    {patient.patientID} - {patient.firstName} {patient.lastName}
+                                </option>
+                            ))}
+                        </select>
+                    </td>
+                    <td>
+                        <select name="doctorID" value={updatedRoom.doctorID} onChange={handleChange}>
+                            {doctors.map(doctor => (
+                                <option key={doctor.doctorID} value={doctor.doctorID}>
+                                    {doctor.doctorID} - {doctor.firstName} {doctor.lastName}
+                                </option>
+                            ))}
+                        </select>
+                    </td>
+                    <td>
+                        <select name="location" value={updatedRoom.location} onChange={handleChange}>
+                            <option value="ICU">ICU</option>
+                            <option value="Recovery">Recovery</option>
+                            <option value="General">General</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" name="number" value={updatedRoom.number} onChange={handleChange} />
+                    </td>
+                    <td>
+                        <select name="occupied" value={updatedRoom.occupied} onChange={handleChange}>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input
+                            type="text"
+                            name="accommodations"
+                            value={updatedRoom.accommodations}
+                            onChange={handleChange}
+                        />
+                    </td>
+                    <td>
+                        <input type="number" name="lengthOfStay" value={updatedRoom.lengthOfStay} onChange={handleChange} />
+                    </td>
                     <td style={{ textAlign: 'center' }}>
                         <button className="btn-action" onClick={handleSave}>Save</button>
                     </td>
                 </>
             ) : (
                 <>
-                    <td>{rooms.roomID}</td>
-                    <td>{rooms.patientID}</td>
-                    <td>{rooms.doctorID}</td>
-                    <td>{rooms.location}</td>
-                    <td>{rooms.number}</td>
-                    <td>{rooms.occupied}</td>
-                    <td>{rooms.accommodations}</td>
-                    <td>{rooms.lengthOfStay}</td>
+                    <td>{room.patientID}</td>
+                    <td>{room.doctorID}</td>
+                    <td>{room.location}</td>
+                    <td>{room.number}</td>
+                    <td>{room.occupied}</td>
+                    <td>{room.accommodations}</td>
+                    <td>{room.lengthOfStay}</td>
                     <td style={{ textAlign: 'center' }}>
                         <button className="btn-action" onClick={handleEdit}><FaEdit /></button>
-                        <button className="btn-action" onClick={() => onDeleteRoom(rooms.roomID)}><FaTrashAlt /></button>
+                        <button className="btn-action" onClick={() => onDeleteRoom(room.roomID)}><FaTrashAlt /></button>
                     </td>
                 </>
             )}

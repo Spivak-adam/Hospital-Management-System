@@ -1,32 +1,34 @@
 import React from 'react';
-import AppointmentRow from './Appointments';
+import Appointments from './Appointments';
 
-function AppointmentsTable({ appointments, onUpdateAppointment, onDeleteAppointment, onEditClick }) {
+function AppointmentsTable({ appointments, onUpdateAppointment, onDeleteAppointment, patients, doctors, rooms }) {
     return (
         <table>
             <thead>
                 <tr>
                     <th>Appointment ID</th>
-                    <th>Doctor ID</th>
                     <th>Patient ID</th>
+                    <th>Doctor ID</th>
                     <th>Room ID</th>
                     <th>Status</th>
                     <th>Reason</th>
+                    <th>Date</th>
                     <th>Check-In Time</th>
                     <th>Check-Out Time</th>
-                    <th>Date</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {appointments.length > 0 ? (
                     appointments.map((appointment, index) => (
-                        <AppointmentRow
+                        <Appointments
                             appointment={appointment}
                             key={index}
                             onUpdateAppointment={onUpdateAppointment}
                             onDeleteAppointment={onDeleteAppointment}
-                            onEditClick={onEditClick}
+                            patients={patients}
+                            doctors={doctors}
+                            rooms={rooms}
                         />
                     ))
                 ) : (
@@ -40,3 +42,4 @@ function AppointmentsTable({ appointments, onUpdateAppointment, onDeleteAppointm
 }
 
 export default AppointmentsTable;
+

@@ -1,7 +1,7 @@
 import React from 'react';
 import Rooms from './Rooms';
 
-function RoomsTable({ rooms, onUpdateRoom, onDeleteRoom }) {
+function RoomsTable({ rooms, onUpdateRoom, onDeleteRoom, patients, doctors }) {
     return (
         <table>
             <thead>
@@ -21,10 +21,12 @@ function RoomsTable({ rooms, onUpdateRoom, onDeleteRoom }) {
                 {rooms.length > 0 ? (
                     rooms.map((room, index) => (
                         <Rooms
-                            rooms={room}
+                            room={room}
                             key={index}
                             onUpdateRoom={onUpdateRoom}
                             onDeleteRoom={onDeleteRoom}
+                            patients={patients}
+                            doctors={doctors}
                         />
                     ))
                 ) : (

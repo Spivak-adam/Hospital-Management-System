@@ -59,7 +59,6 @@ CREATE OR REPLACE TABLE Doctors(
     specialization varchar(100) NOT NULL,
     email varchar(100) NOT NULL UNIQUE,
     phoneNumber varchar(15) NOT NULL,
-    image BLOB NULL,
     language varchar(50) NOT NULL,
     gender ENUM("Male", "Female", "Other")
 );
@@ -95,13 +94,13 @@ CREATE OR REPLACE TABLE DoctorTreatment(
 -- create and insert data into Rooms table
 CREATE OR REPLACE TABLE Rooms(
     roomID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    patientID int NOT NULL,
-    doctorID int NOT NULL,
+    patientID int NULL,
+    doctorID int NULL,
     location ENUM("ICU", "Recovery", "General") NOT NULL,
     number varchar(10) NOT NULL,
     occupied ENUM("Yes", "No") NOT NULL,
     accommodations text NULL,
-    lengthOfStay int NOT NULL,
+    lengthOfStay int NULL,
 
     FOREIGN KEY (patientID) REFERENCES Patients(patientID),
     FOREIGN KEY (doctorID) REFERENCES Doctors(doctorID)

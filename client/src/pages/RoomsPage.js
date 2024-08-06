@@ -8,6 +8,14 @@ function RoomsPage() {
     const [filteredRooms, setFilteredRooms] = useState([]);
     const [showTable, setShowTable] = useState(false);
     const [showForm, setShowForm] = useState(false);
+    const [patients, setPatients] = useState([]);
+    const [doctors, setDoctors] = useState([]);
+
+    useEffect(() => {
+        fetchRooms();
+        fetchPatients();
+        fetchDoctors();
+    }, []);
 
     const fetchRooms = async () => {
         try {
@@ -21,32 +29,36 @@ function RoomsPage() {
         }
     };
 
-    useEffect(() => {
-        if (showTable) {
-            fetchRooms();
+    const fetchPatients = async () => {
+        try {
+            const response = await fetch('/patients');
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            setPatients(data);
+        } catch (error) {
+            console.error('Error fetching patient data:', error);
         }
-    }, [showTable]);
-
-
-
-    
-    const handleSearch = (searchTerm) => {
-        const lowercasedSearchTerm = searchTerm.toLowerCase();
-        const filtered = rooms.filter(room => {
-            return (
-                room.patientID.toString().includes(lowercasedSearchTerm) ||
-                room.doctorID.toString().includes(lowercasedSearchTerm) ||
-                room.location.toLowerCase().includes(lowercasedSearchTerm) ||
-                room.number.toLowerCase().includes(lowercasedSearchTerm) ||
-                room.occupied.toLowerCase().includes(lowercasedSearchTerm) ||
-                room.accommodations.toLowerCase().includes(lowercasedSearchTerm) ||
-                room.lengthOfStay.toString().includes(lowercasedSearchTerm)
-            );
-        });
-        setFilteredRooms(filtered);
     };
 
+    const fetchDoctors = async () => {
+        try {
+            const response = await fetch('/doctors');
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            setDoctors(data);
+        } catch (error) {
+            console.error('Error fetching doctor data:', error);
+        }
+    };
 
+    const handleSearch = (searchTerm) => {
+        const filtered = rooms.filter(room =>
+            Object.values(room).some(value =>
+                value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+            )
+        );
+        setFilteredRooms(filtered);
+    };
 
     const handleSubmitNewRoom = async (event) => {
         event.preventDefault();
@@ -56,7 +68,7 @@ function RoomsPage() {
             doctorID: form.doctorID.value,
             location: form.location.value,
             number: form.number.value,
-            occupied: form.occupied.value === 'true' ? 'Yes' : 'No',
+            occupied: form.occupied.value === 'true',
             accommodations: form.accommodations.value,
             lengthOfStay: form.lengthOfStay.value,
         };
@@ -132,21 +144,50 @@ function RoomsPage() {
         <>
             <SearchBar placeholder="Search Rooms..." onSearch={handleSearch} />
             <div className="patients-list">
-                <RoomsTable rooms={filteredRooms} onUpdateRoom={handleUpdateRoom} onDeleteRoom={handleDeleteRoom} />
+                <RoomsTable
+                    rooms={filteredRooms}
+                    onUpdateRoom={handleUpdateRoom}
+                    onDeleteRoom={handleDeleteRoom}
+                    patients={patients}
+                    doctors={doctors}
+                />
             </div>
         </>
     );
 
     const renderFormSection = () => (
-        <form onSubmit={handleSubmitNewRoom}>
+        <form className="createDataForm" onSubmit={handleSubmitNewRoom}>
             <h3>Add New Room</h3>
-            <input type="text" name="patientID" placeholder="Patient ID" required />
-            <input type="text" name="doctorID" placeholder="Doctor ID" required />
-            <input type="text" name="location" placeholder="Location" required />
+            <select name="patientID">
+                <option value="">Select Patient</option>
+                {patients.map(patient => (
+                    <option key={patient.patientID} value={patient.patientID}>
+                        {patient.patientID} - {patient.firstName} {patient.lastName}
+                    </option>
+                ))}
+            </select>
+            <select name="doctorID">
+                <option value="">Select Doctor</option>
+                {doctors.map(doctor => (
+                    <option key={doctor.doctorID} value={doctor.doctorID}>
+                        {doctor.doctorID} - {doctor.firstName} {doctor.lastName}
+                    </option>
+                ))}
+            </select>
+            <select name="location" required>
+                <option value="">Select Location</option>
+                <option value="ICU">ICU</option>
+                <option value="Recovery">Recovery</option>
+                <option value="General">General</option>
+            </select>
             <input type="text" name="number" placeholder="Room Number" required />
-            <input type="text" name="occupied" placeholder="Occupied (true/false)" required />
+            <select name="occupied" required>
+                <option value="">Occupied?(Yes/No)</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
             <input type="text" name="accommodations" placeholder="Accommodations" required />
-            <input type="text" name="lengthOfStay" placeholder="Length of Stay" required />
+            <input type="number" name="lengthOfStay" placeholder="Length of Stay" />
             <button type="submit" className="btn-action">Submit</button>
         </form>
     );
@@ -158,7 +199,7 @@ function RoomsPage() {
                 <section className="patients-section">
                     <h2>Rooms</h2>
                     <p>Assign and manage room allocations</p>
-                    <div className="patient-actions">
+                    <div className="patients-actions">
                         <button className="btn-action" onClick={() => { setShowTable(true); setShowForm(false); }}>View All Rooms</button>
                         <button className="btn-action" onClick={() => { setShowTable(false); setShowForm(true); }}>Add New Room</button>
                     </div>
@@ -171,3 +212,4 @@ function RoomsPage() {
 }
 
 export default RoomsPage;
+

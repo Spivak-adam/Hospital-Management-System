@@ -369,6 +369,36 @@ footer a:hover {
 }
 
 
+
+/* Create Data forms*/
+.createDataForm{
+  display: flex;
+  flex-direction: column;
+  margin: 15px auto;
+  max-width: 300px;
+  margin-top: 30px;;
+}
+
+.createDataForm h3 {
+  font-size: 1.5em;
+  margin-bottom: 5px;
+}
+
+.createDataForm p {
+  font-size: 1em;
+  margin-bottom: 5px;
+}
+.createDataForm textarea, select, input{
+  font-size: 1em;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.createDataForm textarea{
+  width: inherit;
+}
+
+
 /*hamburger menu styles*/
 /* Add this to your existing CSS */
 
