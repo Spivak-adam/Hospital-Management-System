@@ -21,9 +21,9 @@ function PatientsPage() {
         try {
             const response = await fetch('/patients');
             if (!response.ok) throw new Error('Network response was not ok');
-            const data = await response.json();
-            setPatients(data);
-            setFilteredPatients(data);
+            const patientData = await response.json();
+            setPatients(patientData);
+            setFilteredPatients(patientData);
         } catch (error) {
             console.error('Error fetching patient data:', error);
         }
@@ -237,8 +237,8 @@ function PatientsPage() {
                     </div>
                     {showTable && renderTableSection()}
                     {showForm && renderFormSection()}
-                </section>
-            </div>
+                </section >
+            </div >
         </>
     );
 }

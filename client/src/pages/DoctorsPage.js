@@ -138,6 +138,7 @@ function DoctorsPage() {
             <input type="text" name="language" placeholder="Language" required />
             <input type="text" name="gender" placeholder="Gender" required />
             <button type="submit" className="btn-action">Submit</button>
+
         </form>
     );
 

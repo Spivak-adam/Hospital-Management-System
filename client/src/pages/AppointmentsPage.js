@@ -217,6 +217,7 @@ function AppointmentsPage() {
                 <option value="ER">ER</option>
             </select>
             <button type="submit" className="btn-action">Submit</button>
+
         </form>
     );
 
