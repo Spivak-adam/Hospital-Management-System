@@ -37,6 +37,7 @@ function Treatments({ treatment, onUpdateTreatment, onDeleteTreatment, patients,
                     <td><input type="datetime-local" name="date" value={updatedTreatment.date} onChange={handleChange} /></td>
                     <td><input type="text" name="diagnosis" value={updatedTreatment.diagnosis} onChange={handleChange} /></td>
                     <td><input type="text" name="symptoms" value={updatedTreatment.symptoms} onChange={handleChange} /></td>
+                    <td><input type="text" name="Assigned Doctors" value={updatedTreatment.AssignedDoctors} onChange={handleChange}/></td>
                     <td style={{ textAlign: 'center' }}>
                         <button className="btn-action" onClick={handleSave}>Save</button>
                     </td>
@@ -48,6 +49,7 @@ function Treatments({ treatment, onUpdateTreatment, onDeleteTreatment, patients,
                     <td>{treatment.date}</td>
                     <td>{treatment.diagnosis}</td>
                     <td>{treatment.symptoms}</td>
+                    <td>{treatment.AssignedDoctors}</td>
                     <td style={{ textAlign: 'center' }}>
                         <button className="btn-action" onClick={handleEdit}><FaEdit /></button>
                         <button className="btn-action" onClick={() => onDeleteTreatment(treatment.treatmentID)}><FaTrashAlt /></button>
