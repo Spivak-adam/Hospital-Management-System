@@ -11,7 +11,6 @@ function TreatmentsPage() {
     const [showTable, setShowTable] = useState(false);
     const [showForm, setShowForm] = useState(false);
     const [patients, setPatients] = useState([]);
-    const [doctors, setDoctors] = useState([]);
 
     useEffect(() => {
         fetchTreatments();

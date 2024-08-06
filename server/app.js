@@ -22,7 +22,7 @@ var db = require('./db-connector');
 app.get('/rooms', async (req, res) => {
   try {
       let query1 = "SELECT * FROM Rooms";
-      const { available } = req.query1;
+      const { available } = req.query;
 
       if (available) {
           query1 += " WHERE occupied = 'No'";
@@ -35,6 +35,7 @@ app.get('/rooms', async (req, res) => {
               res.status(500).send('Server error');
           } else {
               // Send data in a JSON file to browser
+              console.log("Successfully retreived Rooms");
               res.send(JSON.stringify(results));
           }
       });
@@ -54,7 +55,7 @@ app.post('/rooms', async (req, res) => {
 
     // Log the received data
     console.log("Received data for new room:", req.body);
-
+s
     // Define the insert query
     const query = `
         INSERT INTO Rooms (patientID, doctorID, location, number, occupied, accommodations, lengthOfStay)
@@ -133,7 +134,6 @@ app.get('/patients', async (req, res) => {
     db.pool.query(query1, function (err, results, fields) {
       // Send data in a JSON file to browser
       console.log("Sending JSON information to /patients");
-      console.log("Patients:\n", JSON.stringify(results))
       res.send(JSON.stringify(results));
     })
 
@@ -233,6 +233,7 @@ app.get('/doctors', async (req, res) => {
         console.error('Error fetching doctors:', err);
         res.status(500).send('Server error');
       } else {
+        console.log("Successfully retreived Doctors");
         res.send(results);
       }
     });
