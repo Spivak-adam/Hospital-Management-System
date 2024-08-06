@@ -1,163 +1,82 @@
-# MedixManager
+# Hospital Management System
 
-MedixManager is a Hospital Management System designed to help manage patients, doctors, appointments, treatments, and rooms. The system provides an intuitive interface for administrators to perform CRUD operations efficiently.
+    This is a web application for managing hospital data including rooms, patients, doctors, appointments, and treatments.
 
-## Table of Contents
+## Prerequisites
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [File Structure](#file-structure)
-- [Technologies Used](#technologies-used)
-- [Contributing](#contributing)
-- [License](#license)
+    1. **Node.js**: Ensure you have Node.js installed on your machine. You can download it from [nodejs.org](https://nodejs.org/).
+    2. **MySQL**: Make sure you have a running MySQL server.
+    3. **VPN**: You need to be connected to the school VPN to access the database server.
 
-## Installation
+## Getting Started
 
-1. **Clone the repository:**
-    ```bash
-    git clone https://github.com/yourusername/medixmanager.git
-    cd medixmanager
-    ```
+### Step 1: Connect to the School VPN
 
-2. **Install the required dependencies for Server and Client:**
-    ```bash
-    npm install
-    ```
+    Follow the instructions provided by your school to connect to the VPN. This is required to access the remote MySQL server.
 
-    For Client
-    ```
-    npm run build
-    ```
+### Step 2: Clone the Repository
 
-3. **Set up the database:**
+    Clone this repository to your local machine using the following command:
 
-    - Ensure you have MySQL installed and running.
-    - Connect to cs340 database:
-        ```
-        mysql -u [cs340_username] -h classmysql.engr.oregonstate.edu -p
-        [cs340_username]
-        ```
+        ``sh
+        git clone <repository-url>
+        cd Hospital-Management-System
+
+### Step 3: Install Dependencies
+
+    You need to make sure dependencies are installed for both the server and client.
+
+    server:
+
+        cd server
+        npm install
+    
+    client:
+
+        cd ../client
+        npm install
+
+
+### Step 4: Congigure the Databse
+
+    Make sure the MySQL server is running. Import the database schema and data using the DDL.sql and DML.sql file.
+
+### Step 5: Build the Client
+
+    Navigate to the client directory and build the client:
         
-    - Import the SQL schema and sample data:
-        ```
-        source ddl.sql
-        source dml.sql
-        ```
+        npm run build
 
-4. **Configure the database connection:**
-   right now its commented out because I was only working on the front end.
+### Step 6: Start the Server
 
-    - Update the `app.js` file with your database credentials:
-        ```javascript
-        const mysql = require('mysql');
+    Navigate to the server and start the server. You can also use nodemon or forever for production if you don't want to keep restarting the server.
 
-        const connection = mysql.createConnection({
-            host: 'localhost',
-            user: 'yourusername',
-            password: 'yourpassword',
-            database: 'medixmanager'
-        });
+    Development:
 
-        module.exports = connection;
-        ```
+        npm start
+        OR
+        npm run dev
 
-5. **Start the application:**
-    ```
-    bash
-    npm start
-    ```
+    production:
 
-    Alternatively, you can use `nodemon` to automatically restart the server when changes are detected:
-    ```bash
-    npm install -g nodemon
-    nodemon app.js
-    ```
+        alias forever='./node_modules/forever/bin/forever'
+        forever start app.js
 
-6. **Access the application:**
 
-    Open your web browser and navigate to:
-    ```
-    http://yourserveraddress:3000
-    ```
+### Step 7: access the application:
 
-    or use the school server which is:
-   ```
-   http://flip.engr.oregonstate.edu:3000
-   ```
+    open browser and navigate to URL (only after starting program).
 
-## Usage
+        if you using forever on the backend you can use your local machine to access frontend:
 
-- **Home Page:** Provides an overview of the hospital management system and quick links to different sections.
-- **Patients:** View, add, update, and delete patient records.
-- **Doctors:** View, add, update, and delete doctor records.
-- **Appointments:** Schedule, view, update, and delete appointments.
-- **Treatments:** Manage treatment procedures.
-- **Rooms:** Assign and manage room allocations.
+            http://localhost:2102/
 
-## File Structure
-```
-medixmanager/
-│
-├── styles.css # Main stylesheet for the application
-│
-├── images/
-│ └── ... # Image assets used in the application
-│
-├── routes/
-│ ├── appointments.js # Routes for managing appointments
-│ ├── doctors.js # Routes for managing doctors
-│ ├── patients.js # Routes for managing patients
-│ ├── rooms.js # Routes for managing rooms
-│ └── treatments.js # Routes for managing treatments
-│
-├── ddl.sql # Database schema definition
-├── dml.sql # Data manipulation queries
-│
-├── public/
-│ ├── appointments.html # HTML for managing appointments
-│ ├── doctors.html # HTML for managing doctors
-│ ├── index.html # Home page HTML
-│ ├── patients.html # HTML for managing patients
-│ ├── rooms.html # HTML for managing rooms
-│ └── treatments.html # HTML for managing treatments
-│
-├── app.js # Main server file
-├── package.json # Node.js dependencies and scripts
-└── README.md # This file
-```
+        if you used nodemon on the backend you can use remoter server to access frontend:
 
-## Technologies Used
+            http://classwork.engr.oregonstate.edu:2102/
 
-- **Backend:**
-  - Node.js
-  - Express.js
+### IMPORTANT: DATBASE CONNECTION
 
-- **Frontend:**
-  - HTML
-  - CSS
-  - JavaScript
-  - React
+    Make sure that you are connected to the VPN and the MySQL server.
 
-- **Database:**
-  - MySQL
-
-## Contributing
-
-1. **Fork the repository.**
-2. **Create a new branch:**
-    ```bash
-    git checkout -b feature/your-feature-name
-    ```
-3. **Commit your changes:**
-    ```bash
-    git commit -m 'Add some feature'
-    ```
-4. **Push to the branch:**
-    ```bash
-    git push origin feature/your-feature-name
-    ```
-5. **Submit a pull request.**
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+       
