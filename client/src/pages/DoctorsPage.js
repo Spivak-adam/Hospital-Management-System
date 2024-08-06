@@ -150,7 +150,7 @@ function DoctorsPage() {
                     <h2>Doctors</h2>
                     <p>Manage doctors in the system</p>
                     <div className="patientss-actions">
-                        <button className="btn-action" onClick={() => { setShowTable(true); setShowForm(false); }}>View All Doctors</button>
+                        <button className="btn-action" onClick={() => { setShowTable(true); setShowForm(false); setFilteredDoctors(doctors); }}>View All Doctors</button>
                         <button className="btn-action" onClick={() => { setShowTable(false); setShowForm(true); }}>Add New Doctor</button>
                     </div>
                     {showTable && renderTableSection()}

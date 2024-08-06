@@ -200,7 +200,7 @@ function RoomsPage() {
                     <h2>Rooms</h2>
                     <p>Assign and manage room allocations</p>
                     <div className="patients-actions">
-                        <button className="btn-action" onClick={() => { setShowTable(true); setShowForm(false); }}>View All Rooms</button>
+                        <button className="btn-action" onClick={() => { setShowTable(true); setShowForm(false); setFilteredRooms(rooms); }}>View All Rooms</button>
                         <button className="btn-action" onClick={() => { setShowTable(false); setShowForm(true); }}>Add New Room</button>
                     </div>
                     {showTable && renderTableSection()}

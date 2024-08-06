@@ -238,7 +238,7 @@ function PatientsPage() {
                     <h2>Patients</h2>
                     <p>Manage patients in the system</p>
                     <div className="patients-actions">
-                        <button className="btn-action" onClick={() => { setShowTable(true); setShowForm(false); }}>View All Patients</button>
+                        <button className="btn-action" onClick={() => { setShowTable(true); setShowForm(false); setFilteredPatients(patients); }}>View All Patients</button>
                         <button className="btn-action" onClick={() => { setShowTable(false); setShowForm(true); }}>Add New Patient</button>
                     </div>
                     {showTable && renderTableSection()}
