@@ -51,14 +51,18 @@ function PatientsPage() {
         }
     };
 
+
+
     const handleSearch = (searchTerm) => {
         const filtered = patients.filter(patient =>
             Object.values(patient).some(value =>
-                value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+                (value !== null && value !== undefined ? value.toString() : "").toLowerCase().includes(searchTerm.toLowerCase())
             )
         );
         setFilteredPatients(filtered);
     };
+    
+
 
     const handleSubmitNewPatient = async (event) => {
         event.preventDefault();
@@ -167,6 +171,8 @@ function PatientsPage() {
             </div>
         </>
     );
+
+    
 
     const renderFormSection = () => (
         <form className="createDataForm" onSubmit={handleSubmitNewPatient}>

@@ -67,7 +67,7 @@ function AppointmentsPage() {
     const handleSearch = (searchTerm) => {
         const filtered = appointments.filter(appointment =>
             Object.values(appointment).some(value =>
-                value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+                (value !== null && value !== undefined ? value.toString() : "").toLowerCase().includes(searchTerm.toLowerCase())
             )
         );
         setFilteredAppointments(filtered);

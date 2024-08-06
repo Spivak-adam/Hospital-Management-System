@@ -54,7 +54,7 @@ function TreatmentsPage() {
     const handleSearch = (searchTerm) => {
         const filtered = treatments.filter(treatment =>
             Object.values(treatment).some(value =>
-                value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+                (value !== null && value !== undefined ? value.toString() : "").toLowerCase().includes(searchTerm.toLowerCase())
             )
         );
         setFilteredTreatments(filtered);

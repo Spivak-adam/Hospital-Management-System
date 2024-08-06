@@ -28,7 +28,7 @@ function DoctorsPage() {
     const handleSearch = (searchTerm) => {
         const filtered = doctors.filter(doctor =>
             Object.values(doctor).some(value =>
-                value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+                (value !== null && value !== undefined ? value.toString() : "").toLowerCase().includes(searchTerm.toLowerCase())
             )
         );
         setFilteredDoctors(filtered);

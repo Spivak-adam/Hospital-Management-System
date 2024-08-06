@@ -54,7 +54,7 @@ function RoomsPage() {
     const handleSearch = (searchTerm) => {
         const filtered = rooms.filter(room =>
             Object.values(room).some(value =>
-                value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+                (value !== null && value !== undefined ? value.toString() : "").toLowerCase().includes(searchTerm.toLowerCase())
             )
         );
         setFilteredRooms(filtered);
