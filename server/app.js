@@ -399,7 +399,11 @@ app.delete('/appointments/:id', async (req, res) => {
 app.get('/treatments', async (req, res) => {
   try {
     // Select all the information from the treatments table    
-    let query1 = `Select Treatments.*, Doctors.lastName from Treatments Inner join DoctorTreatment on DoctorTreatment.treatmentID = Treatments.treatmentID Inner join Doctors on DoctorTreatment.doctorID = Doctors.doctorID ORDER BY treatmentID;`
+    let query1 = `Select Treatments.*, Doctors.lastName 
+                  from Treatments 
+                  Inner join DoctorTreatment on DoctorTreatment.treatmentID = Treatments.treatmentID 
+                  Inner join Doctors on DoctorTreatment.doctorID = Doctors.doctorID 
+                  ORDER BY treatmentID;`
 
     // Select all the information from the doctors table
     let query2 = `Select * FROM Doctors;`
@@ -407,7 +411,7 @@ app.get('/treatments', async (req, res) => {
     // Querry Data from Treatments
     db.pool.query(query1, function (err, results, fields) {
       let treatData = results
-      //console.log("Treatments:\n", treatData)
+      console.log("Treatments:\n", treatData)
 
       // Querry Data from Doctors
       db.pool.query(query2, function (err, results, fields) {
@@ -449,8 +453,7 @@ app.post('/treatments', (req, res) => {
             res.sendStatus(400)
           }
           else {
-            console.log("Successfully Inserted into Treatments Table, and DoctorTreatments")
-            res.redirect('/treatments');
+            res.send("Successfully Inserted into Treatments Table, and DoctorTreatments");
           }
         })
       })

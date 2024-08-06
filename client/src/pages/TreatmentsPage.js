@@ -13,8 +13,6 @@ function TreatmentsPage() {
     const [editMode, setEditMode] = useState(false);
     const [editTreatment, setEditTreatment] = useState(null);
 
-    const redirect = useNavigate();
-
     const fetchTreatments = async () => {
         try {
             const response = await fetch('/treatments');
@@ -22,7 +20,7 @@ function TreatmentsPage() {
             const data = await response.json();
             console.log("Successfully Retrieved data", data)
             let treatData = data.treatment;
-            let doctorData = data.doctors
+            let doctorData = data.doctors;
             setTreatments(treatData);
             setFilteredTreatments(treatData);
             setDoctors(doctorData);
@@ -32,10 +30,8 @@ function TreatmentsPage() {
     };
 
     useEffect(() => {
-        if (showTable) {
-            fetchTreatments();
-        }
-    }, [showTable]);
+        fetchTreatments();
+    }, []);
 
     const handleSearch = (searchTerm) => {
         const filtered = treatments.filter(treatment =>
