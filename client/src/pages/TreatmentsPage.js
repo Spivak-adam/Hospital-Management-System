@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import NavigationBar from '../components/NavigationBar';
 import SearchBar from '../components/SearchBar';
 import TreatmentsTable from '../components/TreatmentsTable';
-import { useNavigate } from "react-router-dom";
 
 function TreatmentsPage() {
     const [treatments, setTreatments] = useState([]);
@@ -55,6 +54,7 @@ function TreatmentsPage() {
             console.error('Error fetching doctor data:', error);
         }
     };
+    
     const handleSearch = (searchTerm) => {
         const filtered = treatments.filter(treatment =>
             Object.values(treatment).some(value =>
