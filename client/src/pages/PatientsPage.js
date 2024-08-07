@@ -51,14 +51,18 @@ function PatientsPage() {
         }
     };
 
+
+
     const handleSearch = (searchTerm) => {
         const filtered = patients.filter(patient =>
             Object.values(patient).some(value =>
-                value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+                (value !== null && value !== undefined ? value.toString() : "").toLowerCase().includes(searchTerm.toLowerCase())
             )
         );
         setFilteredPatients(filtered);
     };
+    
+
 
     const handleSubmitNewPatient = async (event) => {
         event.preventDefault();
@@ -168,19 +172,14 @@ function PatientsPage() {
         </>
     );
 
+    
+
     const renderFormSection = () => (
         <form className="createDataForm" onSubmit={handleSubmitNewPatient}>
             <h3>Add New Patient</h3>
             <input type="text" name="firstName" placeholder="First Name" required />
             <input type="text" name="lastName" placeholder="Last Name" required />
-            <select name="roomID" required>
-                <option value="">Select Room</option>
-                {rooms.map(room => (
-                    <option key={room.roomID} value={room.roomID}>
-                        {room.roomID} - {room.location} {room.number}
-                    </option>
-                ))}
-            </select>
+
             <select name="primaryDoctorID" required>
                 <option value="">Select Primary Doctor</option>
                 {doctors.map(doctor => (
@@ -190,7 +189,6 @@ function PatientsPage() {
                 ))}
             </select>
 
-            <input type="text" name="appointmentID" placeholder="Appointment ID" required />
             <input type="date" name="dateOfBirth" placeholder="Date of Birth" required />
             <input type="text" name="contactPhone" placeholder="Contact Phone" required />
             <input type="email" name="contactEmail" placeholder="Contact Email" required />
@@ -232,7 +230,7 @@ function PatientsPage() {
                     <h2>Patients</h2>
                     <p>Manage patients in the system</p>
                     <div className="patients-actions">
-                        <button className="btn-action" onClick={() => { setShowTable(true); setShowForm(false); }}>View All Patients</button>
+                        <button className="btn-action" onClick={() => { setShowTable(true); setShowForm(false); setFilteredPatients(patients); }}>View All Patients</button>
                         <button className="btn-action" onClick={() => { setShowTable(false); setShowForm(true); }}>Add New Patient</button>
                     </div>
                     {showTable && renderTableSection()}

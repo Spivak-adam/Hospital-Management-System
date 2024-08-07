@@ -67,7 +67,7 @@ function AppointmentsPage() {
     const handleSearch = (searchTerm) => {
         const filtered = appointments.filter(appointment =>
             Object.values(appointment).some(value =>
-                value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+                (value !== null && value !== undefined ? value.toString() : "").toLowerCase().includes(searchTerm.toLowerCase())
             )
         );
         setFilteredAppointments(filtered);
@@ -229,7 +229,7 @@ function AppointmentsPage() {
                     <h2>Appointments</h2>
                     <p>Manage appointments</p>
                     <div className="patients-actions">
-                        <button className="btn-action" onClick={() => { setShowTable(true); setShowForm(false); }}>View All Appointments</button>
+                        <button className="btn-action" onClick={() => { setShowTable(true); setShowForm(false); setFilteredAppointments(appointments); }}>View All Appointments</button>
                         <button className="btn-action" onClick={() => { setShowTable(false); setShowForm(true); }}>Add New Appointment</button>
                     </div>
                     {showTable && renderTableSection()}
