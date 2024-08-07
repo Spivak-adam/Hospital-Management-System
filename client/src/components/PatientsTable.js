@@ -9,9 +9,7 @@ function PatientsTable({ patients, onUpdatePatient, onDeletePatient, rooms, doct
                     <th>Patient ID</th>
                     <th>First Name</th>
                     <th>Last Name</th>
-                    <th>Room ID</th>
-                    <th>Doctor ID</th>
-                    <th>Appointment ID</th>
+                    <th>Primary Doctor ID</th>
                     <th>Date of Birth</th>
                     <th>Contact Phone</th>
                     <th>Contact Email</th>
@@ -38,13 +36,12 @@ function PatientsTable({ patients, onUpdatePatient, onDeletePatient, rooms, doct
                             key={index}
                             onUpdatePatient={onUpdatePatient}
                             onDeletePatient={onDeletePatient}
-                            rooms={rooms}
                             doctors={doctors}
                         />
                     ))
                 ) : (
                     <tr>
-                        <td colSpan="22" style={{ textAlign: 'center' }}>No patients available</td>
+                        <td colSpan="20" style={{ textAlign: 'center' }}>No patients available</td>
                     </tr>
                 )}
             </tbody>
