@@ -164,7 +164,7 @@ function AppointmentsPage() {
                     onDeleteAppointment={handleDeleteAppointment}
                     patients={patients}
                     doctors={doctors}
-                    availableRooms={availableRooms}
+                    rooms={availableRooms}
                 />
             </div>
         </>

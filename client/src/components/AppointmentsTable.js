@@ -2,6 +2,7 @@ import React from 'react';
 import Appointments from './Appointments';
 
 function AppointmentsTable({ appointments, onUpdateAppointment, onDeleteAppointment, patients, doctors, rooms }) {
+    console.log(rooms);
     return (
         <table>
             <thead>

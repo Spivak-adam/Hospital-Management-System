@@ -21,29 +21,29 @@ var db = require('./db-connector');
 // Read from Rooms Entity
 app.get('/rooms', async (req, res) => {
   try {
-      let query1 = "SELECT * FROM Rooms";
-      const { available } = req.query;
+    let query1 = "SELECT * FROM Rooms";
+    const { available } = req.query;
 
-      if (available) {
-          query1 += " WHERE occupied = 'No'";
+    if (available) {
+      query1 += " WHERE occupied = 'No'";
+    }
+
+    // Query Data
+    db.pool.query(query1, function (err, results, fields) {
+      if (err) {
+        console.error('Database operation failed:', err, '. Unable to pull Rooms.');
+        res.status(500).send('Server error');
+      } else {
+        // Send data in a JSON file to browser
+        console.log("Successfully retreived Rooms");
+        res.send(JSON.stringify(results));
       }
-
-      // Query Data
-      db.pool.query(query1, function (err, results, fields) {
-          if (err) {
-              console.error('Database operation failed:', err, '. Unable to pull Rooms.');
-              res.status(500).send('Server error');
-          } else {
-              // Send data in a JSON file to browser
-              console.log("Successfully retreived Rooms");
-              res.send(JSON.stringify(results));
-          }
-      });
+    });
 
   } catch (error) {
-      // Handle Errors
-      console.error('Database operation failed:', error, '. Unable to pull Rooms.');
-      res.status(500).send('Server error');
+    // Handle Errors
+    console.error('Database operation failed:', error, '. Unable to pull Rooms.');
+    res.status(500).send('Server error');
   }
 });
 
@@ -55,7 +55,7 @@ app.post('/rooms', async (req, res) => {
 
     // Log the received data
     console.log("Received data for new room:", req.body);
-s
+
     // Define the insert query
     const query = `
         INSERT INTO Rooms (patientID, doctorID, location, number, occupied, accommodations, lengthOfStay)
@@ -397,30 +397,19 @@ app.delete('/appointments/:id', async (req, res) => {
 // Read from Treatments Entity
 app.get('/treatments', async (req, res) => {
   try {
-    // Select all the information from the treatments table    
-    let query1 = `Select Treatments.*, Doctors.lastName 
-                  from Treatments 
-                  Inner join DoctorTreatment on DoctorTreatment.treatmentID = Treatments.treatmentID 
-                  Inner join Doctors on DoctorTreatment.doctorID = Doctors.doctorID 
+    // Select all the information from the treatments table 
+    let query1 = `Select Treatments.*, Doctors.lastName
+                  from Treatments
+                  Inner join DoctorTreatment on DoctorTreatment.treatmentID = Treatments.treatmentID
+                  Inner join Doctors on DoctorTreatment.doctorID = Doctors.doctorID
                   ORDER BY treatmentID;`
-
-    // Select all the information from the doctors table
-    let query2 = `Select * FROM Doctors;`
 
     // Querry Data from Treatments
     db.pool.query(query1, function (err, results, fields) {
-      let treatData = results
-      console.log("Treatments:\n", treatData)
+      let data = results
 
-      // Querry Data from Doctors
-      db.pool.query(query2, function (err, results, fields) {
-        // Send data in a JSON file to browser
-        let doctorData = results
-        //console.log("Doctors for treatments:\n", doctorData)
-
-        console.log("Sending treatment and doctor JSON information to /treatments");
-        res.send(JSON.stringify({ treatment: treatData, doctors: doctorData }));
-      })
+      console.log("Sending treatment JSON information to /treatments");
+      res.send(JSON.stringify(data));
 
     })
 
@@ -439,24 +428,43 @@ app.post('/treatments', (req, res) => {
   console.log("INSERT treatment data submission form", treatData);
 
   query1 = `SET FOREIGN_KEY_CHECKS=0;`;
-  query2 = `INSERT INTO Treatments (patientID, description, date, diagnosis, symptoms) VALUES ('${treatData['patientID']}','${treatData['description']}','${treatData['date']}','${treatData['diagnosis']}','${treatData['symptoms']}')`
-  query3 = `INSERT INTO DoctorTreatment (treatmentID, doctorID) VALUES (LAST_INSERT_ID(), ${treatData['doctorID']})`
+  query2 = `INSERT INTO Treatments (patientID, description, date, diagnosis, symptoms) VALUES ('${treatData['patientID']}','${treatData['description']}','${treatData['date']}','${treatData['diagnosis']}','${treatData['symptoms']}');`
+  query3 = `INSERT INTO DoctorTreatment (treatmentID, doctorID) VALUES (LAST_INSERT_ID(), ${treatData['doctorID']});`
   query4 = `SET FOREIGN_KEY_CHECKS=1;`;
 
   db.pool.query(query1, function (error, rows, fields) {
-    db.pool.query(query2, function (error, rows, fields) {
-      db.pool.query(query3, function (error, rows, fields) {
-        db.pool.query(query4, function (error, rows, fields) {
-          if (error) {
-            console.log(error)
-            res.sendStatus(400)
-          }
-          else {
-            res.send("Successfully Inserted into Treatments Table, and DoctorTreatments");
-          }
-        })
+    if (error) {
+      console.log(error)
+      res.sendStatus(400)
+    }
+    else {
+      db.pool.query(query2, function (error, rows, fields) {
+        if (error) {
+          console.log(error)
+          res.sendStatus(400)
+        }
+        else {
+          db.pool.query(query3, function (error, rows, fields) {
+            if (error) {
+              console.log(error)
+              res.sendStatus(400)
+            }
+            else {
+              db.pool.query(query4, function (error, rows, fields) {
+                if (error) {
+                  console.log(error)
+                  res.sendStatus(400)
+                }
+                else {
+                  console.log("Successfully Inserted into Treatments Table, and DoctorTreatments");
+                  res.send("Successfully Inserted into Treatments Table, and DoctorTreatments");
+                }
+              })
+            }
+          })
+        }
       })
-    })
+    }
 
 
   })
@@ -467,16 +475,27 @@ app.post('/treatments', (req, res) => {
 app.put('/treatments/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { patientID, description, date, diagnosis, symptoms } = req.body;
-    const query = "UPDATE Treatments SET patientID = ?, description = ?, date = ?, diagnosis = ?, symptoms = ? WHERE treatmentID = ?";
+    const { patientID, description, date, diagnosis, symptoms, doctorID } = req.body;
+    const query1 = "UPDATE Treatments SET patientID = ?, description = ?, date = ?, diagnosis = ?, symptoms = ? WHERE treatmentID = ?";
+    const query2 = "UPDATE DoctorTreatment SET doctorID = ? WHERE treatmentID = ?";
     const values = [patientID, description, date, diagnosis, symptoms, id];
+    const doctorValue = [doctorID, id];
 
-    db.pool.query(query, values, (err, results) => {
+    db.pool.query(query1, values, (err, results) => {
       if (err) {
         console.error('Error updating treatment:', err);
         res.status(500).send('Server error');
       } else {
         res.send('Treatment updated successfully');
+        db.pool.query(query2, doctorValue, (err, results) => {
+          if (err) {
+            console.error('Error updating DoctorTreatment:', err);
+            res.status(500).send('Server error');
+          }
+          else {
+            res.send('DoctorTreatment updated successfully');
+          }
+        })
       }
     });
 
@@ -486,19 +505,49 @@ app.put('/treatments/:id', async (req, res) => {
   }
 });
 
-// Delete treatment
+// Delete treatment and doctorTreatment Relationship
 app.delete('/treatments/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const query = "DELETE FROM Treatments WHERE treatmentID = ?";
     const values = [id];
-
-    db.pool.query(query, values, (err, results) => {
+    const query1 = `SET FOREIGN_KEY_CHECKS=0`;
+    const query2 = "DELETE FROM Treatments WHERE treatmentID = ?";
+    const query3 = "DELETE FROM DoctorTreatment WHERE treatmentID = ?";
+    const query4 = `SET FOREIGN_KEY_CHECKS=1`;
+    
+    db.pool.query(query1, values, (err, results) => {
       if (err) {
-        console.error('Error deleting treatment:', err);
+        console.error('Foreign Key Error:', err);
         res.status(500).send('Server error');
       } else {
-        res.send('Treatment deleted successfully');
+        db.pool.query(query2, values, (err, results) => {
+          if (err) {
+            console.error('Error deleting treatment:', err);
+            res.status(500).send('Server error');
+          } else {
+            res.send('Treatment deleted successfully');
+            db.pool.query(query3, values, (err, results) => {
+              if (err) {
+                console.error('Error DoctorTreatments Error:', err);
+                res.status(500).send('Server error');
+        
+              } else {
+                res.send('DoctorTreatments deleted successfully');
+                db.pool.query(query4, values, (err, results) => {
+                  if (err) {
+                    console.error('Foreign Key Error:', err);
+                    res.status(500).send('Server error');
+            
+                  } else {
+                    res.send('Treatment and DoctorTreatment deleted successfully');
+                  }
+                })
+              }
+            })
+            
+          }
+        })
+
       }
     });
 
@@ -508,6 +557,27 @@ app.delete('/treatments/:id', async (req, res) => {
   }
 });
 
+/* Perform DoctorTreatments CRUD operations
+--------------------------------------------*/
+// Read from Treatments Entity
+app.get('/doctortreatments', async (req, res) => {
+  try {
+    query1 = `SELECT * From DoctorTreatment;`
+
+    db.pool.query(query1, function (err, results, fields) {
+      let data = results
+
+      console.log("Sending treatment JSON information to /DoctorTreatments");
+      res.send(JSON.stringify(data));
+    })
+
+  }
+  catch (error) {
+    // Handle Errors
+    console.error('Database operation failed:', error, '. Unable to read DoctorTreaments.');
+    res.status(500).send('Server error');
+  }
+})
 
 // Build Application using build folder in client
 app.use(express.static(path.join(__dirname, '../client/build')));

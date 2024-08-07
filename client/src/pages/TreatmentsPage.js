@@ -7,6 +7,7 @@ function TreatmentsPage() {
     const [treatments, setTreatments] = useState([]);
     const [filteredTreatments, setFilteredTreatments] = useState([]);
     const [doctors, setDoctors] = useState([]);
+    const [doctorTreatments, setDoctorTreatments] = useState([]);
     const [showTable, setShowTable] = useState(false);
     const [showForm, setShowForm] = useState(false);
     const [patients, setPatients] = useState([]);
@@ -15,6 +16,7 @@ function TreatmentsPage() {
         fetchTreatments();
         fetchPatients();
         fetchDoctors();
+        fetchDoctorTreatments();
     }, []);
 
     const fetchTreatments = async () => {
@@ -23,11 +25,8 @@ function TreatmentsPage() {
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
             console.log("Successfully Retrieved data", data)
-            let treatData = data.treatment;
-            let doctorData = data.doctors;
-            setTreatments(treatData);
-            setFilteredTreatments(treatData);
-            setDoctors(doctorData);
+            setTreatments(data);
+            setFilteredTreatments(data);
         } catch (error) {
             console.error('Error fetching treatment data:', error);
         }
@@ -52,6 +51,17 @@ function TreatmentsPage() {
             setDoctors(data);
         } catch (error) {
             console.error('Error fetching doctor data:', error);
+        }
+    };
+
+    const fetchDoctorTreatments = async () => {
+        try {
+            const response = await fetch('/doctortreatments');
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            setDoctorTreatments(data);
+        } catch (error) {
+            console.error('Error fetching doctorTreatment data:', error);
         }
     };
     
@@ -102,6 +112,7 @@ function TreatmentsPage() {
         }
     };
 
+    // Update Treatments
     const handleUpdateTreatment = async (treatmentID, updatedTreatment) => {
         try {
             const response = await fetch(`/treatments/${treatmentID}`, {
@@ -125,6 +136,7 @@ function TreatmentsPage() {
         }
     };
 
+    // Delete Treatments
     const handleDeleteTreatment = async (treatmentID) => {
         try {
             const response = await fetch(`/treatments/${treatmentID}`, {
