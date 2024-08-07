@@ -27,15 +27,6 @@ function Patients({ patient, onUpdatePatient, onDeletePatient, rooms, doctors })
                     <td><input type="text" name="firstName" value={updatedPatient.firstName} onChange={handleChange} /></td>
                     <td><input type="text" name="lastName" value={updatedPatient.lastName} onChange={handleChange} /></td>
                     <td>
-                        <select name="roomID" value={updatedPatient.roomID} onChange={handleChange}>
-                            {rooms.map(room => (
-                                <option key={room.roomID} value={room.roomID}>
-                                    {room.roomID} - {room.location} {room.number}
-                                </option>
-                            ))}
-                        </select>
-                    </td>
-                    <td>
                         <select name="primaryDoctorID" value={updatedPatient.primaryDoctorID} onChange={handleChange}>
                             {doctors.map(doctor => (
                                 <option key={doctor.doctorID} value={doctor.doctorID}>
@@ -44,7 +35,6 @@ function Patients({ patient, onUpdatePatient, onDeletePatient, rooms, doctors })
                             ))}
                         </select>
                     </td>
-                    <td><input type="text" name="appointmentID" value={updatedPatient.appointmentID} onChange={handleChange} /></td>
                     <td><input type="date" name="dateOfBirth" value={updatedPatient.dateOfBirth} onChange={handleChange} /></td>
                     <td><input type="text" name="contactPhone" value={updatedPatient.contactPhone} onChange={handleChange} /></td>
                     <td><input type="email" name="contactEmail" value={updatedPatient.contactEmail} onChange={handleChange} /></td>
@@ -85,9 +75,7 @@ function Patients({ patient, onUpdatePatient, onDeletePatient, rooms, doctors })
                 <>
                     <td>{patient.firstName}</td>
                     <td>{patient.lastName}</td>
-                    <td>{patient.roomID}</td>
                     <td>{patient.primaryDoctorID}</td>
-                    <td>{patient.appointmentID}</td>
                     <td>{patient.dateOfBirth}</td>
                     <td>{patient.contactPhone}</td>
                     <td>{patient.contactEmail}</td>
