@@ -179,14 +179,7 @@ function PatientsPage() {
             <h3>Add New Patient</h3>
             <input type="text" name="firstName" placeholder="First Name" required />
             <input type="text" name="lastName" placeholder="Last Name" required />
-            <select name="roomID" required>
-                <option value="">Select Room</option>
-                {rooms.map(room => (
-                    <option key={room.roomID} value={room.roomID}>
-                        {room.roomID} - {room.location} {room.number}
-                    </option>
-                ))}
-            </select>
+
             <select name="primaryDoctorID" required>
                 <option value="">Select Primary Doctor</option>
                 {doctors.map(doctor => (
@@ -196,7 +189,6 @@ function PatientsPage() {
                 ))}
             </select>
 
-            <input type="text" name="appointmentID" placeholder="Appointment ID" required />
             <input type="date" name="dateOfBirth" placeholder="Date of Birth" required />
             <input type="text" name="contactPhone" placeholder="Contact Phone" required />
             <input type="email" name="contactEmail" placeholder="Contact Email" required />
