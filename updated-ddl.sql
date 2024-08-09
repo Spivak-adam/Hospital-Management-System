@@ -6,10 +6,8 @@ SET AUTOCOMMIT = 0;
 CREATE OR REPLACE TABLE Patients(
     patientID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     firstName varchar(50),
-    lastName varchar(50),
-    roomID int NULL,               
+    lastName varchar(50),       
     primaryDoctorID int NOT NULL,
-    appointmentID int NULL,
     dateOfBirth DATE NOT NULL,
     contactPhone varchar(15) NOT NULL,      
     contactEmail varchar(100) NULL UNIQUE,
@@ -25,10 +23,8 @@ CREATE OR REPLACE TABLE Patients(
     language varchar(50) NOT NULL,
     patientType ENUM("Primary", "Emergency", "Specialist") NOT NULL,
     releaseDate DATETIME NULL,
-    
-    FOREIGN KEY (roomID) REFERENCES Rooms(roomID),
-    FOREIGN KEY (primaryDoctorID) REFERENCES Doctors(doctorID),
-    FOREIGN KEY (appointmentID) REFERENCES Appointments(appointmentID)
+
+    FOREIGN KEY (primaryDoctorID) REFERENCES Doctors(doctorID)
 );
 
 
@@ -110,26 +106,26 @@ CREATE OR REPLACE TABLE Rooms(
 
 -- Insert into Database to populate
 INSERT INTO Patients (
-    firstName, lastName, dateOfBirth, roomID, contactPhone, contactEmail, 
+    firstName, lastName, dateOfBirth, contactPhone, contactEmail, 
     emergencyContactName, emergencyContactPhone, emergencyContactEmail, 
-    address, checkInTime, appointmentID, primaryDoctorID, bloodType, 
+    address, checkInTime, primaryDoctorID, bloodType, 
     releaseDate, sex, gender, age, language, patientType
 ) VALUES
-('John', 'Doe', '1980-01-01', 1, '123-456-7890', 'john@example.com', 
+('John', 'Doe', '1980-01-01', '123-456-7890', 'john@example.com', 
  'Jane Doe', '123-456-7899', 'jane.doe@example.com', 
- '123 Main St', '2024-07-14 09:00:00', 1, 2, 'A+', '2024-07-20 10:00:00', 'Female', 'Male', 21, 'English', 'Primary'),
-('Jane', 'Smith', '1990-02-02', 2, '234-567-8901', 'jane@example.com', 
+ '123 Main St', '2024-07-14 09:00:00', 2, 'A+', '2024-07-20 10:00:00', 'Female', 'Male', 21, 'English', 'Primary'),
+('Jane', 'Smith', '1990-02-02', '234-567-8901', 'jane@example.com', 
  'John Smith', '234-567-8910', 'john.smith@example.com', 
- '456 Elm St', '2024-07-15 10:00:00', 2, 3, 'B-', NULL, 'Female', 'Female', 55, 'Spanish', 'Emergency'),
-('Alice', 'Brown', '2000-03-03', 3, '345-678-9012', 'alice@example.com', 
+ '456 Elm St', '2024-07-15 10:00:00', 3, 'B-', NULL, 'Female', 'Female', 55, 'Spanish', 'Emergency'),
+('Alice', 'Brown', '2000-03-03', '345-678-9012', 'alice@example.com', 
  'Bob Brown', '345-678-9021', 'bob.brown@example.com', 
- '789 Pine St', '2024-07-16 11:00:00', 3, 1, 'O+', NULL, 'Female', 'Female', 62, 'French', 'Specialist'),
-('Bob', 'White', '1985-04-04', 4, '456-789-0123', 'bob@example.com', 
+ '789 Pine St', '2024-07-16 11:00:00', 1, 'O+', NULL, 'Female', 'Female', 62, 'French', 'Specialist'),
+('Bob', 'White', '1985-04-04', '456-789-0123', 'bob@example.com', 
  'Alice White', '456-789-0132', 'alice.white@example.com', 
- '101 Oak St', '2024-07-17 12:00:00', 4, 2, 'AB-', NULL, 'Male', 'Male', 70, 'English', 'Primary'),
-('Mary', 'Johnson', '1995-05-05', 5, '567-890-1234', 'mary@example.com', 
+ '101 Oak St', '2024-07-17 12:00:00', 2, 'AB-', NULL, 'Male', 'Male', 70, 'English', 'Primary'),
+('Mary', 'Johnson', '1995-05-05', '567-890-1234', 'mary@example.com', 
  'Peter Johnson', '567-890-1243', 'peter.johnson@example.com', 
- '202 Maple St', '2024-07-18 13:00:00', 5, 3, 'B+', '2024-07-25 14:00:00', 'Female', 'Female', 33, 'Spanish', 'Emergency');
+ '202 Maple St', '2024-07-18 13:00:00', 3, 'B+', '2024-07-25 14:00:00', 'Female', 'Female', 33, 'Spanish', 'Emergency');
 
 INSERT INTO Appointments (status, reason, patientID, doctorID, date, checkInTime, checkOutTime, roomID)
 VALUES

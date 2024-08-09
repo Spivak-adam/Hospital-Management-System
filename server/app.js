@@ -147,15 +147,15 @@ app.get('/patients', async (req, res) => {
 // Add Patient
 app.post('/patients', async (req, res) => {
   try {
-    const { firstName, lastName, roomID, primaryDoctorID, appointmentID, dateOfBirth, contactPhone, contactEmail, address, emergencyContactName, emergencyContactPhone, emergencyContactEmail, checkInTime, bloodType, sex, gender, age, language, patientType, releaseDate } = req.body;
+    const { firstName, lastName, primaryDoctorID, dateOfBirth, contactPhone, contactEmail, address, emergencyContactName, emergencyContactPhone, emergencyContactEmail, checkInTime, bloodType, sex, gender, age, language, patientType, releaseDate } = req.body;
 
     const query = `
       INSERT INTO Patients (
-        firstName, lastName, roomID, primaryDoctorID, appointmentID, dateOfBirth, contactPhone, contactEmail, address, emergencyContactName, emergencyContactPhone, emergencyContactEmail, checkInTime, bloodType, sex, gender, age, language, patientType, releaseDate
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        firstName, lastName, primaryDoctorID, dateOfBirth, contactPhone, contactEmail, address, emergencyContactName, emergencyContactPhone, emergencyContactEmail, checkInTime, bloodType, sex, gender, age, language, patientType, releaseDate
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
-    db.pool.query(query, [firstName, lastName, roomID, primaryDoctorID, appointmentID, dateOfBirth, contactPhone, contactEmail, address, emergencyContactName, emergencyContactPhone, emergencyContactEmail, checkInTime, bloodType, sex, gender, age, language, patientType, releaseDate], function (err, results, fields) {
+    db.pool.query(query, [firstName, lastName, primaryDoctorID, dateOfBirth, contactPhone, contactEmail, address, emergencyContactName, emergencyContactPhone, emergencyContactEmail, checkInTime, bloodType, sex, gender, age, language, patientType, releaseDate], function (err, results, fields) {
       if (err) {
         console.error('Database operation failed:', err);
         res.status(500).send('Server error');
@@ -175,15 +175,15 @@ app.post('/patients', async (req, res) => {
 app.put('/patients/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { firstName, lastName, roomID, primaryDoctorID, appointmentID, dateOfBirth, contactPhone, contactEmail, address, emergencyContactName, emergencyContactPhone, emergencyContactEmail, checkInTime, bloodType, sex, gender, age, language, patientType, releaseDate } = req.body;
+    const { firstName, lastName, primaryDoctorID, dateOfBirth, contactPhone, contactEmail, address, emergencyContactName, emergencyContactPhone, emergencyContactEmail, checkInTime, bloodType, sex, gender, age, language, patientType, releaseDate } = req.body;
 
     const query = `
       UPDATE Patients 
-      SET firstName = ?, lastName = ?, roomID = ?, primaryDoctorID = ?, appointmentID = ?, dateOfBirth = ?, contactPhone = ?, contactEmail = ?, address = ?, emergencyContactName = ?, emergencyContactPhone = ?, emergencyContactEmail = ?, checkInTime = ?, bloodType = ?, sex = ?, gender = ?, age = ?, language = ?, patientType = ?, releaseDate = ?
+      SET firstName = ?, lastName = ?, primaryDoctorID = ?, dateOfBirth = ?, contactPhone = ?, contactEmail = ?, address = ?, emergencyContactName = ?, emergencyContactPhone = ?, emergencyContactEmail = ?, checkInTime = ?, bloodType = ?, sex = ?, gender = ?, age = ?, language = ?, patientType = ?, releaseDate = ?
       WHERE patientID = ?
     `;
 
-    db.pool.query(query, [firstName, lastName, roomID, primaryDoctorID, appointmentID, dateOfBirth, contactPhone, contactEmail, address, emergencyContactName, emergencyContactPhone, emergencyContactEmail, checkInTime, bloodType, sex, gender, age, language, patientType, releaseDate, id], function (err, results, fields) {
+    db.pool.query(query, [firstName, lastName, primaryDoctorID, dateOfBirth, contactPhone, contactEmail, address, emergencyContactName, emergencyContactPhone, emergencyContactEmail, checkInTime, bloodType, sex, gender, age, language, patientType, releaseDate, id], function (err, results, fields) {
       if (err) {
         console.error('Database operation failed:', err);
         res.status(500).send('Server error');
@@ -427,49 +427,46 @@ app.post('/treatments', (req, res) => {
 
   console.log("INSERT treatment data submission form", treatData);
 
-  query1 = `SET FOREIGN_KEY_CHECKS=0;`;
-  query2 = `INSERT INTO Treatments (patientID, description, date, diagnosis, symptoms) VALUES ('${treatData['patientID']}','${treatData['description']}','${treatData['date']}','${treatData['diagnosis']}','${treatData['symptoms']}');`
-  query3 = `INSERT INTO DoctorTreatment (treatmentID, doctorID) VALUES (LAST_INSERT_ID(), ${treatData['doctorID']});`
-  query4 = `SET FOREIGN_KEY_CHECKS=1;`;
+  let query1 = `SET FOREIGN_KEY_CHECKS=0;`;
+  let query2 = `INSERT INTO Treatments (patientID, description, date, diagnosis, symptoms) VALUES ('${treatData['patientID']}','${treatData['description']}','${treatData['date']}','${treatData['diagnosis']}','${treatData['symptoms']}');`
+  let query3 = `INSERT INTO DoctorTreatment (treatmentID, doctorID) VALUES (LAST_INSERT_ID(), ${treatData['doctorID']});`
+  let query4 = `SET FOREIGN_KEY_CHECKS=1;`;
 
   db.pool.query(query1, function (error, rows, fields) {
     if (error) {
-      console.log(error)
-      res.sendStatus(400)
+      console.log("Error in query1:", error);
+      return res.sendStatus(400);
     }
-    else {
-      db.pool.query(query2, function (error, rows, fields) {
+    db.pool.query(query2, function (error, rows, fields) {
+      if (error) {
+        console.log("Error in Inserting Treatment:", error);
+        return res.sendStatus(400);
+      }
+      console.log("Inserted into Treatments, rows:", rows);
+      db.pool.query(query3, function (error, rows, fields) {
         if (error) {
           console.log(error)
-          res.sendStatus(400)
+          if (error.code === 'ER_DUP_ENTRY') {
+            return res.status(400).send("Error: Duplicate entry. Doctor already assigned to this treatment.");
+          } else {
+            console.log("Error in query3:", error);
+            return res.sendStatus(400);
+          }
         }
-        else {
-          db.pool.query(query3, function (error, rows, fields) {
-            if (error) {
-              console.log(error)
-              res.sendStatus(400)
-            }
-            else {
-              db.pool.query(query4, function (error, rows, fields) {
-                if (error) {
-                  console.log(error)
-                  res.sendStatus(400)
-                }
-                else {
-                  console.log("Successfully Inserted into Treatments Table, and DoctorTreatments");
-                  res.send("Successfully Inserted into Treatments Table, and DoctorTreatments");
-                }
-              })
-            }
-          })
-        }
-      })
-    }
-
-
-  })
-
+        console.log("Inserted into DoctorTreatment, rows:", rows);
+        db.pool.query(query4, function (error, rows, fields) {
+          if (error) {
+            console.log("Error in query4:", error);
+            return res.sendStatus(400);
+          }
+          console.log("Successfully Inserted into Treatments Table, and DoctorTreatments");
+          res.send("Successfully Inserted into Treatments Table, and DoctorTreatments");
+        });
+      });
+    });
+  });
 });
+
 
 // Update existing treatment
 app.put('/treatments/:id', async (req, res) => {
@@ -486,7 +483,6 @@ app.put('/treatments/:id', async (req, res) => {
         console.error('Error updating treatment:', err);
         res.status(500).send('Server error');
       } else {
-        res.send('Treatment updated successfully');
         db.pool.query(query2, doctorValue, (err, results) => {
           if (err) {
             console.error('Error updating DoctorTreatment:', err);
@@ -510,44 +506,14 @@ app.delete('/treatments/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const values = [id];
-    const query1 = `SET FOREIGN_KEY_CHECKS=0`;
-    const query2 = "DELETE FROM Treatments WHERE treatmentID = ?";
-    const query3 = "DELETE FROM DoctorTreatment WHERE treatmentID = ?";
-    const query4 = `SET FOREIGN_KEY_CHECKS=1`;
-    
+    const query1 = "DELETE FROM Treatments WHERE treatmentID = ?";
+
     db.pool.query(query1, values, (err, results) => {
       if (err) {
         console.error('Foreign Key Error:', err);
         res.status(500).send('Server error');
       } else {
-        db.pool.query(query2, values, (err, results) => {
-          if (err) {
-            console.error('Error deleting treatment:', err);
-            res.status(500).send('Server error');
-          } else {
-            res.send('Treatment deleted successfully');
-            db.pool.query(query3, values, (err, results) => {
-              if (err) {
-                console.error('Error DoctorTreatments Error:', err);
-                res.status(500).send('Server error');
-        
-              } else {
-                res.send('DoctorTreatments deleted successfully');
-                db.pool.query(query4, values, (err, results) => {
-                  if (err) {
-                    console.error('Foreign Key Error:', err);
-                    res.status(500).send('Server error');
-            
-                  } else {
-                    res.send('Treatment and DoctorTreatment deleted successfully');
-                  }
-                })
-              }
-            })
-            
-          }
-        })
-
+        console.log('Treatment and DoctorTreatment deleted successfully');
       }
     });
 

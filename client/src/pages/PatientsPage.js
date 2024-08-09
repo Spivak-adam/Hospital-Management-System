@@ -70,9 +70,7 @@ function PatientsPage() {
         const newPatient = {
             firstName: form.firstName.value,
             lastName: form.lastName.value,
-            roomID: form.roomID.value,
             primaryDoctorID: form.primaryDoctorID.value,
-            appointmentID: form.appointmentID.value,
             dateOfBirth: form.dateOfBirth.value,
             contactPhone: form.contactPhone.value,
             contactEmail: form.contactEmail.value,
