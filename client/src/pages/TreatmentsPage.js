@@ -114,6 +114,7 @@ function TreatmentsPage() {
 
     // Update Treatments
     const handleUpdateTreatment = async (treatmentID, updatedTreatment) => {
+        updatedTreatment['originalDoctor']=filteredTreatments.lastName;
         try {
             const response = await fetch(`/treatments/${treatmentID}`, {
                 method: 'PUT',

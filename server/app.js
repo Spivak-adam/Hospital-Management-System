@@ -427,43 +427,33 @@ app.post('/treatments', (req, res) => {
 
   console.log("INSERT treatment data submission form", treatData);
 
-  let query1 = `SET FOREIGN_KEY_CHECKS=0;`;
-  let query2 = `INSERT INTO Treatments (patientID, description, date, diagnosis, symptoms) VALUES ('${treatData['patientID']}','${treatData['description']}','${treatData['date']}','${treatData['diagnosis']}','${treatData['symptoms']}');`
-  let query3 = `INSERT INTO DoctorTreatment (treatmentID, doctorID) VALUES (LAST_INSERT_ID(), ${treatData['doctorID']});`
-  let query4 = `SET FOREIGN_KEY_CHECKS=1;`;
+  let query1 = `INSERT INTO Treatments (patientID, description, date, diagnosis, symptoms) VALUES (?, ?, ?, ?, ?);`;
+  let query2 = `INSERT INTO DoctorTreatment (treatmentID, doctorID) VALUES (?, ?);`;
 
-  db.pool.query(query1, function (error, rows, fields) {
-    if (error) {
-      console.log("Error in query1:", error);
+  db.pool.query(query1, [treatData['patientID'], treatData['description'], treatData['date'], treatData['diagnosis'], treatData['symptoms']], function (err, result) {
+    if (err) {
+      console.log("Error in Inserting Treatment:", err);
       return res.sendStatus(400);
     }
-    db.pool.query(query2, function (error, rows, fields) {
-      if (error) {
-        console.log("Error in Inserting Treatment:", error);
-        return res.sendStatus(400);
-      }
-      console.log("Inserted into Treatments, rows:", rows);
-      db.pool.query(query3, function (error, rows, fields) {
-        if (error) {
-          console.log(error)
-          if (error.code === 'ER_DUP_ENTRY') {
+    else {
+      console.log("Inserted into Treatments, result:", result);
+
+      const treatmentID = result.insertId;
+
+      db.pool.query(query2, [treatmentID, treatData['doctorID']], function (err, result) {
+        if (err) {
+          console.log(err)
+          if (err.code === 'ER_DUP_ENTRY') {
             return res.status(400).send("Error: Duplicate entry. Doctor already assigned to this treatment.");
           } else {
-            console.log("Error in query3:", error);
+            console.log("Error in query2:", err);
             return res.sendStatus(400);
           }
         }
-        console.log("Inserted into DoctorTreatment, rows:", rows);
-        db.pool.query(query4, function (error, rows, fields) {
-          if (error) {
-            console.log("Error in query4:", error);
-            return res.sendStatus(400);
-          }
-          console.log("Successfully Inserted into Treatments Table, and DoctorTreatments");
-          res.send("Successfully Inserted into Treatments Table, and DoctorTreatments");
-        });
+        console.log("Successfully Inserted into Treatments Table, and DoctorTreatments");
+        res.send("Successfully Inserted into Treatments Table, and DoctorTreatments");
       });
-    });
+    }
   });
 });
 
@@ -472,24 +462,40 @@ app.post('/treatments', (req, res) => {
 app.put('/treatments/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { patientID, description, date, diagnosis, symptoms, doctorID } = req.body;
+    const { patientID, description, date, diagnosis, symptoms, doctorID, lastName } = req.body;
     const query1 = "UPDATE Treatments SET patientID = ?, description = ?, date = ?, diagnosis = ?, symptoms = ? WHERE treatmentID = ?";
-    const query2 = "UPDATE DoctorTreatment SET doctorID = ? WHERE treatmentID = ?";
+    const query2 = "SELECT doctorID FROM Doctors WHERE Doctors.lastName = ?;"
+    const query3 = "UPDATE DoctorTreatment SET doctorID = ? WHERE treatmentID = ? and DoctorID = ?;";
+    
+
     const values = [patientID, description, date, diagnosis, symptoms, id];
-    const doctorValue = [doctorID, id];
+    const doctorLastName = [lastName];
+
+    console.log(req.body);
 
     db.pool.query(query1, values, (err, results) => {
       if (err) {
         console.error('Error updating treatment:', err);
         res.status(500).send('Server error');
       } else {
-        db.pool.query(query2, doctorValue, (err, results) => {
+        db.pool.query(query2, doctorLastName, (err, results) => {
           if (err) {
-            console.error('Error updating DoctorTreatment:', err);
+            console.error('Error getting DoctorID:', err);
             res.status(500).send('Server error');
-          }
-          else {
-            res.send('DoctorTreatment updated successfully');
+          } else {
+
+            const originalDoctorID = results[0].doctorID;
+            const doctorValue = [doctorID, id, originalDoctorID];
+
+            db.pool.query(query3, doctorValue, (err, results) => {
+              if (err) {
+                console.error('Error updating DoctorTreatment:', err);
+                res.status(500).send('Server error');
+              }
+              else {
+                res.send('DoctorTreatment updated successfully');
+              }
+            })
           }
         })
       }
@@ -514,6 +520,7 @@ app.delete('/treatments/:id', async (req, res) => {
         res.status(500).send('Server error');
       } else {
         console.log('Treatment and DoctorTreatment deleted successfully');
+        res.send('DoctorTreatment deleted successfully');
       }
     });
 

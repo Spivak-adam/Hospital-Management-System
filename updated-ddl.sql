@@ -78,12 +78,12 @@ CREATE OR REPLACE TABLE Treatments(
 
 -- create and insert data into DoctorTreatment table
 CREATE OR REPLACE TABLE DoctorTreatment(
-    doctorID int NOT NULL,
     treatmentID int NOT NULL,
+    doctorID int NOT NULL,
 
-    PRIMARY KEY (doctorID, treatmentID),
-    FOREIGN KEY (doctorID) REFERENCES Doctors(doctorID) ON DELETE CASCADE,
-    FOREIGN KEY (treatmentID) REFERENCES Treatments(treatmentID) ON DELETE CASCADE
+    PRIMARY KEY (treatmentID, doctorID),
+    FOREIGN KEY (treatmentID) REFERENCES Treatments(treatmentID) ON DELETE CASCADE,
+    FOREIGN KEY (doctorID) REFERENCES Doctors(doctorID) ON DELETE CASCADE
 );
 
 
@@ -151,17 +151,17 @@ VALUES
 ('Knee replacement', '2024-07-17 12:00:00', 4, 'Osteoarthritis', 'Knee pain, swelling'),
 ('Skin biopsy', '2024-07-18 13:00:00', 5, 'Skin lesion', 'Skin growth, discoloration');
 
-INSERT INTO DoctorTreatment (doctorID, treatmentID)
+INSERT INTO DoctorTreatment (treatmentID, doctorID)
 VALUES
 (1, 1),
-(2, 1),
+(1, 2),
 (2, 2),
-(3, 2),
+(2, 3),
 (3, 3),
-(4, 3),
-(5, 3),
+(3, 4),
+(3, 5),
 (4, 4),
-(4, 5),
+(5, 4),
 (5, 5);
 
 INSERT INTO Rooms (location, number, patientID, doctorID, occupied, accommodations, lengthOfStay)
