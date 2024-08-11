@@ -64,14 +64,38 @@ function AppointmentsPage() {
         }
     };
 
+
+
     const handleSearch = (searchTerm) => {
-        const filtered = appointments.filter(appointment =>
-            Object.values(appointment).some(value =>
-                (value !== null && value !== undefined ? value.toString() : "").toLowerCase().includes(searchTerm.toLowerCase())
-            )
-        );
+        const filtered = appointments.filter(appointment => {
+            // Find the patient associated with this appointment
+            const patient = patients.find(p => p.patientID === appointment.patientID);
+            // Find the doctor associated with this appointment
+            const doctor = doctors.find(d => d.doctorID === appointment.doctorID);
+            // Find the room associated with this appointment
+            const room = availableRooms.find(r => r.roomID === appointment.roomID);
+    
+            // Combine all the fields into a single string to search within
+            const combinedData = `
+                ${appointment.appointmentID}
+                ${appointment.status}
+                ${appointment.reason}
+                ${appointment.date}
+                ${appointment.checkInTime}
+                ${appointment.checkOutTime}
+                ${patient ? `${patient.firstName} ${patient.lastName} ${patient.patientID}` : ""}
+                ${doctor ? `${doctor.firstName} ${doctor.lastName} ${doctor.doctorID}` : ""}
+                ${room ? `${room.roomID} ${room.location} ${room.number}` : ""}
+            `.toLowerCase();
+    
+            // Check if the search term is present in the combined data
+            return combinedData.includes(searchTerm.toLowerCase());
+        });
+    
         setFilteredAppointments(filtered);
     };
+    
+    
 
     const handleSubmitNewAppointment = async (event) => {
         event.preventDefault();

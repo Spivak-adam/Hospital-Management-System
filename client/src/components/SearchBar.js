@@ -4,11 +4,9 @@ function SearchBar({ placeholder, onSearch }) {
     const [searchTerm, setSearchTerm] = useState('');
 
     const handleInputChange = (event) => {
-        setSearchTerm(event.target.value);
-    };
-
-    const handleSearchClick = () => {
-        onSearch(searchTerm);
+        const newSearchTerm = event.target.value;
+        setSearchTerm(newSearchTerm);
+        onSearch(newSearchTerm); // Trigger the search function as the user types
     };
 
     return (
@@ -19,7 +17,6 @@ function SearchBar({ placeholder, onSearch }) {
                 onChange={handleInputChange} 
                 placeholder={placeholder} 
             />
-            <button onClick={handleSearchClick}>Search</button>
         </div>
     );
 }

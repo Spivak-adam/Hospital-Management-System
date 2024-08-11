@@ -69,15 +69,32 @@ function TreatmentsPage() {
         }
     };
     
+
+
     const handleSearch = (searchTerm) => {
-        const filtered = treatments.filter(treatment =>
-            Object.values(treatment).some(value =>
-                (value !== null && value !== undefined ? value.toString() : "").toLowerCase().includes(searchTerm.toLowerCase())
-            )
-        );
+        const filtered = treatments.filter(treatment => {
+            // Get the related patient data
+            const patient = patients.find(p => p.patientID === treatment.patientID);
+            
+            // Combine all the fields into a single string to search within
+            const combinedData = `
+                ${treatment.treatmentID}
+                ${treatment.description}
+                ${treatment.date}
+                ${treatment.diagnosis}
+                ${treatment.symptoms}
+                ${patient ? `${patient.firstName} ${patient.lastName} ${patient.patientID}` : ""}
+            `.toLowerCase();
+    
+            // Check if the search term is present in the combined data
+            return combinedData.includes(searchTerm.toLowerCase());
+        });
+    
         setFilteredTreatments(filtered);
     };
+    
 
+    
     // CREATE and Insert to table and database
     const handleSubmitNewTreatment = async (event) => {
         event.preventDefault();
