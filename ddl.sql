@@ -138,13 +138,13 @@ VALUES
 ('Confirmed', 'Scheduled', 4, 4, '2024-07-17 12:00:00', '12:00:00', '13:00:00', 4),
 ('In-Room', 'ER', 5, 5, '2024-07-18 13:00:00', '13:00:00', '14:00:00', 5);
 
-INSERT INTO Doctors (specialization, firstName, lastName, email, phoneNumber, image, language, gender)
+INSERT INTO Doctors (specialization, firstName, lastName, email, phoneNumber, language, gender)
 VALUES
-('Cardiology', 'John', 'Watson', 'john.watson@example.com', '111-222-3333', NULL, 'English', 'Male'),
-('Neurology', 'Sarah', 'Connor', 'sarah.connor@example.com', '444-555-6666', NULL, 'English', 'Female'),
-('Pediatrics', 'Emily', 'Stone', 'emily.stone@example.com', '777-888-9999', NULL, 'Spanish', 'Female'),
-('Orthopedics', 'Michael', 'Brown', 'michael.brown@example.com', '222-333-4444', NULL, 'English', 'Male'),
-('Dermatology', 'Anna', 'Taylor', 'anna.taylor@example.com', '555-666-7777', NULL, 'French', 'Female');
+('Cardiology', 'John', 'Watson', 'john.watson@example.com', '111-222-3333', 'English', 'Male'),
+('Neurology', 'Sarah', 'Connor', 'sarah.connor@example.com', '444-555-6666', 'English', 'Female'),
+('Pediatrics', 'Emily', 'Stone', 'emily.stone@example.com', '777-888-9999', 'Spanish', 'Female'),
+('Orthopedics', 'Michael', 'Brown', 'michael.brown@example.com', '222-333-4444', 'English', 'Male'),
+('Dermatology', 'Anna', 'Taylor', 'anna.taylor@example.com', '555-666-7777', 'French', 'Female');
 
 INSERT INTO Treatments (description, date, patientID, diagnosis, symptoms)
 VALUES
