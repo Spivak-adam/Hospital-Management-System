@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 
-function Treatments({ treatment, onUpdateTreatment, onDeleteTreatment, patients, doctors }) {
+function Treatments({ treatment, onUpdateTreatment, onDeleteTreatment, doctors }) {
     const [editing, setEditing] = useState(false);
     const [updatedTreatment, setUpdatedTreatment] = useState(treatment);
 
@@ -22,17 +22,9 @@ function Treatments({ treatment, onUpdateTreatment, onDeleteTreatment, patients,
     return (
         <tr>
             <td>{treatment.treatmentID}</td>
+            <td>{treatment.patientID}</td>
             {editing ? (
                 <>
-                    <td>
-                        <select name="patientID" value={updatedTreatment.patientID} onChange={handleChange}>
-                            {patients.map(patient => (
-                                <option key={patient.patientID} value={patient.patientID}>
-                                    {patient.patientID} - {patient.firstName} {patient.lastName}
-                                </option>
-                            ))}
-                        </select>
-                    </td>
                     <td><input type="text" name="description" value={updatedTreatment.description} onChange={handleChange} /></td>
                     <td><input type="datetime-local" name="date" value={updatedTreatment.date} onChange={handleChange} /></td>
                     <td><input type="text" name="diagnosis" value={updatedTreatment.diagnosis} onChange={handleChange} /></td>
@@ -52,7 +44,7 @@ function Treatments({ treatment, onUpdateTreatment, onDeleteTreatment, patients,
                 </>
             ) : (
                 <>
-                    <td>{treatment.patientID}</td>
+                    
                     <td>{treatment.description}</td>
                     <td>{treatment.date}</td>
                     <td>{treatment.diagnosis}</td>

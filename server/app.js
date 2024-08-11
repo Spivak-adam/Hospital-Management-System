@@ -462,13 +462,12 @@ app.post('/treatments', (req, res) => {
 app.put('/treatments/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { patientID, description, date, diagnosis, symptoms, doctorID, lastName } = req.body;
-    const query1 = "UPDATE Treatments SET patientID = ?, description = ?, date = ?, diagnosis = ?, symptoms = ? WHERE treatmentID = ?";
+    const { description, date, diagnosis, symptoms, doctorID, lastName } = req.body;
+    const query1 = "UPDATE Treatments SET description = ?, date = ?, diagnosis = ?, symptoms = ? WHERE treatmentID = ?";
     const query2 = "SELECT doctorID FROM Doctors WHERE Doctors.lastName = ?;"
     const query3 = "UPDATE DoctorTreatment SET doctorID = ? WHERE treatmentID = ? and DoctorID = ?;";
     
-
-    const values = [patientID, description, date, diagnosis, symptoms, id];
+    const values = [ description, date, diagnosis, symptoms, id];
     const doctorLastName = [lastName];
 
     console.log(req.body);
@@ -486,6 +485,7 @@ app.put('/treatments/:id', async (req, res) => {
 
             const originalDoctorID = results[0].doctorID;
             const doctorValue = [doctorID, id, originalDoctorID];
+            console.log(originalDoctorID);
 
             db.pool.query(query3, doctorValue, (err, results) => {
               if (err) {

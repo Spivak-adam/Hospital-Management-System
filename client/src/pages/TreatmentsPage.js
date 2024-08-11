@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import NavigationBar from '../components/NavigationBar';
 import SearchBar from '../components/SearchBar';
 import TreatmentsTable from '../components/TreatmentsTable';
+import DoctorTreatmentTable from '../components/DoctorTreatmentTable';
 
 function TreatmentsPage() {
     const [treatments, setTreatments] = useState([]);
@@ -10,6 +11,7 @@ function TreatmentsPage() {
     const [doctorTreatments, setDoctorTreatments] = useState([]);
     const [showTable, setShowTable] = useState(false);
     const [showForm, setShowForm] = useState(false);
+    const [showAssignment, setShowAssignment] = useState(false);
     const [patients, setPatients] = useState([]);
 
     useEffect(() => {
@@ -54,6 +56,8 @@ function TreatmentsPage() {
         }
     };
 
+    
+    // Read DoctorTreatments
     const fetchDoctorTreatments = async () => {
         try {
             const response = await fetch('/doctortreatments');
@@ -102,6 +106,42 @@ function TreatmentsPage() {
                 fetchTreatments();
                 setShowForm(false);
                 setShowTable(true);
+                setShowAssignment(false);
+            } else {
+                const errorMessage = await response.text();
+                alert(`Failed to add new treatment: ${errorMessage}`);
+            }
+        } catch (error) {
+            console.error('Error adding new treatment:', error);
+            alert('Error adding new treatment. Please try again.');
+        }
+    };
+
+    // Assign (Create) DoctorTreatments
+    const handleAssignDoctorTreatments = async (event) => {
+        event.preventDefault();
+        const form = event.target;
+        const newTreatment = {
+            treatmentID: form.treatmentID.value,
+            doctorID: form.doctorID.value
+        };
+
+        try {
+            const response = await fetch('/doctortreatments', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newTreatment),
+            });
+
+            if (response.ok) {
+                alert('Doctor assigned to treatment successfully!');
+                form.reset();
+                fetchTreatments();
+                setShowForm(false);
+                setShowTable(true);
+                setShowAssignment(false);
             } else {
                 const errorMessage = await response.text();
                 alert(`Failed to add new treatment: ${errorMessage}`);
@@ -157,6 +197,28 @@ function TreatmentsPage() {
         }
     };
 
+    // Update DoctorTreatments
+
+    // Delete DoctorTreatments
+    const handleUnassignDoctorTreatments = async (treatmentID) => {
+        try {
+            const response = await fetch(`/doctortreatments/${treatmentID}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                alert('Treatment deleted successfully!');
+                fetchTreatments();
+            } else {
+                const errorMessage = await response.text();
+                alert(`Failed to delete treatment: ${errorMessage}`);
+            }
+        } catch (error) {
+            console.error('Error deleting treatment:', error);
+            alert('Error deleting treatment. Please try again.');
+        }
+    };
+
     const renderTableSection = () => (
         <>
             <SearchBar placeholder="Search Treatments..." onSearch={handleSearch} />
@@ -165,7 +227,6 @@ function TreatmentsPage() {
                     treatments={filteredTreatments}
                     onUpdateTreatment={handleUpdateTreatment}
                     onDeleteTreatment={handleDeleteTreatment}
-                    patients={patients}
                     doctors={doctors}
                 />
             </div>
@@ -173,6 +234,17 @@ function TreatmentsPage() {
     );
 
     // Add treatment information form
+    const renderAssignmentSection = () => (
+        <>
+            <div className="patients-list">
+                <DoctorTreatmentTable
+                    DoctorTreatment={doctorTreatments}
+                    onDeleteDoctorTreatment={handleUnassignDoctorTreatments}
+                />
+            </div>
+        </>
+    );
+
     const renderFormSection = () => (
         <form className="createDataForm" onSubmit={handleSubmitNewTreatment}>
             <h3>Add New Treatment</h3>
@@ -220,11 +292,13 @@ function TreatmentsPage() {
                     <h2>Treatments</h2>
                     <p>Manage treatments in the system</p>
                     <div className="patients-actions">
-                        <button className="btn-action" onClick={() => { setShowTable(true); setShowForm(false); setFilteredTreatments(treatments); }}>View All Treatments</button>
-                        <button className="btn-action" onClick={() => { setShowTable(false); setShowForm(true); }}>Add New Treatment</button>
+                        <button className="btn-action" onClick={() => { setShowTable(true); setShowForm(false); setShowAssignment(false); setFilteredTreatments(treatments); }}>View All Treatments</button>
+                        <button className="btn-action" onClick={() => { setShowTable(false); setShowForm(true); setShowAssignment(false); }}>Add New Treatment</button>
+                        <button className="btn-action" onClick={() => { setShowTable(false); setShowForm(false); setShowAssignment(true); }}>Assign Treatments</button>
                     </div>
                     {showTable && renderTableSection()}
                     {showForm && renderFormSection()}
+                    {showAssignment && renderAssignmentSection()}
                 </section>
             </div>
         </>

@@ -1,7 +1,8 @@
 import React from 'react';
 import Treatments from './Treatments';
 
-function TreatmentsTable({ treatments, onUpdateTreatment, onDeleteTreatment, patients, doctors }) {
+function TreatmentsTable({ treatments, onUpdateTreatment, onDeleteTreatment, doctors }) {
+
     return (
         <table>
             <thead>
@@ -24,7 +25,6 @@ function TreatmentsTable({ treatments, onUpdateTreatment, onDeleteTreatment, pat
                             key={index}
                             onUpdateTreatment={onUpdateTreatment}
                             onDeleteTreatment={onDeleteTreatment}
-                            patients={patients}
                             doctors={doctors}
                         />
                     ))
