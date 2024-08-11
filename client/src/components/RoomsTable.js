@@ -13,7 +13,7 @@ function RoomsTable({ rooms, onUpdateRoom, onDeleteRoom, patients, doctors }) {
                     <th>Number</th>
                     <th>Occupied</th>
                     <th>Accommodations</th>
-                    <th>Length of Stay</th>
+                    <th>Length of Stay (In Days)</th>
                     <th>Actions</th>
                 </tr>
             </thead>

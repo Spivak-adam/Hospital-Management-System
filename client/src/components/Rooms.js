@@ -19,6 +19,14 @@ function Rooms({ room, onUpdateRoom, onDeleteRoom, patients, doctors }) {
         setUpdatedRoom({ ...updatedRoom, [name]: value });
     };
 
+    // Find the patient's full name
+    const patient = patients.find(p => p.patientID === room.patientID);
+    const patientName = patient ? `${patient.firstName} ${patient.lastName}` : "Unknown Patient";
+
+    // Find the doctor's full name
+    const doctor = doctors.find(d => d.doctorID === room.doctorID);
+    const doctorName = doctor ? `${doctor.firstName} ${doctor.lastName}` : "Unknown Doctor";
+
     return (
         <tr>
             <td>{room.roomID}</td>
@@ -75,8 +83,8 @@ function Rooms({ room, onUpdateRoom, onDeleteRoom, patients, doctors }) {
                 </>
             ) : (
                 <>
-                    <td>{room.patientID}</td>
-                    <td>{room.doctorID}</td>
+                    <td>{`${room.patientID} - ${patientName}`}</td>
+                    <td>{`${room.doctorID} - ${doctorName}`}</td>
                     <td>{room.location}</td>
                     <td>{room.number}</td>
                     <td>{room.occupied}</td>

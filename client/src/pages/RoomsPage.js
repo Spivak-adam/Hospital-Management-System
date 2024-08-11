@@ -187,7 +187,7 @@ function RoomsPage() {
                 <option value="No">No</option>
             </select>
             <input type="text" name="accommodations" placeholder="Accommodations" required />
-            <input type="number" name="lengthOfStay" placeholder="Length of Stay" />
+            <input type="number" name="lengthOfStay" placeholder="Length of Stay (In Days)" />
             <button type="submit" className="btn-action">Submit</button>
         </form>
     );
