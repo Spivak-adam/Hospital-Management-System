@@ -6,6 +6,7 @@ import DoctorTreatmentTable from '../components/DoctorTreatmentTable';
 
 function TreatmentsPage() {
     const [treatments, setTreatments] = useState([]);
+    const [treatmentsOnly, setTreatmentsOnly] = useState([]);
     const [filteredTreatments, setFilteredTreatments] = useState([]);
     const [doctors, setDoctors] = useState([]);
     const [doctorTreatments, setDoctorTreatments] = useState([]);
@@ -19,6 +20,7 @@ function TreatmentsPage() {
         fetchPatients();
         fetchDoctors();
         fetchDoctorTreatments();
+        fetchTreatmentsOnly();
     }, []);
 
     const fetchTreatments = async () => {
@@ -31,6 +33,18 @@ function TreatmentsPage() {
             setFilteredTreatments(data);
         } catch (error) {
             console.error('Error fetching treatment data:', error);
+        }
+    };
+
+    const fetchTreatmentsOnly = async () => {
+        try {
+            const response = await fetch('/treatmentsonly');
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            console.log("Successfully Retrieved data", data)
+            setTreatmentsOnly(data);
+        } catch (error) {
+            console.error('Error fetching DoctorTreatment data:', error);
         }
     };
 
@@ -56,11 +70,10 @@ function TreatmentsPage() {
         }
     };
 
-    
     // Read DoctorTreatments
     const fetchDoctorTreatments = async () => {
         try {
-            const response = await fetch('/doctortreatments');
+            const response = await fetch('/doctortreatment');
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
             setDoctorTreatments(data);
@@ -68,7 +81,7 @@ function TreatmentsPage() {
             console.error('Error fetching doctorTreatment data:', error);
         }
     };
-    
+
     const handleSearch = (searchTerm) => {
         const filtered = treatments.filter(treatment =>
             Object.values(treatment).some(value =>
@@ -113,26 +126,26 @@ function TreatmentsPage() {
             }
         } catch (error) {
             console.error('Error adding new treatment:', error);
-            alert('Error adding new treatment. Please try again.');
+            alert('Error assigning new treatment. Please try again.');
         }
     };
 
     // Assign (Create) DoctorTreatments
-    const handleAssignDoctorTreatments = async (event) => {
+    const handleCreateDoctorTreatments = async (event) => {
         event.preventDefault();
         const form = event.target;
-        const newTreatment = {
+        const newDoctorTreatment = {
             treatmentID: form.treatmentID.value,
             doctorID: form.doctorID.value
         };
 
         try {
-            const response = await fetch('/doctortreatments', {
+            const response = await fetch('/doctortreatment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(newTreatment),
+                body: JSON.stringify(newDoctorTreatment),
             });
 
             if (response.ok) {
@@ -147,14 +160,14 @@ function TreatmentsPage() {
                 alert(`Failed to add new treatment: ${errorMessage}`);
             }
         } catch (error) {
-            console.error('Error adding new treatment:', error);
-            alert('Error adding new treatment. Please try again.');
+            console.error('Error assigning doctor to treatment:', error);
+            alert('Error assigning doctor to treatment. Please try again.');
         }
     };
 
     // Update Treatments
     const handleUpdateTreatment = async (treatmentID, updatedTreatment) => {
-        updatedTreatment['originalDoctor']=filteredTreatments.lastName;
+        updatedTreatment['originalDoctor'] = filteredTreatments.lastName;
         try {
             const response = await fetch(`/treatments/${treatmentID}`, {
                 method: 'PUT',
@@ -197,18 +210,17 @@ function TreatmentsPage() {
         }
     };
 
-    // Update DoctorTreatments
-
     // Delete DoctorTreatments
-    const handleUnassignDoctorTreatments = async (treatmentID) => {
+    const handleDeleteDoctorTreatments = async (treatmentID) => {
         try {
-            const response = await fetch(`/doctortreatments/${treatmentID}`, {
-                method: 'DELETE',
+            const response = await fetch(`/doctortreatment/${treatmentID}`, {
+                method: 'DELETE'
             });
 
             if (response.ok) {
                 alert('Treatment deleted successfully!');
                 fetchTreatments();
+                fetchDoctorTreatments();
             } else {
                 const errorMessage = await response.text();
                 alert(`Failed to delete treatment: ${errorMessage}`);
@@ -236,10 +248,34 @@ function TreatmentsPage() {
     // Add treatment information form
     const renderAssignmentSection = () => (
         <>
+            <form className="createDataForm" onSubmit={handleCreateDoctorTreatments}>
+                <h3>Add or remove Doctors assigned to treatments</h3>
+                <label for="treatmentID">Treatment ID:</label>
+                <select id="treatmentID" name="treatmentID" placeholder="treatment ID" required>
+                    <option value="">Select a treatment</option>
+                    {treatmentsOnly.map(treatmentOnly => (
+                        <option key={treatmentOnly.treatmentID} value={treatmentOnly.treatmentID}>
+                            {treatmentOnly.treatmentID}
+                        </option>
+                    ))}
+                </select>
+
+                <label for="doctorID">Doctor ID:</label>
+                <select id="doctorID" name="doctorID" placeholder="Doctor ID" required>
+                    <option value="">Select a doctor</option>
+                    {doctors.map(doctor => (
+                        <option key={doctor.doctorID} value={doctor.doctorID}>
+                            {doctor.doctorID}
+                        </option>
+                    ))}
+                </select>
+                <button type="submit" className="btn-action">Submit</button>
+            </form>
+
             <div className="patients-list">
                 <DoctorTreatmentTable
                     DoctorTreatment={doctorTreatments}
-                    onDeleteDoctorTreatment={handleUnassignDoctorTreatments}
+                    onDeleteDoctorTreatment={handleDeleteDoctorTreatments}
                 />
             </div>
         </>
@@ -261,17 +297,17 @@ function TreatmentsPage() {
 
             <label for="description">Description:</label>
             <input type="text" name="description" placeholder="Description of Treatment" required />
-              
+
             <label for="date">Date:</label>
             <input type="datetime-local" name="date" placeholder="Date" required />
-             
+
             <label for="diagnosis">Diagnosis:</label>
             <input type="text" name="diagnosis" placeholder="Diagnosis" required />
-              
+
             <label for="symptoms">Symptoms:</label>
             <input type="text" name="symptoms" placeholder="Symptoms" required />
-            
-              <label for="doctorID">Doctor ID:</label>
+
+            <label for="doctorID">Doctor ID:</label>
             <select id="doctorID" name="doctorID" placeholder="Doctor ID" required>
                 <option value="">Select a doctor</option>
                 {doctors.map(doctor => (
@@ -294,7 +330,7 @@ function TreatmentsPage() {
                     <div className="patients-actions">
                         <button className="btn-action" onClick={() => { setShowTable(true); setShowForm(false); setShowAssignment(false); setFilteredTreatments(treatments); }}>View All Treatments</button>
                         <button className="btn-action" onClick={() => { setShowTable(false); setShowForm(true); setShowAssignment(false); }}>Add New Treatment</button>
-                        <button className="btn-action" onClick={() => { setShowTable(false); setShowForm(false); setShowAssignment(true); }}>Assign Treatments</button>
+                        <button className="btn-action" onClick={() => { setShowTable(false); setShowForm(false); setShowAssignment(true); }}>Modify Doctor assignments</button>
                     </div>
                     {showTable && renderTableSection()}
                     {showForm && renderFormSection()}

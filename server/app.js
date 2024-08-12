@@ -394,6 +394,29 @@ app.delete('/appointments/:id', async (req, res) => {
 
 /* Perform Treatments CRUD operations
 --------------------------------------------*/
+// Get treatments information only
+app.get('/treatmentsonly', async (req, res) => {
+  try {
+    // Select all the information from the treatments table 
+    let query1 = `Select * from Treatments;`;
+
+    // Querry Data from Treatments
+    db.pool.query(query1, function (err, results, fields) {
+      let data = results
+
+      console.log("Sending treatment only JSON information to /treatments");
+      res.send(JSON.stringify(data));
+
+    })
+
+  } catch (error) {
+    // Handle Errors
+    console.error('Database operation failed:', error, '. Unable to read Treatments.');
+    res.status(500).send('Server error');
+  }
+
+});
+
 // Read from Treatments Entity
 app.get('/treatments', async (req, res) => {
   try {
@@ -466,8 +489,8 @@ app.put('/treatments/:id', async (req, res) => {
     const query1 = "UPDATE Treatments SET description = ?, date = ?, diagnosis = ?, symptoms = ? WHERE treatmentID = ?";
     const query2 = "SELECT doctorID FROM Doctors WHERE Doctors.lastName = ?;"
     const query3 = "UPDATE DoctorTreatment SET doctorID = ? WHERE treatmentID = ? and DoctorID = ?;";
-    
-    const values = [ description, date, diagnosis, symptoms, id];
+
+    const values = [description, date, diagnosis, symptoms, id];
     const doctorLastName = [lastName];
 
     console.log(req.body);
@@ -485,7 +508,6 @@ app.put('/treatments/:id', async (req, res) => {
 
             const originalDoctorID = results[0].doctorID;
             const doctorValue = [doctorID, id, originalDoctorID];
-            console.log(originalDoctorID);
 
             db.pool.query(query3, doctorValue, (err, results) => {
               if (err) {
@@ -512,7 +534,8 @@ app.delete('/treatments/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const values = [id];
-    const query1 = "DELETE FROM Treatments WHERE treatmentID = ?";
+    const query1 = "DELETE FROM Treatments WHERE treatmentID = ?;";
+
 
     db.pool.query(query1, values, (err, results) => {
       if (err) {
@@ -533,15 +556,44 @@ app.delete('/treatments/:id', async (req, res) => {
 /* Perform DoctorTreatments CRUD operations
 --------------------------------------------*/
 // Read from Treatments Entity
-app.get('/doctortreatments', async (req, res) => {
+app.get('/doctortreatment', async (req, res) => {
   try {
     query1 = `SELECT * From DoctorTreatment;`
 
     db.pool.query(query1, function (err, results, fields) {
-      let data = results
 
       console.log("Sending treatment JSON information to /DoctorTreatments");
-      res.send(JSON.stringify(data));
+      res.send(JSON.stringify(results));
+    })
+
+  }
+  catch (error) {
+    // Handle Errors
+    console.error('Database operation failed:', error, '. Unable to read DoctorTreaments.');
+    res.status(500).send('Server error');
+  }
+});
+
+app.post('/doctortreatment', async (req, res) => {
+  try {
+    const { treatmentID, doctorID } = req.body;
+    const values = [treatmentID, doctorID];
+
+    query1 = `INSERT INTO DoctorTreatment (treatmentID, doctorID) VALUES (?, ?);`
+
+    db.pool.query(query1, values, (err, results) => {
+      if (err) {
+        if (err.code === 'ER_DUP_ENTRY') {
+          return res.status(400).send("Error: Duplicate entry. Doctor already assigned to this treatment.");
+        }
+        else {
+          console.error('Foreign Key Error:', err);
+          res.status(500).send('Server error');
+        }
+      } else {
+        console.log("Sending DoctorTreatment JSON information to /DoctorTreatments");
+        res.send("Sending DoctorTreatment JSON information to /DoctorTreatments");
+      }
     })
 
   }
@@ -551,6 +603,37 @@ app.get('/doctortreatments', async (req, res) => {
     res.status(500).send('Server error');
   }
 })
+
+app.delete('/doctortreatment/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const values = [id];
+    const query1 = "Select doctorID FROM DoctorTreatment WHERE treatmentID = ?;";
+    const query2 = "DELETE FROM DoctorTreatment WHERE treatmentID = ? and doctorID = ?;";
+
+    db.pool.query(query1, values, (err, results) => {
+      if (err) {
+        console.error('Insert DoctorTreatment Error:', err);
+        res.status(500).send('Server error');
+      } else {
+        const doctorID = results[0].doctorID;
+        const deleteValues = [id, doctorID];
+
+        db.pool.query(query2, deleteValues, (err, results) => {
+          if (err) {
+            console.error('Error deleting DoctorTreatment:', err);
+            return res.status(500).send('Server error');
+          }
+          console.log('DoctorTreatment deleted successfully');
+          return res.send('DoctorTreatment deleted successfully');
+        });
+      }
+    });
+  } catch (error) {
+    console.error('Database operation failed:', error, '. Unable to delete Treatment.');
+    res.status(500).send('Server error');
+  }
+});
 
 // Build Application using build folder in client
 app.use(express.static(path.join(__dirname, '../client/build')));
