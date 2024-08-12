@@ -212,4 +212,3 @@ function RoomsPage() {
 }
 
 export default RoomsPage;
-
