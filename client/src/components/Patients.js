@@ -19,6 +19,8 @@ function Patients({ patient, onUpdatePatient, onDeletePatient, rooms, doctors })
         setUpdatedPatient({ ...updatedPatient, [name]: value });
     };
 
+
+    
     return (
         <tr>
             <td>{patient.patientID}</td>
@@ -30,7 +32,7 @@ function Patients({ patient, onUpdatePatient, onDeletePatient, rooms, doctors })
                         <select name="primaryDoctorID" value={updatedPatient.primaryDoctorID} onChange={handleChange}>
                             {doctors.map(doctor => (
                                 <option key={doctor.doctorID} value={doctor.doctorID}>
-                                    {doctor.doctorID} - {doctor.firstName} {doctor.lastName}
+                                    {doctor.doctorID} - ({doctor.firstName} {doctor.lastName})
                                 </option>
                             ))}
                         </select>
@@ -75,7 +77,14 @@ function Patients({ patient, onUpdatePatient, onDeletePatient, rooms, doctors })
                 <>
                     <td>{patient.firstName}</td>
                     <td>{patient.lastName}</td>
-                    <td>{patient.primaryDoctorID}</td>
+                    <td>
+                        {
+                            (() => {
+                                const doctor = doctors.find(d => d.doctorID === patient.primaryDoctorID);
+                                return doctor ? `${doctor.doctorID} - (Dr. ${doctor.firstName} ${doctor.lastName})` : patient.primaryDoctorID;
+                            })()
+                        }
+                    </td>                 
                     <td>{patient.dateOfBirth}</td>
                     <td>{patient.contactPhone}</td>
                     <td>{patient.contactEmail}</td>

@@ -58,12 +58,13 @@ function AppointmentsPage() {
             const response = await fetch('/rooms?available=true');
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
-            setAvailableRooms(data);
+            console.log('Available rooms:', data);
+            setAvailableRooms(data.filter(room => room.occupied === "No"));
         } catch (error) {
             console.error('Error fetching available room data:', error);
         }
     };
-
+            
 
 
     const handleSearch = (searchTerm) => {
