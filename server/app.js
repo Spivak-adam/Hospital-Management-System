@@ -246,9 +246,9 @@ app.get('/doctors', async (req, res) => {
 // ADD new doctor
 app.post('/doctors', async (req, res) => {
   try {
-    const { firstName, lastName, specialization, email, phoneNumber, image, language, gender } = req.body;
-    const query = "INSERT INTO Doctors (firstName, lastName, specialization, email, phoneNumber, image, language, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    const values = [firstName, lastName, specialization, email, phoneNumber, image, language, gender];
+    const { firstName, lastName, specialization, email, phoneNumber, language, gender } = req.body;
+    const query = "INSERT INTO Doctors (firstName, lastName, specialization, email, phoneNumber, language, gender) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    const values = [firstName, lastName, specialization, email, phoneNumber, language, gender];
 
     db.pool.query(query, values, (err, results) => {
       if (err) {
@@ -268,9 +268,9 @@ app.post('/doctors', async (req, res) => {
 app.put('/doctors/:id', async (req, res) => {
   try {
     const doctorID = req.params.id;
-    const { firstName, lastName, specialization, email, phoneNumber, image, language, gender } = req.body;
-    const query = "UPDATE Doctors SET firstName = ?, lastName = ?, specialization = ?, email = ?, phoneNumber = ?, image = ?, language = ?, gender = ? WHERE doctorID = ?";
-    const values = [firstName, lastName, specialization, email, phoneNumber, image, language, gender, doctorID];
+    const { firstName, lastName, specialization, email, phoneNumber, language, gender } = req.body;
+    const query = "UPDATE Doctors SET firstName = ?, lastName = ?, specialization = ?, email = ?, phoneNumber = ?, language = ?, gender = ? WHERE doctorID = ?";
+    const values = [firstName, lastName, specialization, email, phoneNumber, language, gender, doctorID];
 
     db.pool.query(query, values, (err, results) => {
       if (err) {
