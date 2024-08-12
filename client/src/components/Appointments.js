@@ -93,14 +93,7 @@ function Appointments({ appointment, onUpdateAppointment, onDeleteAppointment, p
                             })()
                         }
                     </td>
-                    <td>
-                        {
-                            (() => {
-                                const room = rooms.find(r => r.roomID === appointment.roomID);
-                                return room ? `${room.roomID} - ${room.location}` : appointment.roomID;
-                            })()
-                        }
-                    </td>
+                    <td>{`${appointment.roomID} - ${appointment.location} (${appointment.number})`}</td>
                     <td>{appointment.status}</td>
                     <td>{appointment.reason}</td>
                     <td>{appointment.date}</td>
