@@ -171,6 +171,9 @@ function TreatmentsPage() {
 
     // Update Treatments
     const handleUpdateTreatment = async (treatmentID, updatedTreatment) => {
+        const confirmUpdate = window.confirm("Are you sure you want to update this treatment?");
+        if (!confirmUpdate) return;
+
         updatedTreatment['originalDoctor']=filteredTreatments.lastName;
         try {
             const response = await fetch(`/treatments/${treatmentID}`, {
@@ -196,6 +199,9 @@ function TreatmentsPage() {
 
     // Delete Treatments
     const handleDeleteTreatment = async (treatmentID) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this treatment?");
+        if (!confirmUpdate) return;
+        
         try {
             const response = await fetch(`/treatments/${treatmentID}`, {
                 method: 'DELETE',

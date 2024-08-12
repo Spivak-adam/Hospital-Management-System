@@ -122,6 +122,9 @@ function DoctorsPage() {
     };
 
     const handleUpdateDoctor = async (doctorID, updatedDoctor) => {
+        const confirmUpdate = window.confirm("Are you sure you want to udpate this doctor?");
+        if (!confirmUpdate) return;
+
         try {
             const response = await fetch(`/doctors/${doctorID}`, {
                 method: 'PUT',
@@ -145,6 +148,9 @@ function DoctorsPage() {
     };
 
     const handleDeleteDoctor = async (doctorID) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this doctor?");
+        if (!confirmDelete) return;
+        
         try {
             const response = await fetch(`/doctors/${doctorID}`, {
                 method: 'DELETE',

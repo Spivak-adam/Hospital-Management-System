@@ -87,6 +87,9 @@ function RoomsPage() {
     };
 
     const handleUpdateRoom = async (roomID, updatedRoom) => {
+        const confirmUpdate = window.confirm("Are you sure you want to update this room?");
+        if (!confirmUpdate) return;
+
         try {
             const response = await fetch(`/rooms/${roomID}`, {
                 method: 'PUT',
@@ -110,6 +113,9 @@ function RoomsPage() {
     };
 
     const handleDeleteRoom = async (roomID) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this room?");
+        if (!confirmDelete) return;
+
         try {
             const response = await fetch(`/rooms/${roomID}`, {
                 method: 'DELETE',

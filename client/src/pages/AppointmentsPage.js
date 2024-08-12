@@ -138,6 +138,9 @@ function AppointmentsPage() {
     };
 
     const handleUpdateAppointment = async (appointmentID, updatedAppointment) => {
+        const confirmUpdate = window.confirm("Are you sure you want to update this appointment?");
+        if (!confirmUpdate) return;
+
         try {
             const response = await fetch(`/appointments/${appointmentID}`, {
                 method: 'PUT',
@@ -161,6 +164,9 @@ function AppointmentsPage() {
     };
 
     const handleDeleteAppointment = async (appointmentID) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this appointment?");
+        if (!confirmDelete) return;
+
         try {
             const response = await fetch(`/appointments/${appointmentID}`, {
                 method: 'DELETE',

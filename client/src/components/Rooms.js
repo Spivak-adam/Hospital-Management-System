@@ -48,9 +48,6 @@ function Rooms({ room, onUpdateRoom, onDeleteRoom, patients, doctors }) {
                             onChange={handleChange}
                         />
                     </td>
-                    <td>
-                        <input type="number" name="lengthOfStay" value={updatedRoom.lengthOfStay} onChange={handleChange} />
-                    </td>
                     <td style={{ textAlign: 'center' }}>
                         <button className="btn-action" onClick={handleSave}>Save</button>
                     </td>
