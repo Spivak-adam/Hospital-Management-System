@@ -8,13 +8,9 @@ function RoomsPage() {
     const [filteredRooms, setFilteredRooms] = useState([]);
     const [showTable, setShowTable] = useState(false);
     const [showForm, setShowForm] = useState(false);
-    const [patients, setPatients] = useState([]);
-    const [doctors, setDoctors] = useState([]);
 
     useEffect(() => {
         fetchRooms();
-        fetchPatients();
-        fetchDoctors();
     }, []);
 
     const fetchRooms = async () => {
@@ -29,48 +25,40 @@ function RoomsPage() {
         }
     };
 
-    const fetchPatients = async () => {
-        try {
-            const response = await fetch('/patients');
-            if (!response.ok) throw new Error('Network response was not ok');
-            const data = await response.json();
-            setPatients(data);
-        } catch (error) {
-            console.error('Error fetching patient data:', error);
-        }
-    };
 
-    const fetchDoctors = async () => {
-        try {
-            const response = await fetch('/doctors');
-            if (!response.ok) throw new Error('Network response was not ok');
-            const data = await response.json();
-            setDoctors(data);
-        } catch (error) {
-            console.error('Error fetching doctor data:', error);
-        }
-    };
+
+    
 
     const handleSearch = (searchTerm) => {
-        const filtered = rooms.filter(room =>
-            Object.values(room).some(value =>
-                (value !== null && value !== undefined ? value.toString() : "").toLowerCase().includes(searchTerm.toLowerCase())
-            )
-        );
+        const filtered = rooms.filter(room => {
+            // Get the related patient and doctor data
+            
+            // Combine all the fields into a single string to search within
+            const combinedData = `
+                ${room.roomID}
+                ${room.location}
+                ${room.number}
+                ${room.occupied}
+                ${room.accommodations}
+            `.toLowerCase();
+    
+            // Check if the search term is present in the combined data
+            return combinedData.includes(searchTerm.toLowerCase());
+        });
+    
         setFilteredRooms(filtered);
     };
+
+    
 
     const handleSubmitNewRoom = async (event) => {
         event.preventDefault();
         const form = event.target;
         const newRoom = {
-            patientID: form.patientID.value,
-            doctorID: form.doctorID.value,
             location: form.location.value,
             number: form.number.value,
-            occupied: form.occupied.value === 'true',
+            occupied: form.occupied.value === 'yes',
             accommodations: form.accommodations.value,
-            lengthOfStay: form.lengthOfStay.value,
         };
 
         try {
@@ -99,6 +87,9 @@ function RoomsPage() {
     };
 
     const handleUpdateRoom = async (roomID, updatedRoom) => {
+        const confirmUpdate = window.confirm("Are you sure you want to update this room?");
+        if (!confirmUpdate) return;
+
         try {
             const response = await fetch(`/rooms/${roomID}`, {
                 method: 'PUT',
@@ -122,6 +113,9 @@ function RoomsPage() {
     };
 
     const handleDeleteRoom = async (roomID) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this room?");
+        if (!confirmDelete) return;
+
         try {
             const response = await fetch(`/rooms/${roomID}`, {
                 method: 'DELETE',
@@ -148,8 +142,6 @@ function RoomsPage() {
                     rooms={filteredRooms}
                     onUpdateRoom={handleUpdateRoom}
                     onDeleteRoom={handleDeleteRoom}
-                    patients={patients}
-                    doctors={doctors}
                 />
             </div>
         </>
@@ -158,22 +150,6 @@ function RoomsPage() {
     const renderFormSection = () => (
         <form className="createDataForm" onSubmit={handleSubmitNewRoom}>
             <h3>Add New Room</h3>
-            <select name="patientID">
-                <option value="">Select Patient</option>
-                {patients.map(patient => (
-                    <option key={patient.patientID} value={patient.patientID}>
-                        {patient.patientID} - {patient.firstName} {patient.lastName}
-                    </option>
-                ))}
-            </select>
-            <select name="doctorID">
-                <option value="">Select Doctor</option>
-                {doctors.map(doctor => (
-                    <option key={doctor.doctorID} value={doctor.doctorID}>
-                        {doctor.doctorID} - {doctor.firstName} {doctor.lastName}
-                    </option>
-                ))}
-            </select>
             <select name="location" required>
                 <option value="">Select Location</option>
                 <option value="ICU">ICU</option>
@@ -187,7 +163,6 @@ function RoomsPage() {
                 <option value="No">No</option>
             </select>
             <input type="text" name="accommodations" placeholder="Accommodations" required />
-            <input type="number" name="lengthOfStay" placeholder="Length of Stay" />
             <button type="submit" className="btn-action">Submit</button>
         </form>
     );
@@ -212,3 +187,4 @@ function RoomsPage() {
 }
 
 export default RoomsPage;
+
