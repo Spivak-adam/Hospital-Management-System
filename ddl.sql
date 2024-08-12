@@ -92,13 +92,14 @@ CREATE OR REPLACE TABLE DoctorTreatment(
 
 
 -- create and insert data into Rooms table
-CREATE OR REPLACE TABLE Rooms(
+CREATE OR REPLACE TABLE Rooms (
     roomID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    location ENUM("ICU", "Recovery", "General") NOT NULL,
+    location varchar(100) NOT NULL,
     number varchar(10) NOT NULL,
-    occupied ENUM("Yes", "No") NOT NULL,
-    accommodations text NULL,
+    occupied ENUM('Yes', 'No') NOT NULL,
+    accommodations text NULL
 );
+
 
 
 -- Insert into Database to populate

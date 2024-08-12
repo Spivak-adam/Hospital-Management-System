@@ -51,19 +51,27 @@ app.get('/rooms', async (req, res) => {
 // Add a new room
 app.post('/rooms', async (req, res) => {
   try {
-    const { patientID, doctorID, location, number, occupied, accommodations, lengthOfStay } = req.body;
+    const { location, number, occupied, accommodations } = req.body;
+
+    // Convert boolean to 'Yes' or 'No'
+    const occupiedValue = occupied ? 'Yes' : 'No';
 
     // Log the received data
-    console.log("Received data for new room:", req.body);
+    console.log("Received data for new room:", {
+      location,
+      number,
+      occupied: occupiedValue,
+      accommodations
+    });
 
     // Define the insert query
     const query = `
-        INSERT INTO Rooms (patientID, doctorID, location, number, occupied, accommodations, lengthOfStay)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO Rooms (location, number, occupied, accommodations)
+        VALUES (?, ?, ?, ?)
       `;
 
     // Insert the new room into the database
-    db.pool.query(query, [patientID, doctorID, location, number, occupied, accommodations, lengthOfStay], (err, results, fields) => {
+    db.pool.query(query, [location, number, occupiedValue, accommodations], (err, results, fields) => {
       if (err) {
         console.error('Database operation failed:', err.message);
         res.status(500).send('Server error');
@@ -81,13 +89,16 @@ app.post('/rooms', async (req, res) => {
 app.put('/rooms/:roomID', async (req, res) => {
   try {
     const roomID = req.params.roomID;
-    const { patientID, doctorID, location, number, occupied, accommodations, lengthOfStay } = req.body;
+    const { location, number, occupied, accommodations } = req.body;
+
+    // Convert boolean to 'Yes' or 'No'
+    const occupiedValue = occupied ? 'Yes' : 'No';
 
     const query = `UPDATE Rooms 
-                     SET patientID = ?, doctorID = ?, location = ?, number = ?, occupied = ?, accommodations = ?, lengthOfStay = ?
+                     SET location = ?, number = ?, occupied = ?, accommodations = ?
                      WHERE roomID = ?`;
 
-    db.pool.query(query, [patientID, doctorID, location, number, occupied, accommodations, lengthOfStay, roomID], function (err, results, fields) {
+    db.pool.query(query, [location, number, occupiedValue, accommodations, roomID], function (err, results, fields) {
       if (err) {
         console.error('Database operation failed:', err);
         res.status(500).send('Server error');
@@ -121,6 +132,9 @@ app.delete('/rooms/:roomID', async (req, res) => {
     res.status(500).send('Server error');
   }
 });
+
+
+
 
 /* Perform Patient CRUD operations
 --------------------------------------------*/
