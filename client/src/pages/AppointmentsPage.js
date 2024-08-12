@@ -58,12 +58,13 @@ function AppointmentsPage() {
             const response = await fetch('/rooms?available=true');
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
-            setAvailableRooms(data);
+            console.log('Available rooms:', data);
+            setAvailableRooms(data.filter(room => room.occupied === "No"));
         } catch (error) {
             console.error('Error fetching available room data:', error);
         }
     };
-
+            
 
 
     const handleSearch = (searchTerm) => {
@@ -137,6 +138,9 @@ function AppointmentsPage() {
     };
 
     const handleUpdateAppointment = async (appointmentID, updatedAppointment) => {
+        const confirmUpdate = window.confirm("Are you sure you want to update this appointment?");
+        if (!confirmUpdate) return;
+
         try {
             const response = await fetch(`/appointments/${appointmentID}`, {
                 method: 'PUT',
@@ -160,6 +164,9 @@ function AppointmentsPage() {
     };
 
     const handleDeleteAppointment = async (appointmentID) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this appointment?");
+        if (!confirmDelete) return;
+
         try {
             const response = await fetch(`/appointments/${appointmentID}`, {
                 method: 'DELETE',

@@ -143,6 +143,9 @@ function PatientsPage() {
     };
 
     const handleUpdatePatient = async (patientID, updatedPatient) => {
+        const confirmUpdate = window.confirm("Are you sure you want to update this patient?");
+        if (!confirmUpdate) return;
+
         try {
             const response = await fetch(`/patients/${patientID}`, {
                 method: 'PUT',
@@ -166,6 +169,9 @@ function PatientsPage() {
     };
 
     const handleDeletePatient = async (patientID) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this patient?");
+        if (!confirmDelete) return;
+        
         try {
             const response = await fetch(`/patients/${patientID}`, {
                 method: 'DELETE',

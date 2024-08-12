@@ -1,19 +1,16 @@
 import React from 'react';
 import Rooms from './Rooms';
 
-function RoomsTable({ rooms, onUpdateRoom, onDeleteRoom, patients, doctors }) {
+function RoomsTable({ rooms, onUpdateRoom, onDeleteRoom, }) {
     return (
         <table>
             <thead>
                 <tr>
                     <th>Room ID</th>
-                    <th>Patient ID</th>
-                    <th>Doctor ID</th>
                     <th>Location</th>
                     <th>Number</th>
                     <th>Occupied</th>
                     <th>Accommodations</th>
-                    <th>Length of Stay (In Days)</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -25,8 +22,6 @@ function RoomsTable({ rooms, onUpdateRoom, onDeleteRoom, patients, doctors }) {
                             key={index}
                             onUpdateRoom={onUpdateRoom}
                             onDeleteRoom={onDeleteRoom}
-                            patients={patients}
-                            doctors={doctors}
                         />
                     ))
                 ) : (

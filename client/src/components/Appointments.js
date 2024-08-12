@@ -44,11 +44,15 @@ function Appointments({ appointment, onUpdateAppointment, onDeleteAppointment, p
                     </td>
                     <td>
                         <select name="roomID" value={updatedAppointment.roomID} onChange={handleChange}>
-                            {rooms.map(room => (
-                                <option key={room.roomID} value={room.roomID}>
-                                    {room.roomID} - {room.location}
-                                </option>
-                            ))}
+                            {rooms.length > 0 ? (
+                                rooms.map(room => (
+                                    <option key={room.roomID} value={room.roomID}>
+                                        {room.roomID} - {room.location} ({room.number})
+                                    </option>
+                                ))
+                            ) : (
+                                <option value="">No available rooms</option>
+                            )}
                         </select>
                     </td>
                     <td>
@@ -73,9 +77,23 @@ function Appointments({ appointment, onUpdateAppointment, onDeleteAppointment, p
                 </>
             ) : (
                 <>
-                    <td>{appointment.patientID}</td>
-                    <td>{appointment.doctorID}</td>
-                    <td>{appointment.roomID}</td>
+                    <td>
+                        {
+                            (() => {
+                                const patient = patients.find(p => p.patientID === appointment.patientID);
+                                return patient ? `${patient.patientID} - ${patient.firstName} ${patient.lastName}` : appointment.patientID;
+                            })()
+                        }
+                    </td>
+                    <td>
+                        {
+                            (() => {
+                                const doctor = doctors.find(d => d.doctorID === appointment.doctorID);
+                                return doctor ? `${doctor.doctorID} - Dr. ${doctor.firstName} ${doctor.lastName}` : appointment.doctorID;
+                            })()
+                        }
+                    </td>
+                    <td>{`${appointment.roomID} - ${appointment.location} (${appointment.number})`}</td>
                     <td>{appointment.status}</td>
                     <td>{appointment.reason}</td>
                     <td>{appointment.date}</td>
