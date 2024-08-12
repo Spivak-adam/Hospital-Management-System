@@ -87,19 +87,14 @@ CREATE OR REPLACE TABLE DoctorTreatment(
 
 
 
--- create and insert data into Rooms table
-CREATE OR REPLACE TABLE Rooms(
-    roomID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    patientID int NOT NULL,
-    doctorID int NOT NULL,
-    location ENUM("ICU", "Recovery", "General") NOT NULL,
-    number varchar(10) NOT NULL,
-    occupied ENUM("Yes", "No") NOT NULL,
-    accommodations text NULL,
-    lengthOfStay int NOT NULL,
 
-    FOREIGN KEY (patientID) REFERENCES Patients(patientID),
-    FOREIGN KEY (doctorID) REFERENCES Doctors(doctorID)
+-- create and insert data into Rooms table
+CREATE OR REPLACE TABLE Rooms (
+    roomID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    location varchar(100) NOT NULL,
+    number varchar(10) NOT NULL,
+    occupied ENUM('Yes', 'No') NOT NULL,
+    accommodations text NULL
 );
 
 
@@ -163,18 +158,16 @@ VALUES
 (5, 4),
 (5, 5);
 
-INSERT INTO Rooms (location, number, patientID, doctorID, occupied, accommodations, lengthOfStay)
+INSERT INTO Rooms (location, number, occupied, accommodations)
 VALUES
-('ICU', '101', 1, 1, 'Yes', 'Private room with ventilator', 6),
-('Recovery', '202', 2, 2, 'Yes', 'Shared room with 2 beds', 3),
-('General', '303', 3, 3, 'Yes', 'Private room', 1),
-('ICU', '104', 4, 4, 'Yes', 'Private room with ventilator', 7),
-('Recovery', '205', 5, 5, 'Yes', 'Shared room with 2 beds', 4);
+('ICU', '101','Yes', 'Private room with ventilator' ),
+('Recovery', '202', 'Yes', 'Shared room with 2 beds' ),
+('General', '303','Yes', 'Private room' ),
+('ICU', '104','Yes', 'Private room with ventilator' ),
+('Recovery', '205', 'Yes', 'Shared room with 2 beds');
 
 
 SET FOREIGN_KEY_CHECKS=1;
 COMMIT;
 
--- UPDATED SECTION
--- There is no updates to this file.
 
