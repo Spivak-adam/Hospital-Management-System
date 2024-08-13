@@ -7,7 +7,7 @@ CREATE OR REPLACE TABLE Patients(
     patientID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     firstName varchar(50) NOT NULL,
     lastName varchar(50) NOT NULL,       
-    primaryDoctorID int NOT NULL,
+    primaryDoctorID int NULL,
     dateOfBirth DATE NOT NULL,
     contactPhone varchar(15) NOT NULL,      
     contactEmail varchar(100) NULL UNIQUE,

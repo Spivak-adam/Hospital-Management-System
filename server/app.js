@@ -73,6 +73,9 @@ app.post('/rooms', async (req, res) => {
     // Insert the new room into the database
     db.pool.query(query, [location, number, occupiedValue, accommodations], (err, results, fields) => {
       if (err) {
+        if (err.code === 'ER_DUP_ENTRY') {
+          return res.status(400).send("Error: Duplicate entry. Doctor already assigned to this treatment.");
+        }
         console.error('Database operation failed:', err.message);
         res.status(500).send('Server error');
         return;
@@ -100,6 +103,9 @@ app.put('/rooms/:roomID', async (req, res) => {
 
     db.pool.query(query, [location, number, occupiedValue, accommodations, roomID], function (err, results, fields) {
       if (err) {
+        if (err.code === 'ER_DUP_ENTRY') {
+          return res.status(400).send("Error: Duplicate entry. Doctor already assigned to this treatment.");
+        }
         console.error('Database operation failed:', err);
         res.status(500).send('Server error');
         return;
@@ -211,6 +217,9 @@ app.put('/patients/:id', async (req, res) => {
 
     db.pool.query(query, [firstName, lastName, primaryDoctorID, dateOfBirth, contactPhone, contactEmail, address, emergencyContactName, emergencyContactPhone, emergencyContactEmail, checkInTime, bloodType, sex, gender, age, language, patientType, releaseDate, id], function (err, results, fields) {
       if (err) {
+        if (err.code === 'ER_DUP_ENTRY') {
+          return res.status(400).send("Error: Duplicate entry. Doctor already assigned to this treatment.");
+        }
         console.error('Database operation failed:', err);
         res.status(500).send('Server error');
         return;
@@ -276,6 +285,9 @@ app.post('/doctors', async (req, res) => {
 
     db.pool.query(query, values, (err, results) => {
       if (err) {
+        if (err.code === 'ER_DUP_ENTRY') {
+          return res.status(400).send("Error: Duplicate entry. Doctor already assigned to this treatment.");
+        }
         console.error('Error adding doctor:', err);
         res.status(500).send('Server error');
       } else {
@@ -298,6 +310,9 @@ app.put('/doctors/:id', async (req, res) => {
 
     db.pool.query(query, values, (err, results) => {
       if (err) {
+        if (err.code === 'ER_DUP_ENTRY') {
+          return res.status(400).send("Error: Duplicate entry. Doctor already assigned to this treatment.");
+        }
         console.error('Error updating doctor:', err);
         res.status(500).send('Server error');
       } else {
@@ -315,7 +330,8 @@ app.delete('/doctors/:id', async (req, res) => {
   try {
     const doctorID = req.params.id;
     const query1 = "UPDATE Appointments SET doctorID = NULL WHERE doctorID = ?;";
-    const query2 = "DELETE FROM Doctors WHERE doctorID = ?;";
+    const query2 = "UPDATE Patients SET primaryDoctorID = NULL WHERE primaryDoctorID = ?;";
+    const query3 = "DELETE FROM Doctors WHERE doctorID = ?;";
 
     // Update related appointments to set doctorID to NULL
     db.pool.query(query1, [doctorID], (err, results) => {
@@ -327,12 +343,20 @@ app.delete('/doctors/:id', async (req, res) => {
       // Proceed with deleting the doctor
       db.pool.query(query2, [doctorID], (err, results) => {
         if (err) {
-          console.error('Error deleting doctor:', err);
+          console.error('Error updating patients:', err);
           return res.status(500).send('Server error');
         }
-
-        console.log('Doctor deleted successfully');
-        return res.status(200).send('Doctor deleted successfully');
+        else{
+          db.pool.query(query3, [doctorID], (err, results) => {
+            if (err) {
+              console.error('Error deleting doctor:', err);
+              return res.status(500).send('Server error');
+            }
+    
+            console.log('Doctor deleted successfully');
+            return res.status(200).send('Doctor deleted successfully');
+          });
+        }
       });
     });
   } catch (error) {
@@ -407,6 +431,9 @@ app.put('/appointments/:id', async (req, res) => {
 
     db.pool.query(query, values, (err, results) => {
       if (err) {
+        if (err.code === 'ER_DUP_ENTRY') {
+          return res.status(400).send("Error: Duplicate entry. Doctor already assigned to this treatment.");
+        }
         console.error('Error updating appointment:', err);
         res.status(500).send('Server error');
       } else {
@@ -546,6 +573,9 @@ app.put('/treatments/:id', async (req, res) => {
 
     db.pool.query(query1, values, (err, results) => {
       if (err) {
+        if (err.code === 'ER_DUP_ENTRY') {
+          return res.status(400).send("Error: Duplicate entry.");
+        }
         console.error('Error updating treatment:', err);
         res.status(500).send('Server error');
       } else {
@@ -560,6 +590,9 @@ app.put('/treatments/:id', async (req, res) => {
 
             db.pool.query(query3, doctorValue, (err, results) => {
               if (err) {
+                if (err.code === 'ER_DUP_ENTRY') {
+                  return res.status(400).send("Error: Duplicate entry.");
+                }
                 console.error('Error updating DoctorTreatment:', err);
                 res.status(500).send('Server error');
               }
