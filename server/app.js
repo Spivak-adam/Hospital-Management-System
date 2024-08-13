@@ -86,8 +86,31 @@ app.post('/rooms', async (req, res) => {
 });
 
 // Update a Room
-    const occupiedValue = occupied === "Yes" ? "Yes" : "No";  // <-- This line
+app.put('/rooms/:roomID', async (req, res) => {
+  try {
+    const roomID = req.params.roomID;
+    const { location, number, occupied, accommodations } = req.body;
 
+    // Convert boolean to 'Yes' or 'No'
+    const occupiedValue = occupied === "Yes" ? "Yes" : "No";
+
+    const query = `UPDATE Rooms 
+                     SET location = ?, number = ?, occupied = ?, accommodations = ?
+                     WHERE roomID = ?`;
+
+    db.pool.query(query, [location, number, occupiedValue, accommodations, roomID], function (err, results, fields) {
+      if (err) {
+        console.error('Database operation failed:', err);
+        res.status(500).send('Server error');
+        return;
+      }
+      res.send({ message: 'Room updated successfully!' });
+    });
+  } catch (error) {
+    console.error('Database operation failed:', error);
+    res.status(500).send('Server error');
+  }
+});
 
 // Delete a Room
 app.delete('/rooms/:roomID', async (req, res) => {

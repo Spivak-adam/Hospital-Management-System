@@ -5,8 +5,8 @@ SET AUTOCOMMIT = 0;
 -- create and insert data into Patients table
 CREATE OR REPLACE TABLE Patients(
     patientID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    firstName varchar(50),
-    lastName varchar(50),       
+    firstName varchar(50) NOT NULL,
+    lastName varchar(50) NOT NULL,       
     primaryDoctorID int NOT NULL,
     dateOfBirth DATE NOT NULL,
     contactPhone varchar(15) NOT NULL,      
@@ -50,13 +50,13 @@ CREATE OR REPLACE TABLE Appointments(
 -- create and insert data into Doctors table
 CREATE OR REPLACE TABLE Doctors(
     doctorID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    firstName varchar(50),
-    lastName varchar(50),
+    firstName varchar(50) NOT NULL,
+    lastName varchar(50) NOT NULL,
     specialization varchar(100) NOT NULL,
     email varchar(100) NOT NULL UNIQUE,
     phoneNumber varchar(15) NOT NULL,
     language varchar(50) NOT NULL,
-    gender ENUM("Male", "Female", "Other")
+    gender ENUM("Male", "Female", "Other") NOT NULL
 );
 
 
