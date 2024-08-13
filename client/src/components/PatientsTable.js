@@ -50,3 +50,7 @@ function PatientsTable({ patients, onUpdatePatient, onDeletePatient, rooms, doct
 }
 
 export default PatientsTable;
+    );
+}
+
+export default PatientsTable;
