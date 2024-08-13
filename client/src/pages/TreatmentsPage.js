@@ -117,6 +117,7 @@ function TreatmentsPage() {
                 alert('New treatment added successfully!');
                 form.reset();
                 fetchTreatments();
+                fetchTreatmentsOnly();
                 setShowForm(false);
                 setShowTable(true);
                 setShowAssignment(false);
@@ -152,6 +153,7 @@ function TreatmentsPage() {
                 alert('Doctor assigned to treatment successfully!');
                 form.reset();
                 fetchTreatments();
+                fetchTreatmentsOnly();
                 setShowForm(false);
                 setShowTable(true);
                 setShowAssignment(false);
@@ -180,6 +182,7 @@ function TreatmentsPage() {
             if (response.ok) {
                 alert('Treatment updated successfully!');
                 fetchTreatments();
+                fetchTreatmentsOnly();
             } else {
                 const errorMessage = await response.text();
                 alert(`Failed to update treatment: ${errorMessage}`);
@@ -200,6 +203,7 @@ function TreatmentsPage() {
             if (response.ok) {
                 alert('Treatment deleted successfully!');
                 fetchTreatments();
+                fetchTreatmentsOnly();
             } else {
                 const errorMessage = await response.text();
                 alert(`Failed to delete treatment: ${errorMessage}`);
@@ -220,6 +224,7 @@ function TreatmentsPage() {
             if (response.ok) {
                 alert('Treatment deleted successfully!');
                 fetchTreatments();
+                fetchTreatmentsOnly();
                 fetchDoctorTreatments();
             } else {
                 const errorMessage = await response.text();
