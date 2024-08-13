@@ -43,4 +43,3 @@ function AppointmentsTable({ appointments, onUpdateAppointment, onDeleteAppointm
 }
 
 export default AppointmentsTable;
-
