@@ -210,9 +210,14 @@ function PatientsPage() {
     const renderFormSection = () => (
         <form className="createDataForm" onSubmit={handleSubmitNewPatient}>
             <h3>Add New Patient</h3>
+            <label htmlFor="firstName">First Name:</label>
             <input type="text" name="firstName" placeholder="First Name" required />
+
+            <label htmlFor="lastname">Last Name:</label>
             <input type="text" name="lastName" placeholder="Last Name" required />
 
+        
+            <label htmlFor="primaryDoctorID">Primary Doctor ID:</label>
             <select name="primaryDoctorID" required>
                 <option value="">Select Primary Doctor</option>
                 {doctors.map(doctor => (
@@ -221,35 +226,49 @@ function PatientsPage() {
                     </option>
                 ))}
             </select>
-
+              <label htmlFor="dateOfBirth">Date of Birth:</label>          
             <input type="date" name="dateOfBirth" placeholder="Date of Birth" required />
+                <label htmlFor="contactPhone">Contact Phone:</label>
             <input type="text" name="contactPhone" placeholder="Contact Phone" required />
+                 <label htmlFor="contactEmail">Contact Email:</label>           
             <input type="email" name="contactEmail" placeholder="Contact Email" required />
+                <label htmlFor="address">Address:</label>
             <input type="text" name="address" placeholder="Address" required />
+                 <label htmlFor="emergencyContactName">Emergency Contact Name::</label>
             <input type="text" name="emergencyContactName" placeholder="Emergency Contact Name" required />
+                <label htmlFor="emergencyContactPhone">Emergency Contact Phone Number:</label>                    
             <input type="text" name="emergencyContactPhone" placeholder="Emergency Contact Phone" required />
+                 <label htmlFor="emergencyContactEmail">Emergency Contact Email:</label>               
             <input type="email" name="emergencyContactEmail" placeholder="Emergency Contact Email" required />
+                   <label htmlFor="checkInTime">Check-In Time:</label>             
             <input type="datetime-local" name="checkInTime" placeholder="Check-In Time" required />
+                 <label htmlFor="bloodType">Blood Type:</label>               
             <input type="text" name="bloodType" placeholder="Blood Type" required />
+                 <label htmlFor="sex">Sex:</label>               
             <select name="sex" required>
                 <option value="">Select Sex</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
             </select>
+                  <label htmlFor="gender">Gender:</label>              
             <select name="gender" required>
                 <option value="">Select Gender</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
                 <option value="Other">Other</option>
             </select>
+                  <label htmlFor="age">Age:</label>              
             <input type="number" name="age" placeholder="Age" required />
+                   <label htmlFor="language">Language:</label>       
             <input type="text" name="language" placeholder="Language" required />
+                  <label htmlFor="patientType">Patient Type::</label>                        
             <select name="patientType" required>
                 <option value="">Select Patient Type</option>
                 <option value="Primary">Primary</option>
                 <option value="Emergency">Emergency</option>
                 <option value="Specialist">Specialist</option>
             </select>
+                  <label htmlFor="releaseDate">Release Date:</label>                        
             <input type="datetime-local" name="releaseDate" placeholder="Release Date" />
             <button type="submit" className="btn-action">Submit</button>
         </form>
