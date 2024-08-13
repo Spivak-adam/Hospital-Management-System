@@ -185,13 +185,24 @@ function DoctorsPage() {
     const renderFormSection = () => (
         <form className="createDataForm" onSubmit={handleSubmitNewDoctor}>
             <h3>Add New Doctor</h3>
+        <label htmlFor="firstName">First Name:</label>
             <input type="text" name="firstName" placeholder="First Name" required />
+        <label htmlFor="lastName">last Name:</label>        
             <input type="text" name="lastName" placeholder="Last Name" required />
+        <label htmlFor="specialization">Specialization:</label>        
             <input type="text" name="specialization" placeholder="Specialization" required />
+        <label htmlFor="email">Email:</label>        
             <input type="email" name="email" placeholder="Email" required />
+        <label htmlFor="phoneNumber">Phone Number:</label>        
             <input type="text" name="phoneNumber" placeholder="Phone Number" required />
+        <label htmlFor="language">Language:</label>        
             <input type="text" name="language" placeholder="Language" required />
-            <input type="text" name="gender" placeholder="Gender" required />
+        <label htmlFor="gender">Gender:</label>        
+             <select>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+            </select>
             <button type="submit" className="btn-action">Submit</button>
 
         </form>

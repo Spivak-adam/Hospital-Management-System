@@ -150,18 +150,22 @@ function RoomsPage() {
     const renderFormSection = () => (
         <form className="createDataForm" onSubmit={handleSubmitNewRoom}>
             <h3>Add New Room</h3>
+            <label htmlFor="location">Location:</label>
             <select name="location" required>
                 <option value="">Select Location</option>
                 <option value="ICU">ICU</option>
                 <option value="Recovery">Recovery</option>
                 <option value="General">General</option>
             </select>
+            <label htmlFor="number">Room Number:</label>
             <input type="text" name="number" placeholder="Room Number" required />
+            <label htmlFor="Occupied">Is the room occupied?:</label>
             <select name="occupied" required>
                 <option value="">Occupied?(Yes/No)</option>
                 <option value="Yes">Yes</option>
                 <option value="No">No</option>
             </select>
+            <label htmlFor="accommodations">Accommodations:</label>
             <input type="text" name="accommodations" placeholder="Accommodations" required />
             <button type="submit" className="btn-action">Submit</button>
         </form>
