@@ -54,14 +54,43 @@ function PatientsPage() {
 
 
     const handleSearch = (searchTerm) => {
-        const filtered = patients.filter(patient =>
-            Object.values(patient).some(value =>
-                (value !== null && value !== undefined ? value.toString() : "").toLowerCase().includes(searchTerm.toLowerCase())
-            )
-        );
+        const filtered = patients.filter(patient => {
+            // Get the related room data
+            const room = rooms.find(r => r.roomID === patient.roomID);
+            // Get the related doctor data
+            const doctor = doctors.find(d => d.doctorID === patient.primaryDoctorID);
+    
+            // Combine all the fields into a single string to search within
+            const combinedData = `
+                ${patient.patientID}
+                ${patient.firstName}
+                ${patient.lastName}
+                ${patient.dateOfBirth}
+                ${patient.contactPhone}
+                ${patient.contactEmail}
+                ${patient.address}
+                ${patient.emergencyContactName}
+                ${patient.emergencyContactPhone}
+                ${patient.emergencyContactEmail}
+                ${patient.checkInTime}
+                ${patient.bloodType}
+                ${patient.sex}
+                ${patient.gender}
+                ${patient.age}
+                ${patient.language}
+                ${patient.patientType}
+                ${patient.releaseDate}
+                ${room ? `${room.roomID} ${room.location}` : ""}
+                ${doctor ? `${doctor.firstName} ${doctor.lastName} ${doctor.doctorID}` : ""}
+            `.toLowerCase();
+    
+            // Check if the search term is present in the combined data
+            return combinedData.includes(searchTerm.toLowerCase());
+        });
+    
         setFilteredPatients(filtered);
     };
-    
+        
 
 
     const handleSubmitNewPatient = async (event) => {
@@ -114,6 +143,9 @@ function PatientsPage() {
     };
 
     const handleUpdatePatient = async (patientID, updatedPatient) => {
+        const confirmUpdate = window.confirm("Are you sure you want to update this patient?");
+        if (!confirmUpdate) return;
+
         try {
             const response = await fetch(`/patients/${patientID}`, {
                 method: 'PUT',
@@ -137,6 +169,9 @@ function PatientsPage() {
     };
 
     const handleDeletePatient = async (patientID) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this patient?");
+        if (!confirmDelete) return;
+        
         try {
             const response = await fetch(`/patients/${patientID}`, {
                 method: 'DELETE',
