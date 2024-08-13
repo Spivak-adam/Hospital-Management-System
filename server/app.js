@@ -322,7 +322,6 @@ app.delete('/doctors/:id', async (req, res) => {
 /* Perform Appointments CRUD operations
 --------------------------------------------*/
 // Pull from Appointments Entity
-// Pull from Appointments Entity
 app.get('/appointments', async (req, res) => {
   try {
     // Join the Appointments table with the Rooms table to get the room details
