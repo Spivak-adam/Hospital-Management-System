@@ -259,9 +259,9 @@ app.get('/doctors', async (req, res) => {
 // ADD new doctor
 app.post('/doctors', async (req, res) => {
   try {
-    const { firstName, lastName, specialization, email, phoneNumber, language, gender } = req.body;
-    const query = "INSERT INTO Doctors (firstName, lastName, specialization, email, phoneNumber, language, gender) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    const values = [firstName, lastName, specialization, email, phoneNumber, language, gender];
+    const { firstName, lastName, specialization, email, phoneNumber, image, language, gender } = req.body;
+    const query = "INSERT INTO Doctors (firstName, lastName, specialization, email, phoneNumber, image, language, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    const values = [firstName, lastName, specialization, email, phoneNumber, image, language, gender];
 
     db.pool.query(query, values, (err, results) => {
       if (err) {
@@ -281,9 +281,9 @@ app.post('/doctors', async (req, res) => {
 app.put('/doctors/:id', async (req, res) => {
   try {
     const doctorID = req.params.id;
-    const { firstName, lastName, specialization, email, phoneNumber, language, gender } = req.body;
-    const query = "UPDATE Doctors SET firstName = ?, lastName = ?, specialization = ?, email = ?, phoneNumber = ?, language = ?, gender = ? WHERE doctorID = ?";
-    const values = [firstName, lastName, specialization, email, phoneNumber, language, gender, doctorID];
+    const { firstName, lastName, specialization, email, phoneNumber, image, language, gender } = req.body;
+    const query = "UPDATE Doctors SET firstName = ?, lastName = ?, specialization = ?, email = ?, phoneNumber = ?, image = ?, language = ?, gender = ? WHERE doctorID = ?";
+    const values = [firstName, lastName, specialization, email, phoneNumber, image, language, gender, doctorID];
 
     db.pool.query(query, values, (err, results) => {
       if (err) {
@@ -418,57 +418,6 @@ app.delete('/appointments/:id', async (req, res) => {
     console.error('Database operation failed:', error, '. Unable to delete Appointment.');
     res.status(500).send('Server error');
   }
-});
-/* Perform Treatments CRUD operations
---------------------------------------------*/
-// Get treatments information only
-app.get('/treatmentsonly', async (req, res) => {
-  try {
-    // Select all the information from the treatments table 
-    let query1 = `Select * from Treatments;`;
-
-    // Querry Data from Treatments
-    db.pool.query(query1, function (err, results, fields) {
-      let data = results
-
-      console.log("Sending treatment only JSON information to /treatments");
-      res.send(JSON.stringify(data));
-
-    })
-
-  } catch (error) {
-    // Handle Errors
-    console.error('Database operation failed:', error, '. Unable to read Treatments.');
-    res.status(500).send('Server error');
-  }
-
-});
-
-// Read from Treatments Entity
-app.get('/treatments', async (req, res) => {
-  try {
-    // Select all the information from the treatments table 
-    let query1 = `Select Treatments.*, Doctors.lastName
-                  from Treatments
-                  Inner join DoctorTreatment on DoctorTreatment.treatmentID = Treatments.treatmentID
-                  Inner join Doctors on DoctorTreatment.doctorID = Doctors.doctorID
-                  ORDER BY treatmentID;`
-
-    // Querry Data from Treatments
-    db.pool.query(query1, function (err, results, fields) {
-      let data = results
-
-      console.log("Sending treatment JSON information to /treatments");
-      res.send(JSON.stringify(data));
-
-    })
-
-  } catch (error) {
-    // Handle Errors
-    console.error('Database operation failed:', error, '. Unable to read Treatments.');
-    res.status(500).send('Server error');
-  }
-
 });
 
 //Create Treatments from user
