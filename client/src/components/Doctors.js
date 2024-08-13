@@ -73,12 +73,11 @@ function Doctors({ doctor, onUpdateDoctor, onDeleteDoctor }) {
                         />
                     </td>
                     <td>
-                        <input
-                            type="text"
-                            name="gender"
-                            value={updatedDoctor.gender}
-                            onChange={handleChange}
-                        />
+                    <select name="gender" value={updatedDoctor.gender} onChange={handleChange}>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
                     </td>
                     <td style={{ textAlign: 'center' }}>
                         <button className="btn-action" onClick={handleSave}>Save</button>
@@ -104,3 +103,4 @@ function Doctors({ doctor, onUpdateDoctor, onDeleteDoctor }) {
 }
 
 export default Doctors;
+
