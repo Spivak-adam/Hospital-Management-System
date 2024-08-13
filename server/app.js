@@ -116,20 +116,30 @@ app.put('/rooms/:roomID', async (req, res) => {
 app.delete('/rooms/:roomID', async (req, res) => {
   try {
     const roomID = req.params.roomID;
+    const query1 = "UPDATE Appointments SET roomID = NULL WHERE roomID = ?;";
+    const query2 = "DELETE FROM Rooms WHERE roomID = ?;";
 
-    const query = `DELETE FROM Rooms WHERE roomID = ?`;
-
-    db.pool.query(query, [roomID], function (err, results, fields) {
+    // Update related appointments to set roomID to NULL
+    db.pool.query(query1, [roomID], (err, results) => {
       if (err) {
-        console.error('Database operation failed:', err);
-        res.status(500).send('Server error');
-        return;
+        console.error('Error updating appointments:', err);
+        return res.status(500).send('Server error');
       }
-      res.send({ message: 'Room deleted successfully!' });
+
+      // Proceed with deleting the room
+      db.pool.query(query2, [roomID], (err, results) => {
+        if (err) {
+          console.error('Error deleting room:', err);
+          return res.status(500).send('Server error');
+        }
+
+        console.log('Room deleted successfully');
+        return res.send({ message: 'Room deleted successfully!' });
+      });
     });
   } catch (error) {
     console.error('Database operation failed:', error);
-    res.status(500).send('Server error');
+    return res.status(500).send('Server error');
   }
 });
 
@@ -170,6 +180,9 @@ app.post('/patients', async (req, res) => {
 
     db.pool.query(query, [firstName, lastName, primaryDoctorID, dateOfBirth, contactPhone, contactEmail, address, emergencyContactName, emergencyContactPhone, emergencyContactEmail, checkInTime, bloodType, sex, gender, age, language, patientType, releaseDate], function (err, results, fields) {
       if (err) {
+        if (err.code === 'ER_DUP_ENTRY') {
+          return res.status(400).send("Duplicate email entry.");
+        }
         console.error('Database operation failed:', err);
         res.status(500).send('Server error');
         return;
@@ -215,23 +228,21 @@ app.put('/patients/:id', async (req, res) => {
 // Delete Patient
 app.delete('/patients/:id', async (req, res) => {
   try {
-    const { id } = req.params;
+    const patientID = req.params.id;
+    const query = "DELETE FROM Patients WHERE patientID = ?;";
 
-    const query = "DELETE FROM Patients WHERE patientID = ?";
-
-    db.pool.query(query, [id], function (err, results, fields) {
+    db.pool.query(query, [patientID], (err, results) => {
       if (err) {
-        console.error('Database operation failed:', err);
-        res.status(500).send('Server error');
-        return;
+        console.error('Error deleting patient:', err);
+        return res.status(500).send('Server error');
       }
-      res.send('Patient deleted successfully');
-    });
 
+      console.log('Patient deleted successfully');
+      return res.send('Patient deleted successfully');
+    });
   } catch (error) {
-    // Handle Errors
-    console.error('Database operation failed:', error, '. Unable to delete Patient.');
-    res.status(500).send('Server error');
+    console.error('Database operation failed:', error);
+    return res.status(500).send('Server error');
   }
 });
 
@@ -259,9 +270,9 @@ app.get('/doctors', async (req, res) => {
 // ADD new doctor
 app.post('/doctors', async (req, res) => {
   try {
-    const { firstName, lastName, specialization, email, phoneNumber, image, language, gender } = req.body;
-    const query = "INSERT INTO Doctors (firstName, lastName, specialization, email, phoneNumber, image, language, gender) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-    const values = [firstName, lastName, specialization, email, phoneNumber, image, language, gender];
+    const { firstName, lastName, specialization, email, phoneNumber, language, gender } = req.body;
+    const query = "INSERT INTO Doctors (firstName, lastName, specialization, email, phoneNumber, language, gender) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    const values = [firstName, lastName, specialization, email, phoneNumber, language, gender];
 
     db.pool.query(query, values, (err, results) => {
       if (err) {
@@ -281,9 +292,9 @@ app.post('/doctors', async (req, res) => {
 app.put('/doctors/:id', async (req, res) => {
   try {
     const doctorID = req.params.id;
-    const { firstName, lastName, specialization, email, phoneNumber, image, language, gender } = req.body;
-    const query = "UPDATE Doctors SET firstName = ?, lastName = ?, specialization = ?, email = ?, phoneNumber = ?, image = ?, language = ?, gender = ? WHERE doctorID = ?";
-    const values = [firstName, lastName, specialization, email, phoneNumber, image, language, gender, doctorID];
+    const { firstName, lastName, specialization, email, phoneNumber, language, gender } = req.body;
+    const query = "UPDATE Doctors SET firstName = ?, lastName = ?, specialization = ?, email = ?, phoneNumber = ?, language = ?, gender = ? WHERE doctorID = ?";
+    const values = [firstName, lastName, specialization, email, phoneNumber, language, gender, doctorID];
 
     db.pool.query(query, values, (err, results) => {
       if (err) {
@@ -303,19 +314,30 @@ app.put('/doctors/:id', async (req, res) => {
 app.delete('/doctors/:id', async (req, res) => {
   try {
     const doctorID = req.params.id;
-    const query = "DELETE FROM Doctors WHERE doctorID = ?";
+    const query1 = "UPDATE Appointments SET doctorID = NULL WHERE doctorID = ?;";
+    const query2 = "DELETE FROM Doctors WHERE doctorID = ?;";
 
-    db.pool.query(query, [doctorID], (err, results) => {
+    // Update related appointments to set doctorID to NULL
+    db.pool.query(query1, [doctorID], (err, results) => {
       if (err) {
-        console.error('Error deleting doctor:', err);
-        res.status(500).send('Server error');
-      } else {
-        res.send('Doctor deleted successfully');
+        console.error('Error updating appointments:', err);
+        return res.status(500).send('Server error');
       }
+
+      // Proceed with deleting the doctor
+      db.pool.query(query2, [doctorID], (err, results) => {
+        if (err) {
+          console.error('Error deleting doctor:', err);
+          return res.status(500).send('Server error');
+        }
+
+        console.log('Doctor deleted successfully');
+        return res.status(200).send('Doctor deleted successfully');
+      });
     });
   } catch (error) {
     console.error('Database operation failed:', error);
-    res.status(500).send('Server error');
+    return res.status(500).send('Server error');
   }
 });
 
@@ -471,32 +493,6 @@ app.get('/treatments', async (req, res) => {
 
 });
 
-
-app.get('/treatments', async (req, res) => {
-  try {
-    // Select all the information from the treatments table 
-    let query1 = `Select Treatments.*, Doctors.lastName
-                  from Treatments
-                  Inner join DoctorTreatment on DoctorTreatment.treatmentID = Treatments.treatmentID
-                  Inner join Doctors on DoctorTreatment.doctorID = Doctors.doctorID
-                  ORDER BY treatmentID;`
-
-    // Querry Data from Treatments
-    db.pool.query(query1, function (err, results, fields) {
-      let data = results
-
-      console.log("Sending treatment JSON information to /treatments");
-      res.send(JSON.stringify(data));
-
-    })
-
-  } catch (error) {
-    // Handle Errors
-    console.error('Database operation failed:', error, '. Unable to read Treatments.');
-    res.status(500).send('Server error');
-  }
-
-});
 //Create Treatments from user
 app.post('/treatments', (req, res) => {
   let treatData = req.body;

@@ -234,7 +234,7 @@ function AppointmentsPage() {
             <p>Check-In Time:</p>
             <input type="time" name="checkInTime" placeholder="Check-In Time" required />
             <p>Check-Out Time:</p>
-            <input type="time" name="checkOutTime" placeholder="Check-Out Time" required />
+            <input type="time" name="checkOutTime" placeholder="Check-Out Time" />
 
             <select name="status" required>
                 <option value="">Select Status</option>

@@ -31,9 +31,9 @@ CREATE OR REPLACE TABLE Patients(
 -- create and insert data into Appointments table
 CREATE OR REPLACE TABLE Appointments(
     appointmentID int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    doctorID int NOT NULL,
+    doctorID int NULL,
     patientID int NOT NULL,
-    roomID int NOT NULL,
+    roomID int NULL,
     status ENUM('Confirmed', 'In-Room', 'Released') NOT NULL,
     reason ENUM('Scheduled', 'ER') NOT NULL,
     checkInTime TIME NOT NULL,
@@ -84,9 +84,6 @@ CREATE OR REPLACE TABLE DoctorTreatment(
     FOREIGN KEY (treatmentID) REFERENCES Treatments(treatmentID) ON DELETE CASCADE,
     FOREIGN KEY (doctorID) REFERENCES Doctors(doctorID) ON DELETE CASCADE
 );
-
-
-
 
 -- create and insert data into Rooms table
 CREATE OR REPLACE TABLE Rooms (
