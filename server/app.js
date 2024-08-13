@@ -122,27 +122,18 @@ app.put('/rooms/:roomID', async (req, res) => {
 app.delete('/rooms/:roomID', async (req, res) => {
   try {
     const roomID = req.params.roomID;
-    const query1 = "UPDATE Appointments SET roomID = NULL WHERE roomID = ?;";
-    const query2 = "DELETE FROM Rooms WHERE roomID = ?;";
+    const query = "DELETE FROM Rooms WHERE roomID = ?;";
 
-    // Update related appointments to set roomID to NULL
-    db.pool.query(query1, [roomID], (err, results) => {
+    db.pool.query(query, [roomID], (err, results) => {
       if (err) {
-        console.error('Error updating appointments:', err);
+        console.error('Error deleting room:', err);
         return res.status(500).send('Server error');
       }
 
-      // Proceed with deleting the room
-      db.pool.query(query2, [roomID], (err, results) => {
-        if (err) {
-          console.error('Error deleting room:', err);
-          return res.status(500).send('Server error');
-        }
-
-        console.log('Room deleted successfully');
-        return res.send({ message: 'Room deleted successfully!' });
-      });
+      console.log('Room deleted successfully');
+      return res.status(200).send({ message: 'Room deleted successfully!' });
     });
+
   } catch (error) {
     console.error('Database operation failed:', error);
     return res.status(500).send('Server error');
