@@ -1,14 +1,7 @@
-/*  ===== MOBILE styles (reside at the top and are inherited by all devices) ===== */
-/*  ===== See tablet, desktop, and print @media queries at the bottom. */
 
-
-/*   ----- Imports  -----  */
-/* @import 'node_modules/modern-normalize/modern-normalize.css';  npm install modern-normalize  Resets elements for browser consistency.  https://www.npmjs.com/package/modern-normalize */
-/* @import "component1.css";   Component-specific stylesheets, if any.   */
-/* @import url(//fonts.googleapis.com/css?family=Font+Name); Add fonts from a hosted services like Google Fonts.   */
 @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Lugrasimo&family=Sanchez:ital@0;1&display=swap');
 
-/* Reset some basic styles */
+
 body, h1, h2, h3, p, ul, li, a {
   margin: 0;
   padding: 0;
@@ -480,7 +473,6 @@ footer a:hover {
 
 
 
-/* Add this to your existing CSS */
 
 /* Hide nav links by default on small screens */
 @media (max-width: 768px) {
