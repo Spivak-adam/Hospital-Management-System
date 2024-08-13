@@ -198,7 +198,11 @@ function DoctorsPage() {
         <label htmlFor="language">Language:</label>        
             <input type="text" name="language" placeholder="Language" required />
         <label htmlFor="gender">Gender:</label>        
-            <input type="text" name="gender" placeholder="Gender" required />
+             <select>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+            </select>
             <button type="submit" className="btn-action">Submit</button>
 
         </form>
