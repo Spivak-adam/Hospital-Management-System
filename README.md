@@ -18,7 +18,6 @@
 
     Clone this repository to your local machine using the following command:
 
-        ``sh
         git clone <repository-url>
         cd Hospital-Management-System
 
@@ -39,7 +38,7 @@
 
 ### Step 4: Congigure the Databse
 
-    Make sure the MySQL server is running. Import the database schema and data using the DDL.sql and DML.sql file.
+    Make sure the MySQL server is running with your own credentials. Import the database schema and data using the DDL.sql and DML.sql file.
 
 ### Step 5: Build the Client
 
