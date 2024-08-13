@@ -1,14 +1,13 @@
 import React from 'react';
 import Treatments from './Treatments';
 
-function TreatmentsTable({ treatments, onUpdateTreatment, onDeleteTreatment, doctors }) {
-
+function TreatmentsTable({ treatments, onUpdateTreatment, onDeleteTreatment, doctors, patients }) {
     return (
         <table>
             <thead>
                 <tr>
                     <th>Treatment ID</th>
-                    <th>Patient ID</th>
+                    <th>Patient</th>
                     <th>Description</th>
                     <th>Date</th>
                     <th>Diagnosis</th>
@@ -26,11 +25,12 @@ function TreatmentsTable({ treatments, onUpdateTreatment, onDeleteTreatment, doc
                             onUpdateTreatment={onUpdateTreatment}
                             onDeleteTreatment={onDeleteTreatment}
                             doctors={doctors}
+                            patients={patients} // Pass the patients prop down
                         />
                     ))
                 ) : (
                     <tr>
-                        <td colSpan="7" style={{ textAlign: 'center' }}>No treatments available</td>
+                        <td colSpan="8" style={{ textAlign: 'center' }}>No treatments available</td>
                     </tr>
                 )}
             </tbody>
@@ -39,3 +39,4 @@ function TreatmentsTable({ treatments, onUpdateTreatment, onDeleteTreatment, doc
 }
 
 export default TreatmentsTable;
+

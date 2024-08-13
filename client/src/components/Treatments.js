@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 
-function Treatments({ treatment, onUpdateTreatment, onDeleteTreatment, doctors }) {
+function Treatments({ treatment, onUpdateTreatment, onDeleteTreatment, doctors, patients }) {
     const [editing, setEditing] = useState(false);
     const [updatedTreatment, setUpdatedTreatment] = useState(treatment);
 
@@ -19,10 +19,12 @@ function Treatments({ treatment, onUpdateTreatment, onDeleteTreatment, doctors }
         setUpdatedTreatment({ ...updatedTreatment, [name]: value });
     };
 
+    const patient = patients.find(p => p.patientID === treatment.patientID);
+
     return (
         <tr>
             <td>{treatment.treatmentID}</td>
-            <td>{treatment.patientID}</td>
+            <td>{patient ? `${patient.patientID} - ${patient.firstName} ${patient.lastName}` : treatment.patientID}</td>
             {editing ? (
                 <>
                     <td><input type="text" name="description" value={updatedTreatment.description} onChange={handleChange} /></td>
@@ -44,7 +46,6 @@ function Treatments({ treatment, onUpdateTreatment, onDeleteTreatment, doctors }
                 </>
             ) : (
                 <>
-                    
                     <td>{treatment.description}</td>
                     <td>{treatment.date}</td>
                     <td>{treatment.diagnosis}</td>
@@ -61,3 +62,4 @@ function Treatments({ treatment, onUpdateTreatment, onDeleteTreatment, doctors }
 }
 
 export default Treatments;
+
