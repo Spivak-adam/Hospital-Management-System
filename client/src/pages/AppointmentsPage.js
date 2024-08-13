@@ -204,6 +204,7 @@ function AppointmentsPage() {
     const renderFormSection = () => (
         <form className="createDataForm" onSubmit={handleSubmitNewAppointment}>
             <h3>Add New Appointment</h3>
+        <label htmlFor="patientID">patientID:</label>
             <select name="patientID" required>
                 <option value="">Select Patient</option>
                 {patients.map(patient => (
@@ -212,6 +213,7 @@ function AppointmentsPage() {
                     </option>
                 ))}
             </select>
+        <label htmlFor="doctorID">Doctor ID:</label>                
             <select name="doctorID" required>
                 <option value="">Select Doctor</option>
                 {doctors.map(doctor => (
@@ -220,6 +222,7 @@ function AppointmentsPage() {
                     </option>
                 ))}
             </select>
+        <label htmlFor="roomID">Room ID:</label>                
             <select name="roomID" required>
                 <option value="">Select Room</option>
                 {availableRooms.map(room => (
@@ -228,20 +231,20 @@ function AppointmentsPage() {
                     </option>
                 ))}
             </select>
-
-            <p>Date of Appointment:</p>
+        <label htmlFor="date">Date of Appointment:</label>
             <input type="date" name="date" placeholder="Date of Appointment" required />
-            <p>Check-In Time:</p>
+         <label htmlFor="checkInTime">Check-In Time:</label>         
             <input type="time" name="checkInTime" placeholder="Check-In Time" required />
-            <p>Check-Out Time:</p>
+        <label htmlFor="checkOutTime">Check-out Time:</label>       
             <input type="time" name="checkOutTime" placeholder="Check-Out Time" required />
-
+        <label htmlFor="status">Status of Appointment:</label>
             <select name="status" required>
                 <option value="">Select Status</option>
                 <option value="Confirmed">Confirmed</option>
                 <option value="In-Room">In-Room</option>
                 <option value="Released">Released</option>
             </select>
+          <label htmlFor="reason">Reason:</label>                  
             <select name="reason">
                 <option value="">Select Reason</option>
                 <option value="Scheduled">Scheduled</option>
