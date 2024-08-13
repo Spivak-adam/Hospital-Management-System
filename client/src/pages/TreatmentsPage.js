@@ -240,11 +240,12 @@ function TreatmentsPage() {
         <>
             <SearchBar placeholder="Search Treatments..." onSearch={handleSearch} />
             <div className="patients-list">
-                <TreatmentsTable
-                    treatments={filteredTreatments}
+            <TreatmentsTable
+                    treatments={treatments}
                     onUpdateTreatment={handleUpdateTreatment}
                     onDeleteTreatment={handleDeleteTreatment}
                     doctors={doctors}
+                    patients={patients} // Ensure this line is present
                 />
             </div>
         </>
