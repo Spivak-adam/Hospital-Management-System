@@ -322,15 +322,30 @@ app.delete('/doctors/:id', async (req, res) => {
 /* Perform Appointments CRUD operations
 --------------------------------------------*/
 // Pull from Appointments Entity
+// Pull from Appointments Entity
 app.get('/appointments', async (req, res) => {
   try {
-    // Define our query     
-    const query = "SELECT * FROM Appointments;"
+    // Join the Appointments table with the Rooms table to get the room details
+    const query = `
+      SELECT 
+        Appointments.*, 
+        Rooms.roomID, 
+        Rooms.location, 
+        Rooms.number 
+      FROM 
+        Appointments
+      JOIN 
+        Rooms ON Appointments.roomID = Rooms.roomID;
+    `;
 
     // Query Data
     db.pool.query(query, (err, results) => {
-      if (err) throw err;
-      res.send(JSON.stringify(results));
+      if (err) {
+        console.error('Database operation failed:', err);
+        res.status(500).send('Server error');
+      } else {
+        res.send(JSON.stringify(results));
+      }
     });
 
   } catch (error) {
@@ -404,7 +419,6 @@ app.delete('/appointments/:id', async (req, res) => {
     res.status(500).send('Server error');
   }
 });
-
 /* Perform Treatments CRUD operations
 --------------------------------------------*/
 // Get treatments information only
