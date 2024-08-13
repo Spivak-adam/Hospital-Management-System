@@ -78,7 +78,7 @@ function TreatmentsPage() {
             const data = await response.json();
             setDoctorTreatments(data);
         } catch (error) {
-            console.error('Error fetching doctorTreatment data:', error);
+            console.error('Error fetching doctor treatments:', error);
         }
     };
 
@@ -282,6 +282,7 @@ function TreatmentsPage() {
                 <DoctorTreatmentTable
                     DoctorTreatment={doctorTreatments}
                     onDeleteDoctorTreatment={handleDeleteDoctorTreatments}
+                    doctors={doctors}  // Pass doctors to DoctorTreatmentTable                
                 />
             </div>
         </>
