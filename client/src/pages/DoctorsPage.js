@@ -8,11 +8,37 @@ function DoctorsPage() {
     const [filteredDoctors, setFilteredDoctors] = useState([]);
     const [showTable, setShowTable] = useState(false);
     const [showForm, setShowForm] = useState(false);
-
+    const [patients, setPatients] = useState([]);
+    const [rooms, setRooms] = useState([]);
+    
     useEffect(() => {
         fetchDoctors();
+        fetchPatients();
+        fetchRooms();
     }, []);
-
+    
+    const fetchPatients = async () => {
+        try {
+            const response = await fetch('/patients');
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            setPatients(data);
+        } catch (error) {
+            console.error('Error fetching patient data:', error);
+        }
+    };
+    
+    const fetchRooms = async () => {
+        try {
+            const response = await fetch('/rooms');
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            setRooms(data);
+        } catch (error) {
+            console.error('Error fetching room data:', error);
+        }
+    };
+    
     const fetchDoctors = async () => {
         try {
             const response = await fetch('/doctors');
@@ -25,14 +51,37 @@ function DoctorsPage() {
         }
     };
 
+
+    
     const handleSearch = (searchTerm) => {
-        const filtered = doctors.filter(doctor =>
-            Object.values(doctor).some(value =>
-                (value !== null && value !== undefined ? value.toString() : "").toLowerCase().includes(searchTerm.toLowerCase())
-            )
-        );
+        const filtered = doctors.filter(doctor => {
+            // Find all patients associated with this doctor
+            const associatedPatients = patients.filter(patient => patient.primaryDoctorID === doctor.doctorID);
+            // Find all rooms associated with this doctor
+            const associatedRooms = rooms.filter(room => room.doctorID === doctor.doctorID);
+    
+            // Combine all the fields into a single string to search within
+            const combinedData = `
+                ${doctor.doctorID}
+                ${doctor.firstName}
+                ${doctor.lastName}
+                ${doctor.specialization}
+                ${doctor.email}
+                ${doctor.phoneNumber}
+                ${doctor.language}
+                ${doctor.gender}
+                ${associatedPatients.map(patient => `${patient.firstName} ${patient.lastName} ${patient.patientID}`).join(" ")}
+                ${associatedRooms.map(room => `${room.roomID} ${room.location} ${room.number}`).join(" ")}
+            `.toLowerCase();
+    
+            // Check if the search term is present in the combined data
+            return combinedData.includes(searchTerm.toLowerCase());
+        });
+    
         setFilteredDoctors(filtered);
     };
+    
+    
 
     const handleSubmitNewDoctor = async (event) => {
         event.preventDefault();
@@ -73,6 +122,9 @@ function DoctorsPage() {
     };
 
     const handleUpdateDoctor = async (doctorID, updatedDoctor) => {
+        const confirmUpdate = window.confirm("Are you sure you want to udpate this doctor?");
+        if (!confirmUpdate) return;
+
         try {
             const response = await fetch(`/doctors/${doctorID}`, {
                 method: 'PUT',
@@ -96,6 +148,9 @@ function DoctorsPage() {
     };
 
     const handleDeleteDoctor = async (doctorID) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this doctor?");
+        if (!confirmDelete) return;
+        
         try {
             const response = await fetch(`/doctors/${doctorID}`, {
                 method: 'DELETE',
